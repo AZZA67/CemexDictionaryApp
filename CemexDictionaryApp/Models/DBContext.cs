@@ -21,6 +21,8 @@ namespace CemexDictionaryApp.Models
             base.OnModelCreating(modelBuilder);
 
         }
-        //public DbSet<ApplicationUser> applicationUsers { get; set; }
+        
+        public DbSet<Product> products { get; set; }
+        public DbSet<ProductType> productTypes { get; set; }
     }
 }

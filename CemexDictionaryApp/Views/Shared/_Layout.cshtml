@@ -1,4 +1,11 @@
-﻿<!doctype html>
+﻿@*@model ProductViewModel*@
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using CemexDictionaryApp.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!doctype html>
+
 
 <html lang="en">
 <head>
@@ -136,18 +143,13 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                            <img class="avatar avatar-sm" src="~/demo/static/avatars/000m.jpg">
+                            <img class="avatar avatar-sm" src="~/demo/static/avatars/profile.png">
                             <div class="d-none d-xl-block ps-2">
-                                <div>Paweł Kuna</div>
-                                <div class="mt-1 small text-muted">UI Designer</div>
+                                 <div>@User.Identity.Name</div>
+                                <div class="mt-1 small text-muted">@User.FindFirstValue(ClaimTypes.Email)</div>
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <a href="#" class="dropdown-item">Set status</a>
-                            <a href="#" class="dropdown-item">Profile & account</a>
-                            <a href="#" class="dropdown-item">Feedback</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">Settings</a>
                             <a href="#" class="dropdown-item">Logout</a>
                         </div>
                     </div>
@@ -317,6 +319,35 @@
                                     </div>
                                 </div>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/package -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><polyline points="12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3" /><line x1="12" y1="12" x2="20" y2="7.5" /><line x1="12" y1="12" x2="12" y2="21" /><line x1="12" y1="12" x2="4" y2="7.5" /><line x1="16" y1="5.25" x2="8" y2="9.75" /></svg>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Admin Tasks
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                          
+
+
+  
+                                                <a asp-action="GetAllProducts" asp-controller="Product" asp-route-page_number="1" class="btn dropdown-item">
+                                                    Products
+                                                </a>
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
                             <li class="nav-item">
                                 <a class="nav-link" href="~/demo/form-elements.html">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -554,5 +585,7 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
     </div>
+
+
 </body>
 </html>
