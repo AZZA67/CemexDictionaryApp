@@ -2,23 +2,37 @@
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
 @using CemexDictionaryApp.Models
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@*@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager*@
+
 <!doctype html>
 
 
 <html lang="en">
 <head>
+
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Dashboard - Tabler - Premium and Open Source dashboard template with responsive and high quality UI.</title>
     <!-- CSS files -->
+
     <link href="~/dist/css/tabler.min.css" rel="stylesheet" />
     <link href="~/dist/css/tabler-flags.min.css" rel="stylesheet" />
     <link href="~/dist/css/tabler-payments.min.css" rel="stylesheet" />
     <link href="~/dist/css/tabler-vendors.min.css" rel="stylesheet" />
     <link href="~/dist/css/demo.min.css" rel="stylesheet" />
+    <script src="~/js/site.js"></script>
+    @*<link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/blitzer/jquery-ui.css"
+          rel="stylesheet" type="text/css" />*@
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 </head>
 <body>
     <div class="page">
@@ -144,13 +158,13 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
                             <img class="avatar avatar-sm" src="~/demo/static/avatars/profile.png">
-                            <div class="d-none d-xl-block ps-2">
+                            <div class="d-xl-block ps-2">
                                  <div>@User.Identity.Name</div>
                                 <div class="mt-1 small text-muted">@User.FindFirstValue(ClaimTypes.Email)</div>
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <a href="#" class="dropdown-item">Logout</a>
+                            <a asp-action="Logout" asp-controller="Account" class="dropdown-item">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -333,19 +347,22 @@
                                 <div class="dropdown-menu">
                                     <div class="dropdown-menu-columns">
                                         <div class="dropdown-menu-column">
-                                          
 
 
-  
-                                                <a asp-action="GetAllProducts" asp-controller="Product" asp-route-page_number="1" class="btn dropdown-item">
-                                                    Products
-                                                </a>
-                                          
+                                            <a asp-action="GetAllProducts" asp-controller="Product" class="btn dropdown-item">
+                                                Products
+                                            </a>
+
+                                            <a asp-action="GetAllNews" asp-controller="News" class="btn dropdown-item">
+                                                News
+                                            </a>
+                                            <a asp-action="GetAll" asp-controller="QuestionCategory" class="btn dropdown-item">
+                                                Question Category
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </li>
-
 
 
                             <li class="nav-item">

@@ -87,6 +87,58 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("news");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.NewsLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NewId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NewsLog");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -119,6 +171,34 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("products");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.ProductLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductsLog");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.ProductType", b =>
                 {
                     b.Property<int>("Id")
@@ -132,6 +212,24 @@ namespace CemexDictionaryApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("productTypes");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.QuestionCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("الأسم")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -265,6 +363,23 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.NewsLog", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.News", "news")
+                        .WithMany("NewsLogs")
+                        .HasForeignKey("NewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("news");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.Product", b =>
                 {
                     b.HasOne("CemexDictionaryApp.Models.ProductType", "productType")
@@ -274,6 +389,23 @@ namespace CemexDictionaryApp.Migrations
                         .IsRequired();
 
                     b.Navigation("productType");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.ProductLog", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.Product", "Product")
+                        .WithMany("ProductLogs")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
+                        .WithMany("ProductLogs")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,6 +457,21 @@ namespace CemexDictionaryApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("ProductLogs");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.News", b =>
+                {
+                    b.Navigation("NewsLogs");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.Product", b =>
+                {
+                    b.Navigation("ProductLogs");
                 });
 #pragma warning restore 612, 618
         }

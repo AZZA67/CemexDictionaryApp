@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using CemexDictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CemexDictionaryApp.Repositories
 {
@@ -17,10 +18,12 @@ namespace CemexDictionaryApp.Repositories
     {
         DBContext context;
         private readonly IWebHostEnvironment hostEnvironment;
+
         public ProductRepository(DBContext _context, IWebHostEnvironment _hostEnvironment)
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
+
         }
         public List<Product> GetAll_Active_Products()
         {
@@ -29,18 +32,16 @@ namespace CemexDictionaryApp.Repositories
                 Where(product => product.Status == "Active").ToList();
             return products;
         }
-        public List<Product> GetAll(PagenationParameters productParameters)
+  
+        public List<Product> GetAll()
         {
             List<Product> products = context.products.
-                Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
-          .Take(productParameters.PageSize)
-                .Include(Product => Product.productType).
                 ToList();
             return products;
         }
+
         public int ProductsCount()
         {
-
             return context.products.ToList().Count();
         }
         public string UploadedFile([Bind("Id", "ProductImage")] ProductViewModel ProductViewModel)
@@ -59,10 +60,12 @@ namespace CemexDictionaryApp.Repositories
             }
             return uniqueFileName;
         }
-        public async Task<int> Insert(Product product)
+        public int Insert(Product product)
         {
+
+
             context.products.Add(product);
-            return await context.SaveChangesAsync();
+            return context.SaveChanges();
         }
         public int Update(int id, Product product)
         {
@@ -75,6 +78,7 @@ namespace CemexDictionaryApp.Repositories
                 OldProduct.Status = product.Status;
                 OldProduct.productType.Type = product.productType.Type;
                 OldProduct.Description = product.Description;
+
                 return context.SaveChanges();
             }
             return 0;

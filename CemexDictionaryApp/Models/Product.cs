@@ -15,14 +15,13 @@ namespace CemexDictionaryApp.Models
         public string Type { get; set; }
         public string Image { get; set; }
 
-        [RegularExpression(@"(Active|InActive)", ErrorMessage = "Address Must be Active or InActive")]
+        [RegularExpression(@"(Active|InActive)", ErrorMessage = "Status Must be Active or InActive")]
         public string Status { get; set; }
-        public ProductType productType { get; set; }
+        public virtual ProductType productType { get; set; }
         [ForeignKey("productType")]
-        public int ProductTypeId { get; set; }
+        public  int ProductTypeId { get; set; }
+        public virtual List<ProductLog> ProductLogs { get; set; }
 
-       
-       
         //product type table id , type 
         //Aproduct lOG
         //pRODUCTid / uSERiD / aCTION (aDD / aCTIVE / dEACTIVATE ) , DATETIME

@@ -36,6 +36,7 @@ namespace CemexDictionaryApp.WebApi
             this.dbcontext = _dbcontext;
             this.signinmanager = signinmanager;
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
@@ -77,8 +78,7 @@ namespace CemexDictionaryApp.WebApi
             }
             return Unauthorized();
         }
-
-       
+       //return object have user data
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterModel userDTO)
         {
@@ -94,8 +94,7 @@ namespace CemexDictionaryApp.WebApi
                 Email = userDTO.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = userDTO.Username,
-               
-               
+             
                 Role = "User"
 
             };

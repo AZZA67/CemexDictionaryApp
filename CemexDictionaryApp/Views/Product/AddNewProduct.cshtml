@@ -1,121 +1,72 @@
-﻿@model ProductViewModel
-
+﻿
+@{
+    Layout = null;
+}
+@model ProductViewModel
 
 @{
     SelectList productTypes = new SelectList(ViewBag.ProductTypes, "Id", "Type");
-   
+
+    //data - bs - toggle = "modal" data - bs - target = "#modal-success"
 }
+<form id="form1"asp-action="AddNewProduct" enctype="multipart/form-data" asp-controller="Product" class="card card-md" >
+    @*<div class="modal modal-blur fade in" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true">*@
+    <div class="modal-dialog modal-lg modal-dialog-centered w-100" role="document">
 
-  
-<form asp-action="AddNewProduct" enctype="multipart/form-data" asp-controller="Product" class="card card-md">
-    <div class="modal modal-blur fade in" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">New Product</h5>
-                    <a asp-action="getallproducts" asp-controller="product" asp-route-page_number="1"  type="button" class="btn-close"  aria-label="Close"></a>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label asp-for="Name" class="form-label">Name</label>
-                        <input asp-for="Name" type="text" class="form-control" placeholder="Product Name">
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <span class="form-label">Image</span>
-                            <input class="form-control" asp-for="ProductImage" accept="image/*" />
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="mb-3">
-                                <label class="form-label">Product Type</label>
-                                <select  asp-for="ProductTypeId" asp-items="productTypes"  class="form-select" >
-                                    <option value="0">Select Product Type</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div>
-                                    <label class="form-label">Description</label>
-                                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-
-
-                        <div class="form-footer" style="margin-right:350px">
-                            <a  asp-action="getallproducts" asp-controller="product" asp-route-page_number="1"  class="btn btn-primary w-100">Cancel</a>
-                        </div>
-
-                        <div class="form-footer">
-                            <button style="width:150px" id="submitbtn" data-target="#modal-success" onclick="modal()" type="submit" class="btn btn-primary w-100">Create new product</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</form>
-
-<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-status bg-success"></div>
-            <div class="modal-body text-center py-4">
-                <!-- Download SVG icon from http://tabler-icons.io/i/circle-check -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
-                <h3>Product Added Successfully!</h3>
-
+            <div class="modal-header">
+                <h5 class="modal-title">New Product</h5>
+                <a asp-action="getallproducts" asp-controller="product" asp-route-page_number="1" type="button" class="btn-close" aria-label="Close"></a>
             </div>
-            <div class="modal-footer">
-                <div class="w-100">
-                    <div class="row">
-                        <div class="col">
-                            <a href="#" class="btn w-100" data-bs-dismiss="modal">
-                                Go to dashboard
-                            </a>
-                        </div>
-                        <div class="col">
-                            <a asp-action="GetAllProducts" asp-controller="Product" asp-route-page_number="1" class="btn btn-success w-100" data-bs-dismiss="modal">
-                                Go To All Products
-                            </a>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Product Name">
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <span class="form-label">Image</span>
+                        <input class="form-control" asp-for="ProductImage" accept="image/*" />
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label class="form-label">Product Type</label>
+                            <select asp-for="ProductTypeId" asp-items="productTypes" class="form-select">
+                                <option value="0">Select Product Type</option>
+                            </select>
                         </div>
                     </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <a asp-action="GetAllProducts" asp-controller="Product" class="btn btn-link link-secondary ">Cancel</a>
+
+                    <button id="submitbtn" type="submit" class="btn btn-primary ms-auto">Create new Product</button>
+
                 </div>
             </div>
         </div>
     </div>
-</div>
+    @*</div>*@
 
+</form>
 @section scripts
 {
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <script type="text/javascript">
 
-
-        $(window).on('load', function () {
-            $('#modal-report').modal('show');
-        });
-
-
-
-       
-        function modal() {
-
-            $('#modal-success').modal('show');
-       
-        }
-     
-          
-        
     </script>
 
 }

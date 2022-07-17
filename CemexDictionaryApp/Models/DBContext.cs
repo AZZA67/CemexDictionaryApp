@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace CemexDictionaryApp.Models
     public class DBContext: IdentityDbContext<ApplicationUser>
     {
         private readonly DbContextOptions _options;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DBContext(DbContextOptions options) : base(options)
+        public DBContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _options = options;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,8 +24,12 @@ namespace CemexDictionaryApp.Models
             base.OnModelCreating(modelBuilder);
 
         }
-        
         public DbSet<Product> products { get; set; }
         public DbSet<ProductType> productTypes { get; set; }
+        public DbSet<ProductLog> ProductsLog { get; set; }
+        public DbSet<News> news { get; set; }
+        public DbSet<NewsLog> NewsLog { get; set; }
+        public DbSet<QuestionCategory> QuestionCategories { get; set; }
+
     }
 }

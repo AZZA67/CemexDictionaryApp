@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using CemexDictionaryApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+
 namespace CemexDictionaryApp.Controllers
 {
     public class AccountController : Controller
@@ -15,6 +18,8 @@ namespace CemexDictionaryApp.Controllers
         private SignInManager<ApplicationUser> signInManager;
         private RoleManager<IdentityRole> roleManager;
         DBContext dbcontext;
+
+      
         public AccountController(UserManager<ApplicationUser> _userManager
         , SignInManager<ApplicationUser> _signInManager
         , RoleManager<IdentityRole> _roleManager
@@ -32,44 +37,43 @@ namespace CemexDictionaryApp.Controllers
             return View();
         }
         [HttpPost]
-        [AllowAnonymous]
+
         public async Task<IActionResult> Login(LoginViewModel user)
         {
             if (ModelState.IsValid)
             {
-                var UserModel =
-                await userManager.FindByEmailAsync(user.Email);
+                //var UserModel =
+                //await userManager.FindByEmailAsync(user.Email);
+
+                ApplicationUser UserModel =
+                   await userManager.FindByEmailAsync(user.Email);
 
 
 
                 if (UserModel != null)
                 {
-                   var result =
-                    await signInManager.PasswordSignInAsync
-                    (UserModel, user.Password, user.RememberMe, false);
-                    //Check user role to add Logging Record As Reciptionist
-                   
+                    Microsoft.AspNetCore.Identity.SignInResult result =
+                       await signInManager.PasswordSignInAsync
+                       (UserModel, user.Password, user.RememberMe, false);
+                    //don't forget Redirect
                     return RedirectToAction("HomePage", "Home");
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
                 }
-
                 }
-            
             return View(user);
-
         }
-
-
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -81,7 +85,12 @@ namespace CemexDictionaryApp.Controllers
                     PasswordHash=model.Password,
                     Role="Admin"
                 };
-                var result = await userManager.CreateAsync(user,user.PasswordHash);
+                //var result = await userManager.CreateAsync(user,user.PasswordHash);
+
+
+                IdentityResult result =
+                   await userManager.CreateAsync(user, user.PasswordHash);
+
                 if (await roleManager.RoleExistsAsync("Admin") == false)
                 {
                     IdentityRole role = new IdentityRole();
@@ -95,9 +104,14 @@ namespace CemexDictionaryApp.Controllers
                 }
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false);
 
+                    ClaimsIdentity claims = new ClaimsIdentity();
+                    claims.AddClaim(new Claim("Id", user.Id));
+                    //create cookie
+                    //signInManager.SignInWithClaimsAsync(UserModel, false, claims);
+                    await signInManager.SignInAsync(user, false);
                     return RedirectToAction("HomePage", "Home");
+
                 }
                 foreach (var error in result.Errors)
                 {
@@ -106,6 +120,12 @@ namespace CemexDictionaryApp.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
             return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Login");
         }
     }
 }

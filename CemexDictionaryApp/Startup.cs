@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CemexDictionaryApp
 {
@@ -35,7 +36,12 @@ namespace CemexDictionaryApp
             services.AddDbContext<DBContext>(c => c.UseSqlServer(connectionString));
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
-            services.AddIdentity<ApplicationUser,IdentityRole>().AddEntityFrameworkStores<DBContext>();
+            services.AddScoped<IProductLogRepository, ProductLogRepository>();
+            services.AddScoped<IQuestionCategoryRepository,QuestionCategoryRepository>();
+            services.AddScoped<INewsLogRepository, NewsLogRepository>();
+            services.AddScoped<INewsRepository, NewsRepository>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -43,30 +49,7 @@ namespace CemexDictionaryApp
                     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters =
-                       new TokenValidationParameters()
-                       {
-                           ValidateIssuer = true,
-                           ValidIssuer = Configuration["JWT:ValidIssuer"],
-                           ValidateAudience = true,
-                           ValidAudience = Configuration["JWT:ValidAudience"],
-                           IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecrtKey"]))
-                       };
-            });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
