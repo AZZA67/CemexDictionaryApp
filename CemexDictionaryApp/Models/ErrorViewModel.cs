@@ -1,5 +1,4 @@
 using System;
-
 namespace CemexDictionaryApp.Models
 {
     public class ErrorViewModel
@@ -9,3 +8,4 @@ namespace CemexDictionaryApp.Models
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
+

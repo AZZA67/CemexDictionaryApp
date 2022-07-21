@@ -11,7 +11,6 @@ namespace CemexDictionaryApp.ViewModels
 {
     public class ProductViewModel
     {
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -21,5 +20,6 @@ namespace CemexDictionaryApp.ViewModels
         [Required(ErrorMessage = "Please choose profile image")]
         [Display(Name = "Product Picture")]
         public IFormFile ProductImage { get; set; }
+     
     }
 }

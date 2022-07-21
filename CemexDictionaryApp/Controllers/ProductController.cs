@@ -1,7 +1,6 @@
 ﻿using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
-
 namespace CemexDictionaryApp.Controllers
 {
     public class ProductController : Controller
@@ -40,17 +37,11 @@ namespace CemexDictionaryApp.Controllers
         }
         private async Task<ApplicationUser> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);
         [HttpGet]
-   
-
         public IActionResult GetAllProducts()
         {
-
-       
             List<Product> products = ProductRepository.GetAll();
             return View(products);
         }
-
-
         [HttpGet]
         public IActionResult AddNewProduct()
         {

@@ -87,6 +87,29 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.Media", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionMedia");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.News", b =>
                 {
                     b.Property<int>("Id")
@@ -214,6 +237,38 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("productTypes");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.Question", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SubmitTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TopQuestion")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdminId");
+
+                    b.ToTable("Questions");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.QuestionCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -230,6 +285,21 @@ namespace CemexDictionaryApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("QuestionCategories");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.QuestionPerCategory", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("questionPerCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -363,6 +433,17 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.Media", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.Question", "question")
+                        .WithMany("QuestionMedia")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("question");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.NewsLog", b =>
                 {
                     b.HasOne("CemexDictionaryApp.Models.News", "news")
@@ -406,6 +487,34 @@ namespace CemexDictionaryApp.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.Question", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
+                    b.Navigation("Admin");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.QuestionPerCategory", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.QuestionCategory", "category")
+                        .WithMany("Question_category")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CemexDictionaryApp.Models.Question", "question")
+                        .WithMany("Question_category")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("category");
+
+                    b.Navigation("question");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -472,6 +581,18 @@ namespace CemexDictionaryApp.Migrations
             modelBuilder.Entity("CemexDictionaryApp.Models.Product", b =>
                 {
                     b.Navigation("ProductLogs");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.Question", b =>
+                {
+                    b.Navigation("Question_category");
+
+                    b.Navigation("QuestionMedia");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.QuestionCategory", b =>
+                {
+                    b.Navigation("Question_category");
                 });
 #pragma warning restore 612, 618
         }

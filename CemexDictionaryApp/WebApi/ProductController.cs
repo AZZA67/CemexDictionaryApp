@@ -17,12 +17,13 @@ namespace CemexDictionaryApp.WebApi
         {
             Product_Repository = _product_Repository;
         }
-        [HttpGet]
+    
+        [HttpGet("getAll")]
         public IActionResult getAll()
         {
             if (Product_Repository.GetAll_Active_Products() != null)
             {
-                return Ok();
+                return Ok(Product_Repository.GetAll_Active_Products());
             }
             return BadRequest("No Products are found !");
         }

@@ -52,7 +52,7 @@ namespace CemexDictionaryApp.Repositories
             {
                 string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + ProductViewModel.ProductImage.FileName;
-                string path = Path.Combine(uploadsFolder + @"\images\", uniqueFileName);
+                string path = Path.Combine(uploadsFolder + @"\images\Products\", uniqueFileName);
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     ProductViewModel.ProductImage.CopyTo(fileStream);

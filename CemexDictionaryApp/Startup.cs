@@ -40,6 +40,9 @@ namespace CemexDictionaryApp
             services.AddScoped<IQuestionCategoryRepository,QuestionCategoryRepository>();
             services.AddScoped<INewsLogRepository, NewsLogRepository>();
             services.AddScoped<INewsRepository, NewsRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IMediaRepository, MediaRepository>();
+            services.AddScoped<IQuestionPerCategoryRepository, QuestionPerCategoryRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
             services.AddCors(opt =>

@@ -21,7 +21,9 @@ namespace CemexDictionaryApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<QuestionPerCategory>().HasKey(QC => new { QC.CategoryId, QC.QuestionId });
             base.OnModelCreating(modelBuilder);
+           
 
         }
         public DbSet<Product> products { get; set; }
@@ -31,5 +33,8 @@ namespace CemexDictionaryApp.Models
         public DbSet<NewsLog> NewsLog { get; set; }
         public DbSet<QuestionCategory> QuestionCategories { get; set; }
 
+        public DbSet<Media> QuestionMedia { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionPerCategory> questionPerCategories { get; set; }
     }
 }
