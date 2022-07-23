@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+@*<div class="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog">*@
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable w-100"   id="modal-scrollable" role="document"  >
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Scrollable modal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+            <div class="mb-3">
+                <label class="form-label">Image Check</label>
+
+                @foreach (Media image in ViewBag.Images)
+                {
+
+                    <div class="row g-2">
+                        <div class="col-6 col-sm-4">
+                            <label class="form-imagecheck mb-2">
+                                <input type="checkbox" class="form-imagecheck-input" value="@image.Path" />
+
+                                <span class="form-imagecheck-figure">
+                                    <img src="~/images/@image.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                </span>
+
+                            </label>
+                        </div>
+                    </div>}
+            </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+        </div>
+    </div>
+</div>
+@*</div>*@
+
+@section scripts{
+    <script src="~/dist/js/tabler.min.js" defer></script>
+    <script src="~/dist/js/demo.min.js" defer></script>
+}

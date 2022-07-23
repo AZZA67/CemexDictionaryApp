@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = null;
+}
+@model NewsViewModel
+
+
+<form id="form1" asp-action="AddNewNews" enctype="multipart/form-data" asp-controller="News" class="card card-md">
+    <div class="modal-dialog modal-lg modal-dialog-centered w-100" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New News</h5>
+                <a asp-action="GetAllNews" asp-controller="News"  type="button" class="btn-close" aria-label="Close"></a>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Title</label>
+                    <input asp-for="Title" type="text" class="form-control" placeholder="News Title">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <span class="form-label">Image</span>
+                        <input class="form-control" asp-for="NewsImage" accept="image/*" />
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <a asp-action="GetAllNews" asp-controller="News" class="btn btn-link link-secondary ">Cancel</a>
+
+                    <button id="submitbtn" type="submit" class="btn btn-primary ms-auto">Create new News</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+ 
+
+</form>
+@section scripts
+{
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript">
+
+
+       
+    </script>
+
+}
+

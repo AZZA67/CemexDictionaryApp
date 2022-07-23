@@ -1,0 +1,143 @@
+﻿@model List<QuestionCategory>
+
+@*@TempData["Success"]*@
+<div class="col-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Categories</h3>
+        </div>
+        <div class="card-body border-bottom py-3">
+            <div class="d-flex">
+                <a style="margin-left:50px" onclick="modaladd()" class="btn btn-primary d-none d-sm-inline-block">
+                    Add New Category
+                </a>
+
+            </div>
+        </div>
+        <div class="table-responsive">
+
+            <table id="TblInfo" class="table card-table table-vcenter text-nowrap table-borderless ">
+                <thead>
+                    <tr>
+                        <th>Category No.</th>
+                        <th>Name </th>
+                        <th> الأسم </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (QuestionCategory item in Model)
+                    {
+                        <tr>
+                            <td><span class="text-muted">@item.Id </span></td>
+                            <td>@item.Name</td>
+                            <td>@item.الأسم</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div class="modal modal-blur fade " id="exampleModal2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent2' class="card"></div>
+        </div>
+    </div>
+
+</div>
+<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-success"></div>
+            <div class="modal-body text-center py-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
+                <h3>Category Added Successfully!</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <a asp-action="HomePage" asp-controller="Home" class="btn w-100" data-bs-dismiss="modal">
+                                Go to dashboard
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a asp-action="GetAll" asp-controller="QuestionCategory" class="btn btn-success w-100" data-bs-dismiss="modal">
+                                Go To All Categories
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#TblInfo').DataTable({
+                "paging": true,
+                 columnDefs: [
+                    {
+                        targets: -1,
+                        className: 'table-borderless'
+                    }
+                     ]
+            });
+
+        });
+        function modaladd() {
+            var options = { "backdrop": "static", keyboard: true };
+            $.ajax({
+                type: "GET",
+                url: "/QuestionCategory/AddNewQuestionCategory",
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+
+                success: function (data) {
+
+                    $('#myModalContent2').html(data); //modal
+                    $('#myModal').modal(options);
+                    $('#exampleModal2').modal('show');
+
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+
+        }
+             @*function modalshow() {
+
+            var success = '@ViewBag.success';
+            if (success) {
+                $('#modal-success').modal('show');
+            }
+        }*@
+
+        $(function () {
+
+            var success = '@TempData["Success"]';
+            console.log(success);
+            if (success == "true") {
+                
+                // alert('success');
+                $('#modal-success').modal('show');
+            }
+        })
+    </script>
+
+}

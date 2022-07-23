@@ -1,14 +1,15 @@
-﻿@model List<CemexDictionaryApp.Models.Product>
+﻿@model List<CemexDictionaryApp.Models.News>
+
 @*@TempData["Success"]*@
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Products</h3>
+            <h3 class="card-title">News</h3>
         </div>
         <div class="card-body border-bottom py-3">
             <div class="d-flex">
                 <a style="margin-left:50px" onclick="modaladd()" class="btn btn-primary d-none d-sm-inline-block">
-                    Add New Product
+                    Add New News
                 </a>
             </div>
         </div>
@@ -17,22 +18,26 @@
             <table id="TblInfo" class="table card-table table-vcenter text-nowrap table-borderless ">
                 <thead>
                     <tr>
-                        <th>Product No.</th>
-                        <th>Name </th>
+
+                        <th>News No.</th>
+                        <th>Title </th>
                         <th> Image</th>
                         <th>Description</th>
-                        <th>Type</th>
                         <th>Status</th>
                         <th>Details</th>
                         <th>Change Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Product item in Model)
+
+
+                    @foreach (News item in Model)
+
                     {
                         <tr>
+
                             <td><span class="text-muted">@item.Id </span></td>
-                            <td><a href="invoice.html" class="text-reset" tabindex="-1">@item.Name</a></td>
+                            <td><a href="invoice.html" class="text-reset" tabindex="-1">@item.Title</a></td>
                             <td data-label="Name">
                                 <div class="d-flex py-1 align-items-center">
                                     <Img class="avatar me-2" src="~/images/@item.Image">
@@ -42,23 +47,25 @@
                                 @item.Description
                             </td>
 
-                            <td>
-                                @item.Type
-                            </td>
                             <td id="@item.Id">
                                 <span class="badge bg-success me-1"></span> @item.Status
                             </td>
+
+
                             <td>
                                 <span class="text-muted">
                                     <button onclick="modal(@item.Id)" class="btn align-text-top" id="details" data-id="@item.Id" data-bs-boundary="viewport">Details</button>
+
                                 </span>
                             </td>
                             <td>
                                 <span class="text-end">
                                     <button onclick="toggle(@item.Id)" class="btn  align-text-top" data-bs-boundary="viewport">toggle</button>
+
                                 </span>
                             </td>
                         </tr>
+
                     }
                 </tbody>
             </table>
@@ -68,29 +75,18 @@
 <div class="modal" id="exampleModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div id='myModalContent' class="card p-3 bg-white"></div>
+            <div id='myModalContent' class="card"></div>
         </div>
     </div>
 
 </div>
-
-
-
 <div class="modal modal-blur fade " id="exampleModal2">
     <div class="modal-dialog">
         <div class="modal-content">
             <div id='myModalContent2' class="card"></div>
         </div>
     </div>
-
 </div>
-
-
-
-
-
-
-
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -99,7 +95,7 @@
             <div class="modal-body text-center py-4">
                 <!-- Download SVG icon from http://tabler-icons.io/i/circle-check -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
-                <h3>Product Added Successfully!</h3>
+                <h3>News Added Successfully!</h3>
 
             </div>
             <div class="modal-footer">
@@ -111,8 +107,8 @@
                             </a>
                         </div>
                         <div class="col">
-                            <a asp-action="GetAllProducts" asp-controller="Product" asp-route-page_number="1" class="btn btn-success w-100" data-bs-dismiss="modal">
-                                Go To All Products
+                            <a asp-action="GetAllNews" asp-controller="News" class="btn btn-success w-100" data-bs-dismiss="modal">
+                                Go To All News
                             </a>
                         </div>
                     </div>
@@ -122,24 +118,20 @@
     </div>
 </div>
 @section Scripts {
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-
-
     <script type="text/javascript">
-        $(document).ready(function () { 
+        $(document).ready(function () { //execute ajax after html elements have been rendered
             $('#TblInfo').DataTable({
                 "paging": true,
-                 columnDefs: [
+                columnDefs: [
                     {
                         targets: -1,
                         className: 'table-borderless'
                     }
-                     ]
+                ]
             });
-           
+
         });
 
         function toggle(itemid) {
@@ -147,12 +139,10 @@
                 $.ajax(
                     {
                         type: "GET",
-                        url: "/Product/ChangeProductStatusById",
-                        data: { "productId": itemid },
+                        url: "/News/ChangeNewsStatusById",
+                        data: { "NewsId": itemid },
                         success: function (result) {
                             console.log(result);
-
-
                             document.getElementById(itemid).innerHTML = result;
 
                         }
@@ -166,9 +156,9 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/Product/Details/${itemid}",
+                    url: "/News/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
-                    data: { "productId": itemid },
+                    data: { "NewsId": itemid },
                     datatype: "json",
 
                     success: function (data) {
@@ -184,21 +174,17 @@
                 });
             }
         }
-
         function modaladd() {
-
-
             var options = { "backdrop": "static", keyboard: true };
             $.ajax({
-              
                 type: "GET",
-                url: "/Product/AddNewProduct",
+                url: "/News/AddNewNews",
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
 
                 success: function (data) {
-                    debugger
-                    $('#myModalContent2').html(data); //modal
+
+                    $('#myModalContent2').html(data);
                     $('#myModal').modal(options);
                     $('#exampleModal2').modal('show');
 
@@ -207,24 +193,13 @@
                     alert("Dynamic content load failed.");
                 }
             });
-
-
         }
-
-
-  $(function () {
-
+       $(function () {
             var success = '@TempData["Success"]';
             console.log(success);
             if (success == "true") {
-
-              
                 $('#modal-success').modal('show');
             }
         })
-
-
-      
     </script>
-
 }
