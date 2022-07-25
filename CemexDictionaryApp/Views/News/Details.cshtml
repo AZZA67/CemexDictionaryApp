@@ -1,35 +1,37 @@
-﻿@{
-    Layout = null;
-}
-@model CemexDictionaryApp.Models.News
+﻿@model CemexDictionaryApp.Models.News
 
-<div class="d-flex justify-content-center container mt-5">
-    <div class="card p-3 bg-white">
-        <i class="fa fa-apple"></i>
-        <div class="about-product text-center mt-2">
-            <img src="~/images/@Url.Content(@Model.Image)" width="300">
-            <div>
-                <h4>Product No. @Model.Id Details</h4>
-
+    <div class="d-flex justify-content-center container mt-5">
+        <div class="card p-3 bg-white">
+            <div class="about-product text-center mt-2">
+                <img src="~/images/News/@Url.Content(@Model.Image)" width="300">
+                <br />
+                <div>
+                    <h4>News # : @Model.Id </h4>
+                </div>
             </div>
+            <div class="stats mt-2">
+                 
+                <div class="d-flex justify-content-between p-price">
+                     <span>Title</span>
+                     <span>@Model.Title</span>
+                 </div>
+            
+                 <div class="d-flex justify-content-between p-price">
+                     <span>Description</span>
+                     <span>@Model.Description</span>
+                 </div>
+
+            <div class="d-flex justify-content-between p-price">
+                <span>Status</span>
+                <span>@Model.Status</span>
+            </div>
+            
+            </div>   
+                <br />
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>
         </div>
-        <div class="stats mt-2">
-            <div class="d-flex justify-content-between p-price"><span>Title</span><span>@Model.Title</span></div>
-            <div class="d-flex justify-content-between p-price"><span>Description</span><span>@Model.Description</span></div>
-            <div class="d-flex justify-content-between p-price"><span>Status</span><span>@Model.Status</span></div>
-        </div>
-        
     </div>
-</div>
-
-
-
-
-
-
-
-
-
+    <br />
 
 
 

@@ -1,39 +1,41 @@
 ﻿@model CemexDictionaryApp.Models.Product
 
-
-
-
-
-
-
     <div class="d-flex justify-content-center container mt-5">
         <div class="card p-3 bg-white">
-            <i class="fa fa-apple"></i>
             <div class="about-product text-center mt-2">
-                <img src="~/images/@Url.Content(@Model.Image)" width="300">
+                <img src="~/images/Products/@Url.Content(@Model.Image)" width="300">
+                <br />
                 <div>
-                    <h4>Product No. @Model.Id Details</h4>
-                
+                    <h4>Product# : @Model.Id </h4>
                 </div>
             </div>
             <div class="stats mt-2">
-                <div class="d-flex justify-content-between p-price"><span>Name</span><span>@Model.Name</span></div>
-                <div class="d-flex justify-content-between p-price"><span>Description</span><span>@Model.Description</span></div>
-                <div class="d-flex justify-content-between p-price"><span>Status</span><span>@Model.Status</span></div>
-            </div>
-            <div class="d-flex justify-content-between total font-weight-bold mt-4"><span>Type</span><span>@Model.Type</span></div>
+                <div class="d-flex justify-content-between p-price">
+                    <span>Name</span>
+                    <span>@Model.Name</span>
+                </div>
+                 
+                <div class="d-flex justify-content-between p-price">
+                    <span>Type</span>
+                    <span>@Model.Type</span>
+                </div>
+                
+                <div class="d-flex justify-content-between p-price">
+                    <span>Status</span>
+                    <span>@Model.Status</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span>Description</span>
+                    <span>@Model.Description</span>
+                </div>
+            
+            </div>   
+                <br />
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
+        <br />
 
 
 
