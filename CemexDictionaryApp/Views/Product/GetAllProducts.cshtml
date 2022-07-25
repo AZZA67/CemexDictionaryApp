@@ -1,80 +1,172 @@
 ﻿@model List<CemexDictionaryApp.Models.Product>
-@*@TempData["Success"]*@
-<div class="col-12">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Products</h3>
-        </div>
-        <div class="card-body border-bottom py-3">
-            <div class="d-flex">
-                <a style="margin-left:50px" onclick="modaladd()" class="btn btn-primary d-none d-sm-inline-block">
-                    Add New Product
-                </a>
-            </div>
-        </div>
-        <div class="table-responsive">
 
-            <table id="TblInfo" class="table card-table table-vcenter text-nowrap table-borderless ">
-                <thead>
-                    <tr>
-                        <th>Product No.</th>
-                        <th>Name </th>
-                        <th> Image</th>
-                        <th>Description</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                        <th>Change Status</th>
+            <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <!-- Page pre-title -->
+                            <div class="page-pretitle">
+                                Overview
+                            </div>
+                            <h2 class="page-title">
+                                       Products
+                            </h2>
+                        </div>
+                        <!-- Page title actions -->
+                        <div class="col-12 col-md-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                       @*         <span class="d-none d-sm-inline">
+                                    <a href="#" class="btn btn-white">
+                                        New view
+                                    </a>
+                                </span>*@
+                                <a href="#" class="btn btn-primary d-none d-sm-inline-block" @*data-bs-toggle="modal" data-bs-target="#modal-report"*@  onclick="modaladd()">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                     Add Product
+                                </a>
+                                <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <br />
+
+                          <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-easel3" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8.5 13.134V12h5a1.5 1.5 0 0 0 1.5-1.5V2h.5a.5.5 0 0 0 0-1H.5a.5.5 0 0 0 0 1H1v8.5A1.5 1.5 0 0 0 2.5 12h5v1.134a1 1 0 1 0 1 0ZM2 2v8.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V2H2Z"/></svg> |  Products
+
+                    </h3>
+                  </div>
+@*                  <div class="card-body border-bottom py-3">
+                    <div class="d-flex">
+                      <div class="text-muted">
+                        Show
+                        <div class="mx-2 d-inline-block">
+                          <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                        </div>
+                        entries
+                      </div>
+                      <div class="ms-auto text-muted">
+                        Search:
+                        <div class="ms-2 d-inline-block">
+                          <input type="text" class="form-control form-control-sm" aria-label="Search invoice">
+                        </div>
+                      </div>
+                    </div>
+                  </div>*@
+                  <div class="card-header">
+                  <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap datatable" id="TblInfo">
+                      <thead>
+                       <tr style="vertical-align:central; text-align:center">
+                        <th style="vertical-align:central; text-align:center">Product No.</th>
+                        <th style="vertical-align:central; text-align:center"> Name </th>
+                        <th style="vertical-align:central; text-align:center"> Image</th>
+                        <th style="vertical-align:central; text-align:center">Description</th>
+                        <th style="vertical-align:central; text-align:center">Type</th>
+                        <th style="vertical-align:central; text-align:center">Status</th>
+                        <th style="vertical-align:central; text-align:center">Details</th>
+                        <th style="vertical-align:central; text-align:center">Change Status</th>
                     </tr>
-                </thead>
-                <tbody>
+                      </thead>
+                      <tbody>
                     @foreach (Product item in Model)
                     {
-                        <tr>
-                            <td><span class="text-muted">@item.Id </span></td>
-                            <td><a href="invoice.html" class="text-reset" tabindex="-1">@item.Name</a></td>
-                            <td data-label="Name">
-                                <div class="d-flex py-1 align-items-center">
-                                    <Img class="avatar me-2" src="~/images/@item.Image">
-                                </div>
+                        <tr style="vertical-align:central; text-align:center">
+                            <td style="vertical-align:central; text-align:center"><span class="text-muted">@item.Id </span></td>
+                            <td style="vertical-align:central; text-align:center"><a href="invoice.html" class="text-reset" tabindex="-1">@item.Name</a></td>
+                            <td style="vertical-align:central; text-align:center" data-label="Name">
+                                           <Img class="avatar me-2" src="~/images/Products/@item.Image"  style="vertical-align:central; text-align:center">
+                           @*     <div class="d-flex py-1 align-items-center">
+                         
+                                </div>*@
                             </td>
-                            <td>
+                            <td style="vertical-align:central; text-align:center">
                                 @item.Description
                             </td>
-
-                            <td>
+                            <td style="vertical-align:central; text-align:center">
                                 @item.Type
                             </td>
-                            <td id="@item.Id">
-                                <span class="badge bg-success me-1"></span> @item.Status
-                            </td>
-                            <td>
+                            <td id="@item.Id" style="vertical-align:central; text-align:center">
+                                       @if(item.Status=="Active")
+                                    {
+                                       <span class="badge bg-success me-1"></span> @item.Status
+                                    }
+                                    else
+                                    {
+                                       <span class="badge bg-danger me-1"></span> @item.Status
+                                    }
+                                 
+
+                                </td>
+
+                            <td style="vertical-align:central; text-align:center">
                                 <span class="text-muted">
                                     <button onclick="modal(@item.Id)" class="btn align-text-top" id="details" data-id="@item.Id" data-bs-boundary="viewport">Details</button>
                                 </span>
                             </td>
-                            <td>
+                            <td style="vertical-align:central; text-align:center">
                                 <span class="text-end">
-                                    <button onclick="toggle(@item.Id)" class="btn  align-text-top" data-bs-boundary="viewport">toggle</button>
+                                    <button onclick="toggle(@item.Id)" class="btn  align-text-top" data-bs-boundary="viewport">Toggle</button>
                                 </span>
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                      </tbody>
+                    </table>
+                  </div>
+                  </div>
+@*                  <div class="card-footer d-flex align-items-center">
+                    <p class="m-0 text-muted">Showing <span>1</span> to <span>8</span> of <span>16</span> entries</p>
+                    <ul class="pagination m-0 ms-auto">
+                      <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                          <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                          prev
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">4</a></li>
+                      <li class="page-item"><a class="page-link" href="#">5</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">
+                          next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>*@
+                </div>
+              </div>
+
+
+
+@*@TempData["Success"]*@
+
+
 <div class="modal" id="exampleModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div id='myModalContent' class="card p-3 bg-white"></div>
         </div>
     </div>
-
 </div>
-
-
 
 <div class="modal modal-blur fade " id="exampleModal2">
     <div class="modal-dialog">
@@ -82,13 +174,7 @@
             <div id='myModalContent2' class="card"></div>
         </div>
     </div>
-
 </div>
-
-
-
-
-
 
 
 <div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
@@ -100,7 +186,6 @@
                 <!-- Download SVG icon from http://tabler-icons.io/i/circle-check -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
                 <h3>Product Added Successfully!</h3>
-
             </div>
             <div class="modal-footer">
                 <div class="w-100">
@@ -121,6 +206,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -151,10 +237,7 @@
                         data: { "productId": itemid },
                         success: function (result) {
                             console.log(result);
-
-
                             document.getElementById(itemid).innerHTML = result;
-
                         }
                     }
                 );

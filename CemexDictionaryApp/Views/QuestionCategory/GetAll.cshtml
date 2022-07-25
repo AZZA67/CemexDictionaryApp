@@ -1,44 +1,95 @@
 ﻿@model List<QuestionCategory>
 
-@*@TempData["Success"]*@
+                <div class="page-wrapper">
+            <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <!-- Page pre-title -->
+                            <div class="page-pretitle">
+                                Overview
+                            </div>
+                            <h2 class="page-title">
+                                       Question Categories
+                            </h2>
+                        </div>
+                        <!-- Page title actions -->
+                        <div class="col-12 col-md-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                       @*         <span class="d-none d-sm-inline">
+                                    <a href="#" class="btn btn-white">
+                                        New view
+                                    </a>
+                                </span>*@
+                                <a href="#" class="btn btn-primary d-none d-sm-inline-block" @*data-bs-toggle="modal" data-bs-target="#modal-report"*@  onclick="modaladd()">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                     Add Category
+                                </a>
+                                <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <br />
+
+
+
+
+
+
+
+
+
+
+
 <div class="col-12">
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Categories</h3>
         </div>
-        <div class="card-body border-bottom py-3">
+@*        <div class="card-body border-bottom py-3">
             <div class="d-flex">
                 <a style="margin-left:50px" onclick="modaladd()" class="btn btn-primary d-none d-sm-inline-block">
                     Add New Category
                 </a>
 
             </div>
-        </div>
+        </div>*@
+        <div class="card-header">
         <div class="table-responsive">
-
             <table id="TblInfo" class="table card-table table-vcenter text-nowrap table-borderless ">
                 <thead>
-                    <tr>
-                        <th>Category No.</th>
-                        <th>Name </th>
-                        <th> الأسم </th>
+                      <tr style="vertical-align:central; text-align:center">
+                         <th style="vertical-align:central; text-align:center"> Category No.</th>
+                         <th style="vertical-align:central; text-align:center">Name </th>
+                         <th style="vertical-align:central; text-align:center"> الأسم </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (QuestionCategory item in Model)
                     {
                         <tr>
-                            <td><span class="text-muted">@item.Id </span></td>
-                            <td>@item.Name</td>
-                            <td>@item.الأسم</td>
+                             <td style="vertical-align:central; text-align:center"><span class="text-muted">@item.Id </span></td>
+                             <td style="vertical-align:central; text-align:center"> @item.Name</td>
+                             <td style="vertical-align:central; text-align:center"> @item.الأسم</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-
+        </div>
     </div>
 </div>
+
+
 <div class="modal modal-blur fade " id="exampleModal2">
     <div class="modal-dialog">
         <div class="modal-content">
