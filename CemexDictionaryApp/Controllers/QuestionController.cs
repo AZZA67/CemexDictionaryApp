@@ -18,7 +18,7 @@ namespace CemexDictionaryApp.Controllers
         IQuestionCategoryRepository QuestionCategoryRepository;
         IQuestionRepository QuestionRepository;
         private UserManager<ApplicationUser> userManager;
-        private SignInManager<ApplicationUser> signInManager;
+        //private SignInManager<ApplicationUser> signInManager;
         IMediaRepository mediaRepository;
         IQuestionPerCategoryRepository questionPerCategoryRepository;
 
@@ -34,8 +34,10 @@ namespace CemexDictionaryApp.Controllers
       /*  private async Task<ApplicationUser> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);*/
         public IActionResult GetAll()
         {
-            List<Question> Questions = QuestionRepository.GetAll();
-            return View(Questions);
+            List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
+            ViewData["Categories"] = categories;
+            //List<Question> Questions = QuestionRepository.GetAll();
+            return View();
         }
 
 
@@ -50,19 +52,16 @@ namespace CemexDictionaryApp.Controllers
             ViewData["Categories"] = categories;
             return View();
         }
-
-        //[HttpGet]
-        //public IActionResult Existing_Images()
-        //{
-            
-        //    List<Media> images = mediaRepository.GetAll_uploaded_photos();
-          
-        //    ViewData["Images"] = images;
-
-        //    return PartialView();
-        //}
-
-
+        public int OrderResult(Question _question, string Keyword)
+        {
+            return _question.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries).
+                Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                , StringComparer.OrdinalIgnoreCase).Count()
+                + _question.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count()
+              + _question.Tags.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+              .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count();
+        }
         public List<string> i=new List<string>();
         public void Add(IEnumerable<string>images)
         {
@@ -139,5 +138,43 @@ namespace CemexDictionaryApp.Controllers
                 return View("AddNewQuestion");
             }
         }
+
+
+        public IActionResult Search( SearchViewModel search_viewmodel)
+        {
+            if (search_viewmodel.SearchKeyword != null)
+            {
+                var searchresult = QuestionRepository.Search(search_viewmodel.SearchKeyword, search_viewmodel.Selected_categories);
+                ViewBag.searchresult = searchresult.ToList();
+            }
+            var categories = QuestionCategoryRepository.GetAll();
+            ViewBag.cat = categories;
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach (var item in categories)
+            {
+                items.Add(new SelectListItem() { Text = item.Name, Value = item.Id.ToString() });
+            }
+            ViewBag.categories = items;
+
+            return View("SearchResult");
+        }
+        public IActionResult Searchquestions(string SearchKeyword)
+        {
+            if (SearchKeyword != null)
+            {
+                var searchresult = QuestionRepository.Search(SearchKeyword, null);
+                ViewBag.searchresult = searchresult.ToList();
+            }
+            var categories = QuestionCategoryRepository.GetAll();
+            ViewBag.cat = categories;
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach (var item in categories)
+            {
+                items.Add(new SelectListItem() { Text = item.Name, Value = item.Id.ToString() });
+            }
+            ViewBag.cats = items;
+            return View("SearchResult");
+        }
+
     }
 }

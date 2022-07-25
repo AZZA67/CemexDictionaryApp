@@ -6,7 +6,7 @@
     //data - bs - toggle = "modal" data - bs - target = "#modal-success"
 }
 <div class="card">
-    <div class="card-header">
+    <div class="card-header"> 
         <h3 class="card-title">Post A Question</h3>
     </div>
     <div class="card-body">
@@ -137,7 +137,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <div class="mb-3">
                     <label class="form-label">Image Check</label>
                     <div class="row g-2">
@@ -201,6 +200,7 @@
                     this.value = "";
                 },
                 keyup: function (ev) {
+
                     // if: comma|enter (delimit more keyCodes with | pipe)
                     if (/(188|13)/.test(ev.which)) {
                         ev.preventDefault();
@@ -214,10 +214,6 @@
             });
 
         });
-
-
-
-
         $(document).ready(function () {
             if (window.File && window.FileList && window.FileReader) {
                 $(".files").on("change", function (e) {
@@ -236,8 +232,6 @@
                             $(".remove").click(function () {
                                 $(this).parent(".pip").remove();
                             });
-
-
                         });
                         fileReader.readAsDataURL(f);
                     }
@@ -246,7 +240,6 @@
                 alert("Your browser doesn't support to File API")
             }
         });
-
         var array = [];
         function add(image, check) {
 
@@ -263,12 +256,9 @@
 
                 check.checked = false;
                 console.log("hi");
-
             }
             console.log(image, check);
-
         }
-
         function save() {
             console.log(array);
             $.ajax({
@@ -276,7 +266,6 @@
                 url: "/Question/Add/${array}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
-
                 data: { "images": array },
                 datatype: "json",
             });
@@ -291,9 +280,6 @@
                 }
             });
         });
-
-
-
         function modaladd() {
             $('#modal-scrollable').modal('show');
         }

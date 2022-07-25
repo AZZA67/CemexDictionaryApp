@@ -15,35 +15,85 @@ namespace CemexDictionaryApp.Repositories
     {
         DBContext context;
         private readonly IWebHostEnvironment hostEnvironment;
-
         public QuestionRepository(DBContext _context, IWebHostEnvironment _hostEnvironment)
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
 
         }
-
         public List<Question> GetAll()
         {
             List<Question> Questions = context.Questions.Include(question => question.QuestionMedia).
                 ToList();
             return Questions;
         }
-
-     
-
-
-
-        public List<Question> GetAllByCategoryId(int _categoryId)
+        bool FilterExpression(Question _question, string Keyword)
         {
-            List<Question> Questions = context.Questions.
-                Include(Question => Question.Question_category).
-                Where(Question_category => Question_category.ID == _categoryId)
-                .Include(Question => Question.Question_category).
-                Include(question => question.QuestionMedia)
-                .ToList();
+            return _question.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                       .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries),
+                       StringComparer.OrdinalIgnoreCase).Count() > 0 ||
+                       _question.Answer.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                      .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries),
+                      StringComparer.OrdinalIgnoreCase).Count() > 0 ||
+                      _question.Tags.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                    .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries),
+                    StringComparer.OrdinalIgnoreCase).Count() > 0 ||
+                    _question.Text.Contains(Keyword, StringComparison.OrdinalIgnoreCase)
+                    || _question.Answer.Contains(Keyword, StringComparison.OrdinalIgnoreCase)
+                    || _question.Tags.Contains(Keyword, StringComparison.OrdinalIgnoreCase);
+
+        }
+        public int OrderResult(Question q, string Keyword)
+        {
+            return q.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries).
+                Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                , StringComparer.OrdinalIgnoreCase).Count()
+                + q.Answer.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count()
+              + q.Tags.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+              .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count();
+        }
+        public IEnumerable<Question> Search(string Keyword, int[] categories)
+        {
+            if (categories != null)
+            {
+                string[] keywords = Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+                var QuestionsWithCategories = context.Questions
+                    .Where(q => q.TopQuestion == true && q.Question_category.Any(c => categories.Contains(c.CategoryId)));
+                var FilteredQuestionwithcategories = QuestionsWithCategories.ToList()
+                    .Where(q => FilterExpression(q, Keyword)).OrderByDescending(q => OrderResult(q, Keyword));
+                if (FilteredQuestionwithcategories.Count() > 0)
+                {
+                    return FilteredQuestionwithcategories;
+                }
+                return QuestionsWithCategories;
+            }
+            else
+            {
+                //  DateTime now = DateTime.Now;
+                var result = context.Questions.Where(q => q.TopQuestion == true).ToList().Where(q => FilterExpression(q, Keyword))
+                    .OrderByDescending(q => OrderResult(q, Keyword));
+                //var timetaked = ((DateTime.Now - now)).TotalSeconds;
+                return result;
+
+            }
+        }
+
+        public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
+        {
+            List<QuestionPerCategory> Questions = context.questionPerCategories.Where(questionpercategory => questionpercategory.CategoryId == _categoryId)
+                .Include(questionpercategory => questionpercategory.question).
+                ThenInclude(question => question.QuestionMedia).ToList();
+            //List<Question> Questions = context.Questions.
+            //    Include(Question => Question.Question_category
+            //    .Where(Question_category => Question_category.CategoryId == _categoryId))
+
+            //    .Include(question => question.QuestionMedia)
+            //    .ToList();
             return Questions;
         }
+
         public List<string> UploadFile(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();
@@ -53,9 +103,8 @@ namespace CemexDictionaryApp.Repositories
             {
                 if (formFile.Length > 0)
                 {
-
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
-                    images.Add( Guid.NewGuid().ToString() + "_" + formFile.FileName);
+                    images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
                     string path = Path.Combine(uploadsFolder + @"\images\Questions\", images[count]);
                     count++;
                     using (var fileStream = new FileStream(path, FileMode.Create))
@@ -64,15 +113,14 @@ namespace CemexDictionaryApp.Repositories
                     }
                 }
             }
-
             return images;
-
         }
+
         public int Insert(Question question)
         {
             context.Questions.Add(question);
             return context.SaveChanges();
-        }    
+        }
         public Question GetById(int QuestionId)
         {
             Question question = context.Questions.Include(question => question.QuestionMedia).
