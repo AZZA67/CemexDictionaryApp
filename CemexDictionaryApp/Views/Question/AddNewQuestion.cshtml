@@ -10,7 +10,7 @@
         <h3 class="card-title">Post A Question</h3>
     </div>
     <div class="card-body">
-        <form asp-action="AddNewQuestion" asp-controller="Question" method="post" enctype="multipart/form-data">
+        <form id="form" asp-action="AddNewQuestion" asp-controller="Question" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group mb-3 ">
@@ -29,18 +29,17 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group mb-3 " id="tags">
-                        <label asp-for="Tags" class="form-label"> Add Tags</label>
-                        <input asp-for="Tags"   class="form-control" placeholder="Enter Question Tags">
+                    <div class="row">
+                        <div class="form-group mb-3 " id="tags">
+                            <label asp-for="Tags" class="form-label"> Add Tags</label>
+                            <input asp-for="Tags" class="form-control" placeholder="Enter Question Tags">
+                        </div>
+                           
+                        
                     </div>
-                   
 
 
                     <div class="form-group mb-3 ">
-
-                        @*<label class="form-label"> Select Question Category</label>*@
-
                         <div class="d-flex justify-content-center align-items-center w-100">
                             <div class="inline w-100 field">
 
@@ -50,8 +49,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="form-selectgroup-boxes row mb-3">
                         <div class="col-lg-6">
                             <label class="form-selectgroup-item">
@@ -88,8 +85,6 @@
                             </div>
 
                         </div>
-
-                     
                     </div>
                     <div class="form-group mb-3 ">
                         <label asp-for="Videos_URLs" class="form-label">URL</label>
@@ -97,14 +92,10 @@
                             <input asp-for="Videos_URLs" class="form-control" placeholder="Enter Video URL">
                         </div>
                     </div>
-
-    
-
                 </div>
 
-
                 <div class="form-footer">
-                    <button type="submit" class="btn btn-primary" onsubmit="map()">Submit</button>
+                    <button id="submit" class="btn btn-primary" type="submit"  >Submit</button>
                 </div>
             </div>
         </form>
@@ -146,7 +137,7 @@
                                 <label class="form-imagecheck mb-2">
                                     <input onclick="add('@image.Path', this)" type="checkbox" class="form-imagecheck-input" value="@image.Path" />
                                     <span class="form-imagecheck-figure">
-                                        <img src="~/images/@image.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                        <img src="~/images/Questions/@image.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
                                     </span>
 
                                 </label>
@@ -164,13 +155,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
 @section scripts
     {
     <link href="~/Tags/Tags.css" rel="stylesheet" />
@@ -188,32 +172,75 @@
     <script src="~/Multiselect/js/main.js"></script>
     <script>
 
-
+        var tagss = [];
         $(function () { // DOM ready
 
             // ::: TAGS BOX
 
+         
             $("#tags input").on({
+
                 focusout: function () {
                     var txt = this.value.replace(/[^a-z0-9\+\-\.\#]/ig, ''); // allowed characters
-                    if (txt) $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
+                    if (txt) {
+                        $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
+                        add_tag(txt);
+                        console.log(tagss);
+                        console.log(txt);
+                    }
+                       
                     this.value = "";
                 },
                 keyup: function (ev) {
 
                     // if: comma|enter (delimit more keyCodes with | pipe)
                     if (/(188|13)/.test(ev.which)) {
-                        ev.preventDefault();
+                     
                         $(this).focusout();
                     }
 
                 }
             });
             $('#tags').on('click', 'span', function () {
-                if (confirm("Remove " + $(this).text() + "?")) $(this).remove();
+                if (confirm("Remove " + $(this).text() + "?")) {
+
+
+                    $(this).remove();
+                    console.log($(this).text());
+                    remove_tag($(this).text());
+
+                }
+            });
+        });
+        function add_tag(txt) {
+           
+            $.ajax({
+
+                url: "/Question/add_Tag/${txt}",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                data: { "new_tag": txt },
+                datatype: "json",
+               
+            });
+           
+        }
+
+        function remove_tag(txt) {
+
+            $.ajax({
+
+                url: "/Question/remove_Tag/${txt}",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                data: { "removed_tag": txt },
+                datatype: "json",
+
             });
 
-        });
+        }
+
+
         $(document).ready(function () {
             if (window.File && window.FileList && window.FileReader) {
                 $(".files").on("change", function (e) {

@@ -5,14 +5,7 @@
 @model NewsViewModel
 
 
-<form id="form1" asp-action="AddNewNews" enctype="multipart/form-data" asp-controller="News" class="card card-md">
-    <div class="modal-dialog modal-lg modal-dialog-centered w-100" role="document">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">New News</h5>
-                <a asp-action="GetAllNews" asp-controller="News"  type="button" class="btn-close" aria-label="Close"></a>
-            </div>
+<form id="form1" asp-action="AddNewNews" enctype="multipart/form-data" asp-controller="News" >
             <div class="modal-body">
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label">Title</label>
@@ -25,7 +18,7 @@
                     </div>
                 </div>
 
-                <div class="modal-body">
+               
                     <div class="row">
                         <div class="col-lg-12">
                             <div>
@@ -34,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+               
                 <div class="modal-footer">
 
                     <a asp-action="GetAllNews" asp-controller="News" class="btn btn-link link-secondary ">Cancel</a>
@@ -44,8 +37,7 @@
                 </div>
 
             </div>
-        </div>
-    </div>
+      
  
 
 </form>

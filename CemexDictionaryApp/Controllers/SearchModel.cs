@@ -10,6 +10,7 @@ namespace CemexDictionary.Models
     {
         [Required]
         public string SearchKeyword { get; set; }
-        public int[] categories { get; set; }
+        public int[] categories { get; set; } 
     }
 }
+

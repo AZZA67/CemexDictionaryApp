@@ -21,22 +21,31 @@ namespace CemexDictionaryApp.Controllers
         //private SignInManager<ApplicationUser> signInManager;
         IMediaRepository mediaRepository;
         IQuestionPerCategoryRepository questionPerCategoryRepository;
+        ICustomerQuestionMediaRepository CustomerQuestionMedia;
 
-        public QuestionController(IQuestionPerCategoryRepository _questionPerCategoryRepository,IMediaRepository _mediaRepository, UserManager<ApplicationUser> _userManager,IQuestionCategoryRepository _questionCategoryRepository, IQuestionRepository _questionRepository)
+        ICustomerQuistionsRepository Customer_QuestionRepository;
+        public QuestionController(IQuestionPerCategoryRepository _questionPerCategoryRepository,
+            IMediaRepository _mediaRepository, UserManager<ApplicationUser> _userManager,
+            IQuestionCategoryRepository _questionCategoryRepository,
+            IQuestionRepository _questionRepository,
+            ICustomerQuistionsRepository _customer_QuestionRepository,
+             ICustomerQuestionMediaRepository _customerQuestionMedia
+            )
         {
+            CustomerQuestionMedia = _customerQuestionMedia;
             QuestionCategoryRepository = _questionCategoryRepository;
             QuestionRepository = _questionRepository;
             userManager = _userManager;
             mediaRepository = _mediaRepository;
             questionPerCategoryRepository = _questionPerCategoryRepository;
+            Customer_QuestionRepository = _customer_QuestionRepository;
         }
 
-      /*  private async Task<ApplicationUser> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);*/
+
         public IActionResult GetAll()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
             ViewData["Categories"] = categories;
-            //List<Question> Questions = QuestionRepository.GetAll();
             return View();
         }
 
@@ -45,7 +54,7 @@ namespace CemexDictionaryApp.Controllers
         public IActionResult AddNewQuestion()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
-            //ViewBag.Categories = new MultiSelectList(categories, "Id", "Name");
+     
             List<Media> images = mediaRepository.GetAll_uploaded_photos();
           
             ViewData["Images"] = images;
@@ -62,31 +71,42 @@ namespace CemexDictionaryApp.Controllers
               + _question.Tags.Split(" ", StringSplitOptions.RemoveEmptyEntries)
               .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count();
         }
+
         public List<string> i=new List<string>();
-        public void Add(IEnumerable<string>images)
+        public void Add(IEnumerable<string> images)
         {
-            //List<string> images = new List<string>();
-            //images.Add(imagepath);
+           
             TempData["selectedImages"] = images;
-            }
-            [HttpPost]
+        }
+
+
+        private static readonly List<string> tags = new List<string>();
+        public void add_Tag(string  new_tag) 
+        {
+            tags.Add(new_tag);
+        }
+
+        public void remove_Tag(string removed_tag)
+        {
+            tags.Remove(removed_tag);
+        }
+        [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
-            if (ModelState.IsValid && ((photos.Count<=3 && TempData["selectedImages"]==null) ||
-                (((IEnumerable<string>)TempData["selectedImages"]).Count()<=3 && photos.Count ==0)))
+            if (ModelState.IsValid && 
+                ((IEnumerable<string>)TempData["selectedImages"]).Count() + photos.Count() <=3 )
             {
                 Question question = new Question();
                 question.Text= questionViewModel.Text;
                 question.Answer = questionViewModel.Answer;
-                question.Tags = questionViewModel.Tags;
-                question.SubmitTime = DateTime.Now; //askkk
+                question.Tags = string.Join(",", tags);
+                question.SubmitTime = DateTime.Now; 
                 question.AdminId = userManager.GetUserId(HttpContext.User);
                 question.TopQuestion = questionViewModel.TopQuestion;
                 QuestionRepository.Insert(question);
                 if (photos != null)
                 {
                     List<string> images = QuestionRepository.UploadFile(photos);
-           
                     foreach (var item in images)
                     {
                         Media media = new Media();
@@ -139,41 +159,100 @@ namespace CemexDictionaryApp.Controllers
             }
         }
 
-
         public IActionResult Search( SearchViewModel search_viewmodel)
         {
             if (search_viewmodel.SearchKeyword != null)
             {
                 var searchresult = QuestionRepository.Search(search_viewmodel.SearchKeyword, search_viewmodel.Selected_categories);
                 ViewBag.searchresult = searchresult.ToList();
+                TempData["searchResult"] = searchresult.ToList();
             }
             var categories = QuestionCategoryRepository.GetAll();
-            ViewBag.cat = categories;
-            List<SelectListItem> items = new List<SelectListItem>();
-            foreach (var item in categories)
-            {
-                items.Add(new SelectListItem() { Text = item.Name, Value = item.Id.ToString() });
-            }
-            ViewBag.categories = items;
-
-            return View("SearchResult");
+            ViewBag.Categories = categories;
+            return View("GetAll");
         }
+
         public IActionResult Searchquestions(string SearchKeyword)
-        {
+       {
             if (SearchKeyword != null)
             {
                 var searchresult = QuestionRepository.Search(SearchKeyword, null);
                 ViewBag.searchresult = searchresult.ToList();
+                TempData["searchResult"] = searchresult.ToList();
             }
             var categories = QuestionCategoryRepository.GetAll();
-            ViewBag.cat = categories;
-            List<SelectListItem> items = new List<SelectListItem>();
-            foreach (var item in categories)
+            ViewBag.Categories = categories;
+            TempData["searchKeyWord"] = SearchKeyword;
+            return View("GetAll");
+        }
+
+        public IActionResult Details(int QuestionId)
+        {
+            Question question = QuestionRepository.GetById(QuestionId);
+            return PartialView("Details", question);
+        }
+
+        [HttpGet]
+        public IActionResult AnswerQuestion(int questionId)
+        {
+            CustomerQuestions question = Customer_QuestionRepository.GetById(questionId);
+
+
+            return View("AnswerQuestion", question);
+        }
+        [HttpPost]
+        public IActionResult AnswerQuestion(CustomerQuestions question,List<IFormFile>photos, string videoURL)
+        {
+            if (ModelState.IsValid)
             {
-                items.Add(new SelectListItem() { Text = item.Name, Value = item.Id.ToString() });
+                question.AdminId= userManager.GetUserId(HttpContext.User);
+                if (photos != null)
+                {
+                    List<string> images = Customer_QuestionRepository.UploadImagesByAdmin(photos);
+                    foreach (var item in images)
+                    {
+                        CustomerQuestionMedia media = new CustomerQuestionMedia();
+                        media.Path = item;
+                        media.Type = MediaTypes.Image.ToString();
+                        media.QuestionId = question.ID;
+                        media.UserId= userManager.GetUserId(HttpContext.User);
+                        CustomerQuestionMedia.Insert(media);
+                    }
+
+                }
+
+                if (TempData["selectedImages"] != null)
+                {
+                    IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
+                    foreach (var item in existing_images)
+                    {
+                        CustomerQuestionMedia media = new CustomerQuestionMedia();
+                        media.Path = item;
+                        media.Type = MediaTypes.Image.ToString();
+                        media.QuestionId = question.ID;
+                        media.UserId = userManager.GetUserId(HttpContext.User);
+                        CustomerQuestionMedia.Insert(media);
+                    }
+                }
+
+                if (videoURL != null)
+                {
+                        CustomerQuestionMedia media = new CustomerQuestionMedia();
+                        media.Path = videoURL;
+                        media.Type = MediaTypes.Video.ToString();
+                        media.QuestionId = question.ID;
+                        CustomerQuestionMedia.Insert(media);
+                        
+                }
             }
-            ViewBag.cats = items;
-            return View("SearchResult");
+            return View("GetAll");
+        }
+
+
+        public IActionResult RejectQuestion(int questionId,string comment)
+        {
+            int x = Customer_QuestionRepository.RejectQuestion(questionId, comment);
+            return NoContent();
         }
 
     }

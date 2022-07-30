@@ -87,6 +87,79 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.CustomerQuestionMedia", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CustomerQuestionMedias");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.CustomerQuestions", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SubmitTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AdminId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("customer_Questions");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.Media", b =>
                 {
                     b.Property<int>("Id")
@@ -433,12 +506,52 @@ namespace CemexDictionaryApp.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CemexDictionaryApp.Models.CustomerQuestionMedia", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.CustomerQuestions", "question")
+                        .WithMany("QuestionMedia")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("question");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.CustomerQuestions", b =>
+                {
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
+                    b.HasOne("CemexDictionaryApp.Models.QuestionCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Admin");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CemexDictionaryApp.Models.Media", b =>
                 {
                     b.HasOne("CemexDictionaryApp.Models.Question", "question")
                         .WithMany("QuestionMedia")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("question");
@@ -449,7 +562,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.News", "news")
                         .WithMany("NewsLogs")
                         .HasForeignKey("NewId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -466,7 +579,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ProductType", "productType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("productType");
@@ -477,7 +590,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.Product", "Product")
                         .WithMany("ProductLogs")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -503,13 +616,13 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.QuestionCategory", "category")
                         .WithMany("Question_category")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.Question", "question")
                         .WithMany("Question_category")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("category");
@@ -522,7 +635,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -531,7 +644,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -540,7 +653,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -549,13 +662,13 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -564,13 +677,18 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("CemexDictionaryApp.Models.ApplicationUser", b =>
                 {
                     b.Navigation("ProductLogs");
+                });
+
+            modelBuilder.Entity("CemexDictionaryApp.Models.CustomerQuestions", b =>
+                {
+                    b.Navigation("QuestionMedia");
                 });
 
             modelBuilder.Entity("CemexDictionaryApp.Models.News", b =>
