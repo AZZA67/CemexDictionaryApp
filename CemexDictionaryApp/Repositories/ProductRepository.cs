@@ -62,8 +62,6 @@ namespace CemexDictionaryApp.Repositories
         }
         public int Insert(Product product)
         {
-
-
             context.products.Add(product);
             return context.SaveChanges();
         }

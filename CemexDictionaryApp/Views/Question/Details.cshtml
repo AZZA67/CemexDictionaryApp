@@ -1,0 +1,77 @@
+﻿@{Layout = null;}
+@model CemexDictionaryApp.Models.Question
+
+
+
+
+<div class="modal-body">
+    <div class="mb-3">
+        //all categories
+        <label class="form-label">Question Details</label>
+        <div>
+            <div class="stats mt-2">
+                <div class="d-flex justify-content-between p-price">
+                    <span>Question Text</span>
+                    <span>@Model.Text</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span> Answer</span>
+                    <span>@Model.Answer</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span>Tags</span>
+                    <span>@Model.Tags</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span>Question's submit Date and Time</span>
+                    <span>@Model.SubmitTime</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span>Top Question?</span>
+                    <span>@Model.TopQuestion</span>
+                </div>
+
+                <div class="d-flex justify-content-between p-price">
+                    <span>Video URL</span>
+                    <span>@Model.QuestionMedia.Find(media=>media.Type=="Video")</span>
+                </div>
+                <div class="row g-2">
+                    @foreach (var media in Model.QuestionMedia)
+                    {
+
+                        @if (media.Type == "Image")
+                        {
+                            <div class="col-6 col-sm-4">
+                                <label class="form-imagecheck mb-2">
+                                    <span class="form-imagecheck-figure">
+                                        <img src="~/images/Questions/@media.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                    </span>
+                                </label>
+                            </div>
+
+                        }
+                    }
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/blitzer/jquery-ui.css"
+          rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+
+
+    </script>
+}
+
+

@@ -15,6 +15,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using CemexDictionaryApp.Hubs;
+using Newtonsoft;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CemexDictionaryApp
 {
@@ -30,6 +34,12 @@ namespace CemexDictionaryApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddMvc
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
+
             services.AddControllersWithViews();
             string connectionString = Configuration.GetConnectionString("Cemex_Dictionary");
             services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
@@ -43,6 +53,8 @@ namespace CemexDictionaryApp
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IMediaRepository, MediaRepository>();
             services.AddScoped<IQuestionPerCategoryRepository, QuestionPerCategoryRepository>();
+            services.AddScoped<ICustomerQuestionMediaRepository, CustomerQuestionMediaRepository>();
+            services.AddScoped<ICustomerQuistionsRepository, CustomerQuistionsRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
             services.AddCors(opt =>
@@ -52,6 +64,8 @@ namespace CemexDictionaryApp
                     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
+            services.AddSignalR();
+          
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -74,11 +88,9 @@ namespace CemexDictionaryApp
                 endpoints.MapControllerRoute(
                     name: "Login",
                     pattern: "{controller=Account}/{action=Login}/{Id?}");
-            
-            
-                    endpoints.MapControllerRoute(name: "default",
-             pattern: "{controller=Home}/{action=HpmePage}/{id?}");
-                
+
+                endpoints.MapHub<NotificationHub>("/NotificationHub");
+
             }
             );
         }

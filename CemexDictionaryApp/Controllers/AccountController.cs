@@ -46,17 +46,18 @@ namespace CemexDictionaryApp.Controllers
                 //await userManager.FindByEmailAsync(user.Email);
 
                 ApplicationUser UserModel =
-                   await userManager.FindByEmailAsync(user.Email);
-
-
-
+                await userManager.FindByEmailAsync(user.Email);
                 if (UserModel != null)
                 {
                     Microsoft.AspNetCore.Identity.SignInResult result =
                        await signInManager.PasswordSignInAsync
                        (UserModel, user.Password, user.RememberMe, false);
                     //don't forget Redirect
-                    return RedirectToAction("HomePage", "Home");
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("HomePage", "Home");
+                    }
+
                 }
                 else
                 {
@@ -65,6 +66,10 @@ namespace CemexDictionaryApp.Controllers
                 }
             return View(user);
         }
+
+
+       
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -111,7 +116,6 @@ namespace CemexDictionaryApp.Controllers
                     //signInManager.SignInWithClaimsAsync(UserModel, false, claims);
                     await signInManager.SignInAsync(user, false);
                     return RedirectToAction("HomePage", "Home");
-
                 }
                 foreach (var error in result.Errors)
                 {

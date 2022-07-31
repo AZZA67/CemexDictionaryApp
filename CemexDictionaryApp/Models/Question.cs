@@ -19,7 +19,6 @@ namespace CemexDictionaryApp.Models
         public DateTime SubmitTime { get; set; }
         public bool TopQuestion { get; set; }
         public virtual List<Media> QuestionMedia { get; set; }
-
         public virtual List<QuestionPerCategory> Question_category { get; set; }
 
     }
