@@ -24,6 +24,9 @@ namespace CemexDictionaryApp.Repositories
         public List<Question> GetAll()
         {
             List<Question> Questions = context.Questions.Include(question => question.QuestionMedia).
+                Include(q=>q.Admin).
+                  Include(q => q.Question_category).
+                ThenInclude(qc => qc.category).
                 ToList();
             return Questions;
         }
@@ -61,8 +64,10 @@ namespace CemexDictionaryApp.Repositories
 
                 var QuestionsWithCategories = context.Questions
                     .Where(q => q.TopQuestion == true && q.Question_category.
-                    Any(c => categories.Contains(c.CategoryId))).Include(q=>q.QuestionMedia).
-                    Include(q=>q.Question_category);
+                    Any(c => categories.Contains(c.CategoryId))).Include(q => q.QuestionMedia).
+                    Include(q => q.Admin).
+                     Include(q => q.Question_category).
+                ThenInclude(qc => qc.category);
                 var FilteredQuestionwithcategories = QuestionsWithCategories.ToList()
                     .Where(q => FilterExpression(q, Keyword)).OrderByDescending(q => OrderResult(q, Keyword));
                 if (FilteredQuestionwithcategories.Count() > 0)
@@ -73,14 +78,24 @@ namespace CemexDictionaryApp.Repositories
             }
             else
             {
-               
-                var result = context.Questions.Where(q => q.TopQuestion == true).ToList().Where(q => FilterExpression(q, Keyword))
+
+                var result = context.Questions.Where(q => q.TopQuestion == true)
+                       .Include(q => q.QuestionMedia).
+                    Include(q => q.Admin).
+                     Include(q => q.Question_category).
+                ThenInclude(qc => qc.category).ToList().
+                    Where(q => FilterExpression(q, Keyword))
+                 
+
                     .OrderByDescending(q => OrderResult(q, Keyword));
                
                 return result;
 
             }
         }
+
+
+
 
         public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
         {
@@ -121,6 +136,7 @@ namespace CemexDictionaryApp.Repositories
         public Question GetById(int QuestionId)
         {
             Question question = context.Questions.Include(question => question.QuestionMedia).
+                 Include(q => q.Admin).
                 Include(q=>q.Question_category).
                 ThenInclude(qc=>qc.category).
                 FirstOrDefault(question => question.ID == QuestionId);

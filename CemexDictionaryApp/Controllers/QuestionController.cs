@@ -159,7 +159,7 @@ namespace CemexDictionaryApp.Controllers
             }
         }
 
-        public IActionResult Search( SearchViewModel search_viewmodel)
+        public IActionResult Search_question( SearchViewModel search_viewmodel)
         {
             if (search_viewmodel.SearchKeyword != null)
             {

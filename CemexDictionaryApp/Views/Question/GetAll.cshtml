@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="col-9">
-                        <form class="row" asp-action="Search" asp-controller="Question">
+                        <form class="row" asp-action="Search_question" asp-controller="Question">
                             <div class="col-3">
                                 <div class=" justify-content-center align-items-center">
                                     <div class="inline w-100 field">
@@ -60,51 +60,59 @@
                                 <div class="input-group rounded ">
                                     @if (TempData["searchKeyWord"] != null)
                                     {
-                                <input asp-for="SearchKeyword" value="@TempData["searchKeyWord"]" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                }
-                                            else
-                                            {
-                                                <input asp-for="SearchKeyword" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                            }
+                                        <input asp-for="SearchKeyword" value="@TempData["searchKeyWord"]" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="SearchKeyword" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    }
                                     <button type="submit" class="input-group-text border-0"><i class="fa fa-search "></i></button>
                                 </div>
                             </div>
                         </form>
                         @if (TempData["searchResult"] != null)
                         {
-                        <div class="card">
-                            <div class="card-body">
-                                @foreach (Question question in (List<Question>)TempData["searchResult"])
-                                {
-                            <div >
-                                <div class="row">
-                                    <div class="col-auto">
-                                        @*<img class="avatar" src="~"">*@
-                                        @*//default search result
-                                        //question text
-                                        //submit date 
-                                        //admin name*@ 
 
-                                    </div>
-                                    <div class="col">
-                                        <div class="text-truncate">
-                                            It's Question Number : <strong>@question.ID</strong> .
+                            @foreach (Question question in (List<Question>)TempData["searchResult"])
+                            {
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-auto">
+                                                    @*<img class="avatar" src="~"">*@
+                                                    @*//default search result
+                                    //question text
+                                    //submit date
+                                    //admin name*@
+
+                                                </div>
+                                                <div class="col">
+                                                    <div class="text-truncate">
+                                                        Question Number : <strong>@question.ID</strong> .
+                                                    </div>
+                                                    <div class="text-truncate">
+                                                        Question Text : <label class="form-control"> @question.Text  </label>
+                                                    </div>
+                                                    <div class="text-truncate">
+                                                        Admin Name : <label class="form-control"> @question.Admin.UserName  </label>
+                                                    </div>
+                                                    <div class="text-muted">  <label class="form-control"> @question.SubmitTime </label></div>
+                                                    <div class="text-muted"> Number of Images : @question.QuestionMedia.Where(q => q.Type == "Image").Count()</div>
+                                                    <div class="text-muted">Number of Videos : @question.QuestionMedia.Where(q => q.Type == "Video").Count()</div>
+                                                </div>
+                                                <div class="col-auto align-self-center">
+                                                    <div class="badge bg-primary"></div>
+                                                    <span class="text-muted">
+                                                        <button onclick="modal(@question.ID)" class="btn align-text-top" id="details" data-id="@question.ID" data-bs-boundary="viewport">Details</button>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="text-muted">@question.SubmitTime</div>
-                                        <div class="text-muted"> #Images : @question.QuestionMedia.Where(q => q.Type == "Image").Count()</div>
-                                        <div class="text-muted">#Videos : @question.QuestionMedia.Where(q => q.Type == "Video").Count()</div>
-                                    </div>
-                                    <div class="col-auto align-self-center">
-                                        <div class="badge bg-primary"></div>
-                                        <span class="text-muted">
-                                            <button onclick="modal(@question.ID)" class="btn align-text-top" id="details" data-id="@question.ID" data-bs-boundary="viewport" >Details</button>
-                                        </span>
                                     </div>
                                 </div>
-                            </div>
-                                }
-                            </div>
-                        </div>
+                            }
+
                         }
                     </div>
 
