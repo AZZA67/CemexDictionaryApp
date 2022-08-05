@@ -18,12 +18,10 @@ namespace CemexDictionaryApp.Models
         public int ID { get; set; }
         public string Text { get; set; }
         public string Answer { get; set; }
-
         public string Status { get; set; }
         public virtual ApplicationUser Admin { get; set; }
         [ForeignKey("Admin")]
         public string AdminId { get; set; }
-
         public virtual ApplicationUser User { get; set; }
         [ForeignKey("User")]
         public string UserId { get; set; }

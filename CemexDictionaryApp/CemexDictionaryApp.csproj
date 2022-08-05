@@ -23,6 +23,9 @@
     <Content Update="wwwroot\demo\static\avatars\000m.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\images\CustomerQuestions\0ee79bf4-2f5a-40eb-9c01-74bd34fa2b33.jpg\0ee79bf4-2f5a-40eb-9c01-74bd34fa2b33.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,8 @@ namespace CemexDictionaryApp.Models
     public class ApplicationUser:IdentityUser
     {
         public string Role { get; set; }
+        public string State { get; set; }
+        public string Zone { get; set; }
         public virtual List<ProductLog> ProductLogs { get; set; }
     }
 }

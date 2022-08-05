@@ -25,7 +25,10 @@ namespace CemexDictionaryApp.Repositories
 
         public List<CustomerQuestions> GetAll()
         {
-            List<CustomerQuestions> Questions = context.customer_Questions.Include(question => question.QuestionMedia).
+            List<CustomerQuestions> Questions = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                Include(question=>question.Category).
+                 Include(question => question.User).
                 ToList();
             return Questions;
         }
@@ -34,6 +37,8 @@ namespace CemexDictionaryApp.Repositories
         {
             List<CustomerQuestions> Questions = context.customer_Questions
                 .Include(question => question.QuestionMedia).
+                 Include(question => question.Category).
+                 Include(question => question.User).
                Where(question => question.CategoryId == _categoryId).ToList();
 
             return Questions;
@@ -48,14 +53,7 @@ namespace CemexDictionaryApp.Repositories
             {
                 if (base64image != null)
                 {
-                    //string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
-                    //images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    //string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
-                    //count++;
-                    //using (var fileStream = new FileStream(path, FileMode.Create))
-                    //{
-                    //    formFile.CopyTo(fileStream);
-                    //}
+
 
 
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
@@ -71,9 +69,7 @@ namespace CemexDictionaryApp.Repositories
                         System.IO.Directory.CreateDirectory(path); //Create directory if it doesn't exist
                     }
 
-                  
 
-                    //set the image path
                     string imgPath = Path.Combine(path, imageName);
 
                     byte[] imageBytes = Convert.FromBase64String(base64image);
@@ -118,14 +114,19 @@ namespace CemexDictionaryApp.Repositories
 
         public CustomerQuestions GetById(int QuestionId)
         {
-            CustomerQuestions question = context.customer_Questions.Include(question => question.QuestionMedia).
+            CustomerQuestions question = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                Include(q => q.Category).
+                 Include(question => question.User).
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
 
         public int AnswerQuestion(int QuestionId, CustomerQuestions questionWithAnswer)
         {
-            CustomerQuestions question = context.customer_Questions.Include(question => question.QuestionMedia).
+            CustomerQuestions question = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                 Include(question => question.User).
             FirstOrDefault(question => question.ID == QuestionId);
             question.Answer = questionWithAnswer.Answer;
             question.Status = Question_Status.Answered.ToString();
@@ -138,7 +139,9 @@ namespace CemexDictionaryApp.Repositories
         }
         public int RejectQuestion(int QuestionId, string comment)
         {
-            CustomerQuestions question = context.customer_Questions.Include(question => question.QuestionMedia).
+            CustomerQuestions question = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                 Include(question => question.User).
             FirstOrDefault(question => question.ID == QuestionId);
 
             if (comment != null)
@@ -151,5 +154,40 @@ namespace CemexDictionaryApp.Repositories
             context.SaveChanges();
             return question.ID;
         }
+
+
+
+        public List<CustomerQuestions> GetAllPendingQuestions()
+        {
+            List<CustomerQuestions> Pending_questions = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                 Include(question => question.User).
+           Where(question => question.Status == "Pending" && question.IsRead == true).ToList();
+            return Pending_questions;
+        }
+
+        public void change_IsRead_Property(int questionId)
+        {
+            CustomerQuestions question = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                 Include(question => question.User).
+            FirstOrDefault(question => question.ID == questionId);
+            question.IsRead = true;
+            context.customer_Questions.Update(question);
+            context.SaveChanges();
+        }
+
+        public List<CustomerQuestions> NotificationList()
+        {
+            List<CustomerQuestions> Pending_questions = context.customer_Questions.
+                Include(question => question.QuestionMedia).
+                Include(question=>question.User).
+           Where(question => question.Status == "Pending" && question.IsRead == false).ToList();
+         
+                Pending_questions.Reverse();
+            return Pending_questions;
+        }
+
+
     }
 }

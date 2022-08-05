@@ -61,13 +61,10 @@ namespace CemexDictionaryApp.WebApi
                 }
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
 
-              
+
                 //getuser(authClaims);
-                return Ok(new
-                {
-                   user,
-                    authClaims = authClaims[2].Value
-                });
+                return Ok(user);
+                
             }
             return Unauthorized();
         }
@@ -87,7 +84,8 @@ namespace CemexDictionaryApp.WebApi
                 Email = userDTO.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = userDTO.Username,
-             
+                Zone= userDTO.Zone,
+                State= userDTO.State,
                 Role = "User"
 
             };

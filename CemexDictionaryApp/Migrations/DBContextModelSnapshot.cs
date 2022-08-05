@@ -67,12 +67,18 @@ namespace CemexDictionaryApp.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Zone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -511,7 +517,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.CustomerQuestions", "question")
                         .WithMany("QuestionMedia")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -532,7 +538,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.QuestionCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -551,7 +557,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.Question", "question")
                         .WithMany("QuestionMedia")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("question");
@@ -562,7 +568,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.News", "news")
                         .WithMany("NewsLogs")
                         .HasForeignKey("NewId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -579,7 +585,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ProductType", "productType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("productType");
@@ -590,7 +596,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.Product", "Product")
                         .WithMany("ProductLogs")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", "User")
@@ -616,13 +622,13 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.QuestionCategory", "category")
                         .WithMany("Question_category")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.Question", "question")
                         .WithMany("Question_category")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("category");
@@ -635,7 +641,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -644,7 +650,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -653,7 +659,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -662,13 +668,13 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -677,7 +683,7 @@ namespace CemexDictionaryApp.Migrations
                     b.HasOne("CemexDictionaryApp.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

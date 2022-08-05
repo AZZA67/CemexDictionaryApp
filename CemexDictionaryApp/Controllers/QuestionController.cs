@@ -93,8 +93,8 @@ namespace CemexDictionaryApp.Controllers
         [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
-            if (ModelState.IsValid && 
-                ((IEnumerable<string>)TempData["selectedImages"]).Count() + photos.Count() <=3 )
+            int check = (TempData["selectedImages"] == null) ? 0 : ((IEnumerable<string>)TempData["selectedImages"]).Count();
+            if (ModelState.IsValid && (check + photos?.Count() <=3) )
             {
                 Question question = new Question();
                 question.Text= questionViewModel.Text;
@@ -196,9 +196,16 @@ namespace CemexDictionaryApp.Controllers
         public IActionResult AnswerQuestion(int questionId)
         {
             CustomerQuestions question = Customer_QuestionRepository.GetById(questionId);
+              List<Media> images = mediaRepository.GetAll_uploaded_photos();
+            ViewData["Images"] = images;
+            Customer_QuestionRepository.change_IsRead_Property(question.ID);
 
-
-            return View("AnswerQuestion", question);
+            return View( question);
+        }
+        [HttpGet]
+        public void savecomment(string comment)
+        {
+            TempData["comment"] = comment;   
         }
         [HttpPost]
         public IActionResult AnswerQuestion(CustomerQuestions question,List<IFormFile>photos, string videoURL)
@@ -218,9 +225,7 @@ namespace CemexDictionaryApp.Controllers
                         media.UserId= userManager.GetUserId(HttpContext.User);
                         CustomerQuestionMedia.Insert(media);
                     }
-
                 }
-
                 if (TempData["selectedImages"] != null)
                 {
                     IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
@@ -244,16 +249,44 @@ namespace CemexDictionaryApp.Controllers
                         CustomerQuestionMedia.Insert(media);
                         
                 }
+                Customer_QuestionRepository.AnswerQuestion(question.ID, question);
+                return RedirectToAction("HomePage", "Home");
             }
-            return View("GetAll");
+            return View("AnswerQuestion", question);
         }
-
-
-        public IActionResult RejectQuestion(int questionId,string comment)
+        public IActionResult RejectQuestion(int questionId)
         {
+            string comment="";
+            if (TempData["comment"] !=null)
+            {
+                comment = TempData["comment"].ToString();
+            }
+           
             int x = Customer_QuestionRepository.RejectQuestion(questionId, comment);
-            return NoContent();
+            return RedirectToAction("HomePage","Home");
         }
+        public IActionResult GetNotificationList(string listName)
+        {
+            
+            List<CustomerQuestions> notifications = new List<CustomerQuestions>();
+          if (listName=="Notification")
+            {
+                notifications = Customer_QuestionRepository.NotificationList();
+      
+            }
+          
+          else
+            {
+
+                notifications = Customer_QuestionRepository.GetAllPendingQuestions();
+
+            }
+            return View(notifications);
+        }
+        
+
+
 
     }
 }
+

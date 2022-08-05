@@ -1,0 +1,378 @@
+﻿@model CemexDictionaryApp.Models.CustomerQuestions
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Answer Question</h3>
+    </div>
+    <div class="card-body">
+        <form id="form" asp-action="AnswerQuestion" asp-controller="Question" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+
+
+
+                    <div>
+                        <input value="@Model.ID" asp-for="ID" class="form-control visually-hidden">
+                    </div>
+
+
+                    <div class="form-group mb-3 ">
+                        <label asp-for="User.UserName" class="form-label">User Name</label>
+                        <div>
+                            <label asp-for="User.UserName" class="form-control">@Model.User.UserName</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3 ">
+                        <label asp-for="SubmitTime" class="form-label">Submit Date & Time</label>
+                        <div>
+                            <label asp-for="SubmitTime" class="form-control">@Model.SubmitTime</label>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mb-3 ">
+                        <label asp-for="Text" class="form-label">Question Text</label>
+                        <div>
+                            <label asp-for="Text" class="form-control">@Model.Text</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3 ">
+                        <label asp-for="CategoryId" class="form-label">Category Name</label>
+                        <div>
+                            <label asp-for="CategoryId" class="form-control"> @Model.Category.Name </label>
+                        </div>
+                    </div>
+
+
+                    <div class="row g-2">
+                        @foreach (var media in Model.QuestionMedia)
+                        {
+
+                            @if (media.Type == "Image")
+                            {
+                                <div class="col-6 col-sm-4">
+                                    <label class="mb-2">
+                                        <span>
+                                            <img src="~/images/CustomerQuestions/@media.Path/@media.Path">
+                                        </span>
+                                    </label>
+                                </div>
+
+                            }
+                        }
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Answer</h3>
+                        </div>
+
+                        <div class="form-group mb-3 ">
+                            <label asp-for="Answer" class="form-label">Answer Text</label>
+                            <div>
+                                <input asp-for="Answer" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-body row border-0 field">
+                                <h3 class="card-title"> Upload Images</h3>
+                                <div class="col-6">
+                                    <input class="form-control files" type="file" name="photos" id="photos" multiple />
+                                </div>
+
+                                <div class="col-6">
+                                    <button type="button" onclick="modaladd()" class="btn me-primary">Choose from existing images</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group mb-3 ">
+                        <label class="form-label">URL</label>
+                        <div>
+                            <input name="videoURL" id="videoURL" class="form-control" placeholder="Enter Video URL">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer row">
+                    <button id="submit" class="btn btn-primary col-6" type="submit">Submit</button>
+                    <a onclick="rejectModal()"  class="btn btn-danger col-6">Reject Question</a>
+                </div>
+           
+            </div>
+        </form>
+    </div>
+    <input type="file" multiple="multiple" class="dz-hidden-input" tabindex="-1" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;">
+</div>
+
+
+<div class="modal modal-blur fade" id="modal-danger" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center py-4">
+                Download SVG icon from http://tabler-icons.io/i/alert-triangle
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+                <h3>Sorry only 3 images are allowed </h3>
+                <div class="text-muted">Do you really want to remove 84 files? What you've done cannot be undone.</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-scrollable" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable w-100" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scrollable modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Image Check</label>
+                    <div class="row g-2">
+                        @foreach (Media image in ViewBag.Images)
+                        {
+                            <div class="col-6 col-sm-4">
+                                <label class="form-imagecheck mb-2">
+                                    <input onclick="add('@image.Path', this)" type="checkbox" class="form-imagecheck-input" value="@image.Path" />
+                                    <span class="form-imagecheck-figure">
+                                        <img src="~/images/Questions/@image.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                    </span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="save()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="modal-small" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="modal-title">Comment</div>
+                <input  onchange="savecomment()" id="comment" asp-for="Comment" class="form-control" placeholder="Enter Your Comment!">
+            </div>
+
+            <div class="modal-footer">
+                <button   type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Cancel</button>
+          <a href="/Question/RejectQuestion?questionId=@Model.ID"  type="button" class="btn btn-danger">Yes,reject</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <link href="~/Tags/Tags.css" rel="stylesheet" />
+    <link href="~/Upload_Images/Upload_Images.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    @*<script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>*@
+
+
+    <script src="~/Multiselect/js/jquery.min.js"></script>
+    <script src="~/Multiselectjs/popper.js"></script>
+    <script src="~/Multiselectjs/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.js"></script>
+    <script src="~/Multiselect/js/main.js"></script>
+    <script>
+
+        var tagss = [];
+        $(function () { // DOM ready
+
+            // ::: TAGS BOX
+
+
+            $("#tags input").on({
+
+                focusout: function () {
+                    var txt = this.value.replace(/[^a-z0-9\+\-\.\#]/ig, ''); // allowed characters
+                    if (txt) {
+                        $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
+                        add_tag(txt);
+                        console.log(tagss);
+                        console.log(txt);
+                    }
+
+                    this.value = "";
+                },
+                keyup: function (ev) {
+
+                    // if: comma|enter (delimit more keyCodes with | pipe)
+                    if (/(188|13)/.test(ev.which)) {
+
+                        $(this).focusout();
+                    }
+
+                }
+            });
+            $('#tags').on('click', 'span', function () {
+                if (confirm("Remove " + $(this).text() + "?")) {
+
+
+                    $(this).remove();
+                    console.log($(this).text());
+                    remove_tag($(this).text());
+
+                }
+            });
+        });
+        function add_tag(txt) {
+
+            $.ajax({
+
+                url: "/Question/add_Tag/${txt}",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                data: { "new_tag": txt },
+                datatype: "json",
+            });
+        }
+
+        function savecomment() {
+            var comment_txt = document.getElementById("comment").value;
+          
+            console.log(comment_txt);
+
+            $.ajax({
+                url: "/Question/savecomment",
+                contentType: "application/json; charset=utf-8",
+                data: {
+                "comment": comment_txt},
+                datatype: "json",
+            }
+                );
+        }
+
+        function rejectModal() {
+          
+               $('#modal-small').modal('show');
+  
+        }
+
+
+        function remove_tag(txt) {
+
+            $.ajax({
+
+                url: "/Question/remove_Tag/${txt}",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                data: { "removed_tag": txt },
+                datatype: "json",
+
+            });
+
+        }
+
+
+        $(document).ready(function () {
+            if (window.File && window.FileList && window.FileReader) {
+                $(".files").on("change", function (e) {
+
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function (e) {
+                            var file = e.target;
+                            $("<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                                "<br/><span class=\"remove\">Remove image</span>" +
+                                "</span>").insertAfter(".files");
+                            $(".remove").click(function () {
+                                $(this).parent(".pip").remove();
+                            });
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
+        var array = [];
+        function add(image, check) {
+
+            if (check.checked == true && array.length < 3) {
+                array.push(image);
+            }
+            else if (check.checked == false) {
+                array.splice(array.indexOf(image), 1);
+            }
+            else {
+                $('.alert').show();
+                alert("only 3 images are allowed!");
+
+                check.checked = false;
+                console.log("hi");
+            }
+            console.log(image, check);
+        }
+        function save() {
+            console.log(array);
+            $.ajax({
+
+                url: "/Question/Add/${array}",
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                data: { "images": array },
+                datatype: "json",
+            });
+        }
+
+        $(function () {
+            $("button[type='submit']").click(function () {
+                var $fileUpload = $("input[type='file']");
+                if (parseInt($fileUpload.get(0).files.length) > 3) {
+                    alert("You can only upload a maximum of 3 files");
+
+                }
+            });
+        });
+        function modaladd() {
+            $('#modal-scrollable').modal('show');
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
