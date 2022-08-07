@@ -72,7 +72,8 @@ namespace CemexDictionaryApp.WebApi
             return Unauthorized();
         }
        //return object have user data
-        [HttpPost("Register")]
+        [HttpPost]
+        [Route("Register")]
         public async Task<IActionResult> Register(RegisterModel userDTO)
         {
             if (!ModelState.IsValid)

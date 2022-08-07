@@ -12,7 +12,6 @@ connection.on("ReciveQuestions", function (message) {
     document.getElementById("notificationCount").innerHTML = notificationsCount;
     
     
-
    
     var question = JSON.parse(message);
     console.log(question);
@@ -28,9 +27,13 @@ connection.on("ReciveQuestions", function (message) {
                   ${question.SubmitTime}
                 </div>
             </div>
-         
+
         </div>
     </div>`;
+    document.getElementById("item").style.flexDirection = "column-reverse";
+
+
+   
 
 
 
