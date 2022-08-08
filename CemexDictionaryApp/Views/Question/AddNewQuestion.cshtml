@@ -65,11 +65,17 @@
                       <div >
                          <input asp-for="Text" class="form-control" placeholder="Enter Question Text">
                         <small class="form-hint">Question Title - Question Header </small>
+                        
+                            <span asp-validation-for="@Model.Text" class="text-danger"></span> 
+
                       </div>
                     </div>
                     <div class="form-group mb-3 ">
                           <label asp-for="Answer" class="form-label">Answer</label>
                           <textarea asp-for="Answer" class="form-control" rows="3"></textarea>
+                          
+                            <span asp-validation-for="@Model.Answer" class="text-danger"></span> 
+
                     </div>
 
                            <div class="form-group mb-3 ">
@@ -338,12 +344,12 @@ Images Selected :  0 New : 0 Existing
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable w-100" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Scrollable modal</h5>
+                <h5 class="modal-title">choose Images</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label">Image Check</label>
+                    <label class="form-label">All Images</label>
                     <div class="row g-2">
                         @foreach (Media image in ViewBag.Images)
                         {

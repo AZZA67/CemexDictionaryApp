@@ -4,6 +4,7 @@ using CemexDictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,9 @@ namespace CemexDictionaryApp.Controllers
         {
             List<ProductType> productTypes = ProductTypeRepository.GetAll();
             ViewData["ProductTypes"] = productTypes;
+        
+
+
             return PartialView();
         }
         public IActionResult Details(int productId)
@@ -72,7 +76,6 @@ namespace CemexDictionaryApp.Controllers
             var user = await GetCurrentUserAsync();
             ProductLog _productlog = new ProductLog
             {
-                
 
                 UserId = userManager.GetUserId(HttpContext.User),
             DateTime = DateTime.Now,
@@ -108,10 +111,16 @@ namespace CemexDictionaryApp.Controllers
                     Action = "Adding",
                     ProductId = product.Id
                 };
+
                 ProductLogRepository.Insert(_productlog);
                 return RedirectToAction("GetAllProducts", "Product");
             }
+
+            List<ProductType> productTypes = ProductTypeRepository.GetAll();
+            ViewData["ProductTypes"] = productTypes;
             return View("AddNewProduct");
+            //Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "MyFunction()", true);
+
         }
 
     }
