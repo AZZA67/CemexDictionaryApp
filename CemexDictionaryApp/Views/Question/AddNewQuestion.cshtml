@@ -791,14 +791,14 @@
 
         var tagss = [];
         $(function () { // DOM ready
-
+            
             // ::: TAGS BOX
 
          
             $("#tags input").on({
 
                 focusout: function () {
-                    var txt = this.value.replace(/[^a-zء-ي0-9\+\-\.\#]/ig, ''); // allowed characters
+                    var txt = this.value.replace(/[^a-zء0-9\+\-\.\#]/ig, ''); // allowed characters
                     if (txt) {
                         $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
                         add_tag(txt);

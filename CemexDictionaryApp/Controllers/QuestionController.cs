@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 
 namespace CemexDictionaryApp.Controllers
@@ -226,6 +229,7 @@ namespace CemexDictionaryApp.Controllers
                         CustomerQuestionMedia.Insert(media);
                     }
                 }
+
                 if (TempData["selectedImages"] != null)
                 {
                     IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
@@ -283,7 +287,16 @@ namespace CemexDictionaryApp.Controllers
             }
             return View(notifications);
         }
-        
+
+        public ActionResult GetNotifications()
+        {
+            List<CustomerQuestions> notifications= Customer_QuestionRepository.NotificationList();
+            
+            return Json(notifications);
+           
+
+
+        }
 
 
 

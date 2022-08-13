@@ -47,7 +47,7 @@
                     </a>
                 </h1>
 
-                <a  href="/Question/GetNotificationList?listName=Pending"  id="pendingCount" type="button" class="btn btn-primary">
+                <a href="/Question/GetNotificationList?listName=Pending" id="pendingCount" type="button" class="btn btn-primary">
                     Pending Questions <span class="badge badge-light bg-red">@questionRepo.GetAllPendingQuestions().Count()</span>
                 </a>
 
@@ -63,42 +63,43 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="4" /><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" /></svg>
                         </a>
                         <div class="nav-item dropdown d-none d-md-flex me-3">
-                            <a href="#" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
+                            <button onclick="loadnotifications()" class="nav-link px-0" data-bs-toggle="dropdown" tabindex="-1" aria-label="Show notifications">
                                 <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
                                 <span id="notificationCount" class="badge bg-red">@questionRepo.NotificationList().Count()</span>
-                            </a>
+                            </button>
                             <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 class="card-title">Notifications</h3>
-                                       
+
                                     </div>
-                                    <div  id="viewall">
+                                    @*<div  id="viewall">
                                         <a  href="/Question/GetNotificationList?listName=Notification" class="btn btn-link link-secondary"><h5 >View All</h5></a>
-                                    </div>
+                                    </div>*@
                                     <div class="list-group list-group-flush list-group-hoverable scrollable" id="item">
 
-                                        <div class="loadnotifications">
+                                        @*<div class="loadnotifications">
+                                            hi
+                                        </div>*@
 
+                                        @*@foreach (CustomerQuestions customer_question in @questionRepo.NotificationList())
+                                                        {
+                                                            <div  class="list-group-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
+                                                        <div class="col text-truncate">
+                                                            <a href = "/Question/AnswerQuestion?questionId=@customer_question.ID" class="text-body d-block">@customer_question.User.UserName
+
+                                                            </a>
+
+                                                            <div class="d-block text-muted text-truncate mt-n1">
+                                                                @customer_question.SubmitTime
+                                                            </div>
                                         </div>
-
-                                        @foreach (CustomerQuestions customer_question in @questionRepo.NotificationList())
-                                        {
-                                            <div  class="list-group-item loadnotifications">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
-                                        <div class="col text-truncate">
-                                            <a href = "/Question/AnswerQuestion?questionId=@customer_question.ID" class="text-body d-block">@customer_question.User.UserName
-                                
-                                            </a>
-                                            <div class="d-block text-muted text-truncate mt-n1">
-                                                @customer_question.SubmitTime
-                                            </div>
-                        </div>
-                        </div>
-                        </div>
-                                                                }
+                                        </div>
+                                        </div>
+                                                         }*@
                                     </div>
 
                                 </div>
@@ -513,7 +514,7 @@
                             </li>
                         </ul>
                         <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-                            <form    asp-action="Searchquestions" asp-controller="Question" >
+                            <form asp-action="Searchquestions" asp-controller="Question">
                                 <div class="input-icon">
                                     <span class="input-icon-addon">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/search -->
@@ -589,6 +590,44 @@
                 })
             }
 
+            function loadnotifications() {
+
+            
+
+              $.ajax({
+                  type: "post",
+                  url: "/Question/GetNotifications",
+                  contentType: "application/json; charset=utf-8",
+                  traditional: true,
+                  datatype: "json",
+
+                  success: function (data) {
+                      var x = JSON.parse(data);
+                      for (let i = 0; i <x.legnth;i++) {
+                          console.log(x[i].id);
+                          
+
+         document.getElementById("item").innerHTML +=` <div  class="list-group-item">
+        <div class="row align-items-center">
+            <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
+            <div class="col text-truncate">
+                <a href="/Question/AnswerQuestion?questionId=${x[i].id}" class="text-body d-block">${x[i].userName}</a>
+                <div class="d-block text-muted text-truncate mt-n1">
+                  ${x[i].submitTime}
+                </div>
+            </div>
+            </div>
+            </div>`
+
+                        }
+                    }
+
+                })
+            }
+
+
+
+
             function show(questiionId) {
                 console.log(questiionId);
                 $.ajax({
@@ -628,7 +667,38 @@
         <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
 
+        @*<script>
 
+            var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationHub").build();
+            connection.start().then(() => { //alert("connected")
+            }
+            );
+            connection.on("ReciveQuestions", function (message) {
+                var notificationsCount = document.getElementById("notificationCount").innerHTML;
+                notificationsCount = parseInt(notificationsCount) + 1;
+                document.getElementById("notificationCount").innerHTML = notificationsCount;
+
+
+
+
+                var question = JSON.parse(message);
+                console.log(document.getElementById("item"));
+               /* console.log(document.querySelectorAll(".loadnotifications")[0]);*/
+                var list = document.getElementById("item");
+                list.insertBefore(document.querySelectorAll(".list-group-item")[0], `<div  class="list-group-item">
+        <div class="row align-items-center">
+            <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
+            <div class="col text-truncate">
+                <a href="/Question/AnswerQuestion?questionId=${question.ID}" class="text-body d-block">${question.User.UserName}</a>
+                <div class="d-block text-muted text-truncate mt-n1">
+                ${question.SubmitTime}
+                </div>
+            </div>
+       </div>
+    </div>`);
+
+            });
+        </script>*@
 
 
         @await RenderSectionAsync("Scripts", required: false)
