@@ -13,17 +13,26 @@ namespace CemexDictionaryApp.DTO
 
         [EmailAddress]
         [Required(ErrorMessage = "Email is required")]
+
         public string Email { get; set; }
         public string State { get; set; }
         public string Zone { get; set; }
 
         [Required(ErrorMessage = "National id is required ")]
+        [Display(Name = "National ID")]
         public string NationalID{ get; set; }
+        [Required(ErrorMessage = "Address is required ")]
         public string Address { get; set; }
-
         public string Mobileno { get; set; }
+
         [Required(ErrorMessage = "Password is required")]
+       
         public string Password { get; set; }
+
+      
+      
+
+
 
     }
 }

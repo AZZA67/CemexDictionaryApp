@@ -5,6 +5,7 @@ using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -19,16 +20,20 @@ namespace CemexDictionaryApp.WebApi
     [ApiController]
     public class QuestionController : ControllerBase
     {
+
+        private UserManager<ApplicationUser> userManager;
         IQuestionRepository Question_Repository;
         IQuestionCategoryRepository Question_Category;
         ICustomerQuestionMediaRepository Customer_Media;
         ICustomerQuistionsRepository customer_Question;
         IHubContext<NotificationHub> hubContext;
-        public QuestionController(IQuestionRepository _question_Repository,
+
+        public QuestionController(UserManager<ApplicationUser> _userManager,  IQuestionRepository _question_Repository,
             IQuestionCategoryRepository _question_Category, ICustomerQuestionMediaRepository _customer_Media,
             ICustomerQuistionsRepository _customer_Question, IHubContext<NotificationHub> _hubContext
             )
         {
+            userManager = _userManager;
             hubContext = _hubContext;
              customer_Question = _customer_Question;
             Customer_Media = _customer_Media;
@@ -59,18 +64,23 @@ namespace CemexDictionaryApp.WebApi
 
 
         [HttpPost("AddQuestion")]
-        public IActionResult AddQuestionn(QuestionModel questionModel)
+        public async Task<IActionResult> AddQuestionnAsync(QuestionModel questionModel)
         {
             if (questionModel.Text !=null && questionModel.CategoryId !=0)
             {
-
+                ApplicationUser UserModel =
+              await userManager.FindByIdAsync(questionModel.UserId);
                 CustomerQuestions customerQuestion = new CustomerQuestions();
                 customerQuestion.Text = questionModel.Text;
                 customerQuestion.CategoryId = questionModel.CategoryId;
                 customerQuestion.Status = Question_Status.Pending.ToString();
                 customerQuestion.SubmitTime = DateTime.Now;
                 customerQuestion.UserId = questionModel.UserId;
+                customerQuestion.User = UserModel;
                 customer_Question.Insert(customerQuestion);
+               
+
+
                 if (questionModel.QuestionImage != null)
                 {
                     List<string> Images = customer_Question.UploadFile(questionModel.QuestionImage);
@@ -94,7 +104,7 @@ namespace CemexDictionaryApp.WebApi
 
                 //   JsonConvert.SerializeObject(question);
 
-                hubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
+               await hubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
                 return Ok(customerQuestion);
             }
             else

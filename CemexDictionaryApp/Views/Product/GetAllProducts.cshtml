@@ -285,9 +285,10 @@
                 datatype: "json",
 
                 success: function (data) {
-                    debugger
+               
                     $('.modal-body').html(data); //modal
                     $('#myModal').modal(options);
+                    
                     $('#modal-report').modal('show');
 
                 },
@@ -298,15 +299,11 @@
 
 
         }
-
-
   $(function () {
 
             var success = '@TempData["Success"]';
             console.log(success);
             if (success == "true") {
-
-
                 $('#modal-success').modal('show');
             }
         })

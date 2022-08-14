@@ -6,17 +6,12 @@
 
 
 <form id="form1" asp-action="AddNewQuestionCategory" enctype="multipart/form-data" asp-controller="QuestionCategory" class="card card-md">
-    <div class="modal-dialog modal-lg modal-dialog-centered w-100" role="document">
-
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">New Category</h5>
-                <a asp-action="GetAll" asp-controller="QuestionCategory" type="button" class="btn-close" aria-label="Close"></a>
-            </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label">Name</label>
                     <input asp-for="Name" type="text" class="form-control" placeholder="Category Name">
+                      <span asp-validation-for="@Model.Name" class="text-danger"></span> 
                 </div>
                 <div class="mb-3">
                     <label asp-for="الأسم" class="form-label">الأسم</label>
@@ -26,11 +21,10 @@
                 <div class="modal-footer">
 
                     <a asp-action="GetAll" asp-controller="QuestionCategory" class="btn btn-link link-secondary ">Cancel</a>
-
                     <button id="submitbtn" type="submit" class="btn btn-primary ms-auto">Create new Category</button>
 
                 </div>
             </div>
         </div>
-    </div>
+   
 </form>

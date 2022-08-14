@@ -18,8 +18,6 @@ namespace CemexDictionaryApp.Controllers
         private SignInManager<ApplicationUser> signInManager;
         private RoleManager<IdentityRole> roleManager;
         DBContext dbcontext;
-
-      
         public AccountController(UserManager<ApplicationUser> _userManager
         , SignInManager<ApplicationUser> _signInManager
         , RoleManager<IdentityRole> _roleManager

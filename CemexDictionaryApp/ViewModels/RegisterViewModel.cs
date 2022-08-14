@@ -10,20 +10,20 @@ namespace CemexDictionaryApp.ViewModels
     {
 
 
-        [Required]
+        [Required(ErrorMessage = "User Name is required")]
         public string Name { get; set; }
-
-        [Required]
         [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
+
 
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = " Confirm Password is required")]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm Password")]
-        [Compare("Password", ErrorMessage = "Password and confirmation password not match.")]
+        [Compare("Password", ErrorMessage = "Password and confirm password does not match")]
         public string ConfirmPassword { get; set; }
     }
 }
