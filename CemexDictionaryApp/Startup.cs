@@ -57,6 +57,17 @@ namespace CemexDictionaryApp
             services.AddScoped<ICustomerQuistionsRepository, CustomerQuistionsRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                // configure identity options
+                //option.Password.RequireDigit = false;
+                //option.Password.RequireLowercase = false;
+                //option.Password.RequireUppercase = false;
+                //option.Password.RequireNonAlphanumeric = false;
+                //option.Password.RequiredLength = 4;
+                option.SignIn.RequireConfirmedPhoneNumber = true;
+                
+            });
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
