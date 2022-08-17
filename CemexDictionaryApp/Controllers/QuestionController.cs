@@ -58,7 +58,7 @@ namespace CemexDictionaryApp.Controllers
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
      
-            List<Media> images = mediaRepository.GetAll_uploaded_photos();
+            List<string> images = mediaRepository.GetAll_uploaded_photos();
           
             ViewData["Images"] = images;
             ViewData["Categories"] = categories;
@@ -156,7 +156,7 @@ namespace CemexDictionaryApp.Controllers
             {
                 List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
                 ViewData["Categories"] = categories;
-                List<Media> images = mediaRepository.GetAll_uploaded_photos();
+                List<string> images = mediaRepository.GetAll_uploaded_photos();
                 ViewData["Images"] = images;
                 return View("AddNewQuestion");
             }
@@ -199,7 +199,7 @@ namespace CemexDictionaryApp.Controllers
         public IActionResult AnswerQuestion(int questionId)
         {
             CustomerQuestions question = Customer_QuestionRepository.GetById(questionId);
-              List<Media> images = mediaRepository.GetAll_uploaded_photos();
+              List<string> images = mediaRepository.GetAll_uploaded_photos();
             ViewData["Images"] = images;
             Customer_QuestionRepository.change_IsRead_Property(question.ID);
 

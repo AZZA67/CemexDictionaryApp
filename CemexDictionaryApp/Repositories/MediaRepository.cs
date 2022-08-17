@@ -12,17 +12,17 @@ namespace CemexDictionaryApp.Repositories
     {
         DBContext context;
         private readonly IWebHostEnvironment hostEnvironment;
-
         public MediaRepository(DBContext _context, IWebHostEnvironment _hostEnvironment)
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
-
         }
+
         public List<Media> GetAllMediaByQuestionId(int _questionId)
         {
-            List<Media> media = context.QuestionMedia.Where(media => media.QuestionId == _questionId)
-                .ToList();
+            List<Media> media = context.QuestionMedia.
+            Where(media => media.QuestionId == _questionId)
+            .ToList();
             return media;
         }
         public int Insert(Media media)
@@ -30,20 +30,16 @@ namespace CemexDictionaryApp.Repositories
             context.QuestionMedia.Add(media);
             return context.SaveChanges();
         }
-
-        public List<Media> GetAll_uploaded_photos()
+        public List<string> GetAll_uploaded_photos()
         {
-            List<Media> images = context.QuestionMedia.Where(media => media.Type == MediaTypes.Image.ToString()).ToList();
-
+            List<string> images = context.QuestionMedia.
+                Where(media => media.Type ==
+                MediaTypes.Image.ToString()).
+                Select(m=>m.Path)
+                .Distinct()
+                .ToList();
             return images;
         }
 
-
-        //public Question GetById(int QuestionId)
-        //{
-        //    Question question = context.Questions.Include(question => question.QuestionMedia).
-        //        FirstOrDefault(question => question.ID == QuestionId);
-        //    return question;
-        //}
     }
 }

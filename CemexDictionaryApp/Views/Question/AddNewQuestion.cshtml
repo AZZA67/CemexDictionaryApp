@@ -351,13 +351,13 @@ Images Selected :  0 New : 0 Existing
                 <div class="mb-3">
                     <label class="form-label">All Images</label>
                     <div class="row g-2">
-                        @foreach (Media image in ViewBag.Images)
+                        @foreach (string image in ViewBag.Images)
                         {
                             <div class="col-6 col-sm-4">
                                 <label class="form-imagecheck mb-2">
-                                    <input onclick="add('@image.Path', this)" type="checkbox" class="form-imagecheck-input" value="@image.Path" />
+                                    <input onclick="add('@image', this)" type="checkbox" class="form-imagecheck-input" value="@image" />
                                     <span class="form-imagecheck-figure">
-                                        <img src="~/images/Questions/@image.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                        <img src="~/images/Questions/@image" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
                                     </span>
 
                                 </label>

@@ -17,11 +17,7 @@ namespace CemexDictionaryApp.Repositories
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
-
         }
-
-
-
         public List<CustomerQuestionMedia> GetAllMediaByQuestionId(int _questionId)
         {
             List<CustomerQuestionMedia> media = context.CustomerQuestionMedias.Where(media => media.QuestionId == _questionId)
@@ -33,7 +29,6 @@ namespace CemexDictionaryApp.Repositories
             context.CustomerQuestionMedias.Add(media);
             return context.SaveChanges();
         }
-
         public List<CustomerQuestionMedia> GetAll_uploaded_photos()
         {
             List<CustomerQuestionMedia> images = context.CustomerQuestionMedias.Where(media => media.Type == MediaTypes.Image.ToString()).ToList();

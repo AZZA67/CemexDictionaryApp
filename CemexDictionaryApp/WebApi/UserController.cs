@@ -82,14 +82,25 @@ namespace CemexDictionaryApp.WebApi
                 return BadRequest(error: "User already exists!");
             ApplicationUser user = new ApplicationUser()
             {
-                Email = userDTO.Email,
+                //Email = userDTO.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = userDTO.Username,
                 Zone= userDTO.Zone,
                 State= userDTO.State,
+                Category=userDTO.Category,
+                Occupation=userDTO.Occupation,
+                PhoneNumber=userDTO.Mobileno,
                 Role = "User"
 
             };
+            if(userDTO.Email==null)
+            {
+                user.Email = userDTO.Mobileno + "@cemex.com";
+            }
+            else
+            {
+                user.Email = userDTO.Email;
+            }
             var result = await userManager.CreateAsync(user, userDTO.Password);
             if (await roleManager.RoleExistsAsync("User") == false)
             {
