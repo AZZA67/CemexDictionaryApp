@@ -6,9 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Drawing;
-using CemexDictionaryApp.ViewModels;
 
 namespace CemexDictionaryApp.Repositories
 {
@@ -20,9 +17,7 @@ namespace CemexDictionaryApp.Repositories
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
-
         }
-
         public List<CustomerQuestions> GetAll()
         {
             List<CustomerQuestions> Questions = context.customer_Questions.
@@ -30,9 +25,8 @@ namespace CemexDictionaryApp.Repositories
                 Include(question=>question.Category).
                  Include(question => question.User).
                 ToList();
-            return Questions;
+                return Questions;
         }
-
         public List<CustomerQuestions> GetAllByCategoryId(int _categoryId)
         {
             List<CustomerQuestions> Questions = context.customer_Questions
@@ -54,8 +48,6 @@ namespace CemexDictionaryApp.Repositories
                 if (base64image != null)
                 {
 
-
-
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     string imageName = Guid.NewGuid().ToString() + ".jpg";
                     images.Add(imageName);
@@ -63,26 +55,14 @@ namespace CemexDictionaryApp.Repositories
                     string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
                     count++;
 
-                    //Check if directory exist
-                    if (!System.IO.Directory.Exists(path))
-                    {
-                        System.IO.Directory.CreateDirectory(path); //Create directory if it doesn't exist
-                    }
-
-
-                    string imgPath = Path.Combine(path, imageName);
-
+                 
                     byte[] imageBytes = Convert.FromBase64String(base64image);
 
-                    File.WriteAllBytes(imgPath, imageBytes);
+                    File.WriteAllBytes(path, imageBytes);
                 }
             }
             return images;
         }
-
-
-
-
         public List<string> UploadImagesByAdmin(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();
@@ -104,8 +84,6 @@ namespace CemexDictionaryApp.Repositories
             }
             return images;
         }
-
-
         public int Insert(CustomerQuestions question)
         {
             context.customer_Questions.Add(question);

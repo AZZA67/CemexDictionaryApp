@@ -10,19 +10,18 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label">Name</label>
-                    <input asp-for="Name" type="text" class="form-control" placeholder="Category Name">
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Category Name" required>
                       <span asp-validation-for="@Model.Name" class="text-danger"></span> 
                 </div>
                 <div class="mb-3">
                     <label asp-for="الأسم" class="form-label">الأسم</label>
-                    <input asp-for="الأسم" type="text" class="form-control" placeholder="أسم الفئة">
+                    <input asp-for="الأسم" type="text" class="form-control" placeholder="أسم الفئة" required>
                 </div>
 
                 <div class="modal-footer">
 
                     <a asp-action="GetAll" asp-controller="QuestionCategory" class="btn btn-link link-secondary ">Cancel</a>
                     <button id="submitbtn" type="submit" class="btn btn-primary ms-auto">Create new Category</button>
-
                 </div>
             </div>
         </div>

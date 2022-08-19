@@ -9,13 +9,13 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label">Title</label>
-                    <input asp-for="Title" type="text" class="form-control" placeholder="News Title">
+                    <input asp-for="Title" type="text" class="form-control" placeholder="News Title" required>
                      <span asp-validation-for="@Model.Title" class="text-danger"></span> 
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
                         <span class="form-label">Image</span>
-                        <input class="form-control" asp-for="NewsImage" accept="image/*" />
+                        <input class="form-control" asp-for="NewsImage" accept="image/*" required />
                          <span asp-validation-for="@Model.NewsImage" class="text-danger"></span> 
                     </div>
                 </div>

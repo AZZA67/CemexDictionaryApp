@@ -1,6 +1,5 @@
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,16 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using CemexDictionaryApp.Hubs;
-using Newtonsoft;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace CemexDictionaryApp
@@ -57,17 +48,7 @@ namespace CemexDictionaryApp
             services.AddScoped<ICustomerQuistionsRepository, CustomerQuistionsRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
-            services.AddIdentity<ApplicationUser, IdentityRole>(option =>
-            {
-                // configure identity options
-                //option.Password.RequireDigit = false;
-                //option.Password.RequireLowercase = false;
-                //option.Password.RequireUppercase = false;
-                //option.Password.RequireNonAlphanumeric = false;
-                //option.Password.RequiredLength = 4;
-                option.SignIn.RequireConfirmedPhoneNumber = true;
-                
-            });
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -76,7 +57,6 @@ namespace CemexDictionaryApp
                 });
             });
             services.AddSignalR();
-          
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
