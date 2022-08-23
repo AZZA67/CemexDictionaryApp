@@ -133,6 +133,8 @@ namespace CemexDictionaryApp.Repositories
             context.Questions.Add(question);
             return context.SaveChanges();
         }
+
+
         public Question GetById(int QuestionId)
         {
             Question question = context.Questions.Include(question => question.QuestionMedia).
@@ -142,5 +144,6 @@ namespace CemexDictionaryApp.Repositories
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
+
     }
 }

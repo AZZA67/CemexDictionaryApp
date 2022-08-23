@@ -32,12 +32,12 @@ namespace CemexDictionaryApp.Models
         public DbSet<News> news { get; set; }
         public DbSet<NewsLog> NewsLog { get; set; }
         public DbSet<QuestionCategory> QuestionCategories { get; set; }
-
         public DbSet<Media> QuestionMedia { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionPerCategory> questionPerCategories { get; set; }
         public DbSet<CustomerQuestions> customer_Questions { get; set; }
         public DbSet<CustomerQuestionMedia> CustomerQuestionMedias { get; set; }
 
+        public DbSet<ApplicationUser> app_users { get; set; }
     }
 }

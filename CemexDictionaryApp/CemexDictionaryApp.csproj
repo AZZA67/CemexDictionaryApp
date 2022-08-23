@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\CustomerQuestions\" />
+    <Folder Include="wwwroot\images\CustomerQuestions\CustomerQuestions_Answers\" />
     <Folder Include="wwwroot\images\News\" />
     <Folder Include="wwwroot\images\Questions\" />
     <Folder Include="wwwroot\images\Products\" />

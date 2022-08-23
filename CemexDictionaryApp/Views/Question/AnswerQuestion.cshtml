@@ -44,7 +44,6 @@
                         </div>
                     </div>
 
-
                     <div class="row g-2">
                         @foreach (var media in Model.QuestionMedia)
                         {
@@ -54,7 +53,7 @@
                                 <div class="col-6 col-sm-4">
                                     <label class="mb-2">
                                         <span>
-                                            <img src="~/images/CustomerQuestions/@media.Path/@media.Path">
+                                        <img src="~/images/CustomerQuestions/@media.Path">
                                         </span>
                                     </label>
                                 </div>
@@ -77,18 +76,24 @@
                             <div>
                                 <input asp-for="Answer" class="form-control">
                             </div>
+                            <span asp-validation-for="@Model.Answer" class="text-danger"></span>
                         </div>
 
 
                         <div class="card">
                             <div class="card-body row border-0 field">
                                 <h3 class="card-title"> Upload Images</h3>
-                                <div class="col-6">
+
+                                <div class="col-5">
                                     <input class="form-control files" type="file" name="photos" id="photos" multiple />
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-5">
                                     <button type="button" onclick="modaladd()" class="btn me-primary">Choose from existing images</button>
+                                </div>
+
+                                <div class="col-2">
+                                    <button type="button" onclick="Reset()" class="btn me-primary">Reset</button>
                                 </div>
                             </div>
 
@@ -180,6 +185,38 @@
     </div>
 </div>
 
+
+@*<div class="modal modal-blur fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="modal-status bg-success"></div>
+                        <div class="modal-body text-center py-4">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/circle-check -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="9" /><path d="M9 12l2 2l4 -4" /></svg>
+                            <h3>Product Added Successfully!</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="w-100">
+                                <div class="row">
+                                    <div class="col">
+                                        <a asp-action="HomePage" asp-controller="Home" class="btn w-100" data-bs-dismiss="modal">
+                                            Go to dashboard
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <a asp-action="GetAll" asp-controller="Question" asp-route-page_number="1" class="btn btn-success w-100" data-bs-dismiss="modal">
+                                            Go To Search in All Questions
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+
 @section scripts
     {
     <link href="~/Tags/Tags.css" rel="stylesheet" />
@@ -197,10 +234,21 @@
     <script src="~/Multiselect/js/main.js"></script>
     <script>
 
+        // $(function () {
+        //    var success = '@TempData["Answered_successfully"]';
+        //    console.log(success);
+        //    if (success == "true") {
+        //        $('#modal-success').modal('show');
+        //    }
+        //})
         var tagss = [];
+
         $(function () { // DOM ready
 
             // ::: TAGS BOX
+
+
+
 
 
             $("#tags input").on({
@@ -299,11 +347,9 @@
                             var file = e.target;
                             $("<span class=\"pip\">" +
                                 "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-                                "<br/><span class=\"remove\">Remove image</span>" +
+                            
                                 "</span>").insertAfter(".files");
-                            $(".remove").click(function () {
-                                $(this).parent(".pip").remove();
-                            });
+                          
                         });
                         fileReader.readAsDataURL(f);
                     }
@@ -341,6 +387,13 @@
                 datatype: "json",
             });
         }
+
+
+        function Reset() {
+            document.getElementById("photos").value = null;
+            $(".pip").remove();
+        }
+
 
         $(function () {
             $("button[type='submit']").click(function () {

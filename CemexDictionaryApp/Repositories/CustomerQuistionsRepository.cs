@@ -74,7 +74,7 @@ namespace CemexDictionaryApp.Repositories
                 {
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    string path = Path.Combine(uploadsFolder + @"\images\Questions\", images[count]);
+                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\CustomerQuestions_Answers", images[count]);
                     count++;
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
@@ -93,13 +93,14 @@ namespace CemexDictionaryApp.Repositories
         public CustomerQuestions GetById(int QuestionId)
         {
             CustomerQuestions question = context.customer_Questions.
-                Include(question => question.QuestionMedia).
+                
                 Include(q => q.Category).
                  Include(question => question.User).
+                 Include(question => question.QuestionMedia).
+                 ThenInclude(questionmedia=>questionmedia.User).
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
-
         public int AnswerQuestion(int QuestionId, CustomerQuestions questionWithAnswer)
         {
             CustomerQuestions question = context.customer_Questions.

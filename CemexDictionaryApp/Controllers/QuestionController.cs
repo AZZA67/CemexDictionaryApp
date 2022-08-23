@@ -195,6 +195,13 @@ namespace CemexDictionaryApp.Controllers
             return PartialView("Details", question);
         }
 
+        public IActionResult CustomerQuestionDetails(int QuestionId)
+        {
+            CustomerQuestions _question = Customer_QuestionRepository.GetById(QuestionId);
+            return PartialView("CustomerQuestionDetails", _question);
+        }
+
+
         [HttpGet]
         public IActionResult AnswerQuestion(int questionId)
         {
@@ -202,7 +209,7 @@ namespace CemexDictionaryApp.Controllers
               List<string> images = mediaRepository.GetAll_uploaded_photos();
             ViewData["Images"] = images;
             Customer_QuestionRepository.change_IsRead_Property(question.ID);
-
+           
             return View( question);
         }
         [HttpGet]
@@ -213,10 +220,15 @@ namespace CemexDictionaryApp.Controllers
         [HttpPost]
         public IActionResult AnswerQuestion(CustomerQuestions question,List<IFormFile>photos, string videoURL)
         {
-            if (ModelState.IsValid)
+
+            CustomerQuestions q = Customer_QuestionRepository.GetById(question.ID);
+            List<string> imagess = mediaRepository.GetAll_uploaded_photos();
+            ViewData["Images"] = imagess;
+            Customer_QuestionRepository.change_IsRead_Property(question.ID);
+            if (ModelState.IsValid && question.Answer!=null)
             {
                 question.AdminId= userManager.GetUserId(HttpContext.User);
-                if (photos != null)
+                if (photos != null )
                 {
                     List<string> images = Customer_QuestionRepository.UploadImagesByAdmin(photos);
                     foreach (var item in images)
@@ -250,13 +262,17 @@ namespace CemexDictionaryApp.Controllers
                         media.Path = videoURL;
                         media.Type = MediaTypes.Video.ToString();
                         media.QuestionId = question.ID;
-                        CustomerQuestionMedia.Insert(media);
+                    media.UserId = userManager.GetUserId(HttpContext.User);
+                    CustomerQuestionMedia.Insert(media);
                         
                 }
                 Customer_QuestionRepository.AnswerQuestion(question.ID, question);
+                TempData["Answered_successfully"] = true;
                 return RedirectToAction("HomePage", "Home");
+                //return View("AnswerQuestion", q);
             }
-            return View("AnswerQuestion", question);
+           
+            return View("AnswerQuestion", q);
         }
         public IActionResult RejectQuestion(int questionId)
         {
@@ -271,7 +287,7 @@ namespace CemexDictionaryApp.Controllers
         }
         public IActionResult GetNotificationList(string listName)
         {
-            
+            TempData["listname"]=listName;
             List<CustomerQuestions> notifications = new List<CustomerQuestions>();
           if (listName=="Notification")
             {
@@ -293,11 +309,25 @@ namespace CemexDictionaryApp.Controllers
             List<CustomerQuestions> notifications= Customer_QuestionRepository.NotificationList();
             
             return Json(notifications);
-           
-
-
         }
 
+
+        //public ActionResult SearchQuestionById(int questionId,string QuestionType)
+        //{
+        //    if(QuestionType=="user")
+        //    {
+        //        CustomerQuestions _question= Customer_QuestionRepository.GetById(questionId);
+        //        return 
+        //    }
+        //    else
+        //    {
+
+        //    }
+        //    return Json(notifications);
+
+
+
+        //}
 
 
     }

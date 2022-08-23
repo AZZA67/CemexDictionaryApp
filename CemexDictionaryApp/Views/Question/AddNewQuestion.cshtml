@@ -147,13 +147,17 @@
 
                       <div class="card">
                             <div class="card-body row border-0 field">
-                                <div class="col-6">
+                                <div class="col-5">
                                     <input class="form-control files" type="file" name="photos" id="photos" multiple />
                                 </div>
 
-                                <div class="col-6">
+                                <div class="col-5">
                                     <button type="button" onclick="modaladd()" class="btn btn-info">Choose from existing images</button>
                                 </div>
+
+                                <div class="col-2">
+                                 <button type="button" onclick="Reset()" class="btn btn-info">Reset</button>
+                                 </div>
                             </div>
                         </div>
                     </div>
@@ -161,11 +165,11 @@
                         <div class="form-group mb-3 ">
 
                     <div class="alert alert-success" role="alert">
-Images Selected :  0 New : 0 Existing 
-</div>
-</div>
+                    Images Selected :  0 New : 0 Existing 
+                   </div>
+                    </div>
 
-<br />
+                      <br />
              <div class="form-group mb-3 ">
                       <button type="submit" class="btn btn-primary" style="width:100%">Submit</button>
                     </div>
@@ -461,6 +465,15 @@ Images Selected :  0 New : 0 Existing
         }
 
 
+
+
+        function Reset()
+        {
+            document.getElementById("photos").value = null;
+            $(".pip").remove();
+        }
+
+
         $(document).ready(function () {
             if (window.File && window.FileList && window.FileReader) {
                 $(".files").on("change", function (e) {
@@ -474,11 +487,9 @@ Images Selected :  0 New : 0 Existing
                             var file = e.target;
                             $("<span class=\"pip\">" +
                                 "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
-                                "<br/><span class=\"remove\">Remove image</span>" +
+            
                                 "</span>").insertAfter(".files");
-                            $(".remove").click(function () {
-                                $(this).parent(".pip").remove();
-                            });
+                           
                         });
                         fileReader.readAsDataURL(f);
                     }
@@ -532,6 +543,19 @@ Images Selected :  0 New : 0 Existing
         }
     </script>
 }
+
+@*<script src="aa.js"></script>
+<form id="myForm">
+  <input type="file" id="files" name="files" multiple>
+  <div id="selectedFiles"></div>
+  <br/>
+  <input type="submit">
+</form> 
+*@
+
+
+
+
 
 
 
