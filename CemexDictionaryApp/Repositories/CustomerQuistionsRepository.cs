@@ -1,11 +1,17 @@
 ﻿using CemexDictionaryApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using static System.Net.WebRequestMethods;
+//using static System.Net.Mime.MediaTypeNames;
 
 namespace CemexDictionaryApp.Repositories
 {
@@ -34,10 +40,37 @@ namespace CemexDictionaryApp.Repositories
                  Include(question => question.Category).
                  Include(question => question.User).
                Where(question => question.CategoryId == _categoryId).ToList();
-
             return Questions;
         }
 
+
+
+        //public Dictionary<string, string> UploadUserMedia(ImageModel[] files)
+        //{
+        //    var uploads = Path.Combine(hosting.WebRootPath, "uploads");
+        //    var ImgDictionary = new Dictionary<string, string>();
+
+        //    foreach (var file in files)
+        //    {
+
+        //        var key = Guid.NewGuid().ToString();
+        //        ImgDictionary.Add(key, file.ImageName);
+        //        var fullpath = Path.Combine(uploads, key + '_' + file.ImageName);
+        //        if (file.ImageBase64.Contains("data:image"))
+        //        {
+
+        //            file.ImageBase64 = file.ImageBase64.Substring(file.ImageBase64.LastIndexOf(',') + 1);
+
+        //        }
+        //        byte[] imageBytes = Convert.FromBase64String(file.ImageBase64);
+
+        //        using (var img = Image.Load(imageBytes))
+        //        {
+        //            img.Save(fullpath);
+        //        }
+        //    }
+        //    return ImgDictionary;
+        //}
         public List<string> UploadFile(List<string> base64Images)
         {
             List<string> images = new List<string>();
@@ -55,10 +88,22 @@ namespace CemexDictionaryApp.Repositories
                     string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
                     count++;
 
-                 
+
+                    //byte[] imageBytes = Convert.FromBase64String(base64image);
+
+                    //File.WriteAllBytes(path, imageBytes);
+
+                    //if (base64image.Contains("data:image"))
+                    //{
+                    //    base64image = base64image.Substring(base64image.LastIndexOf(',') + 1);
+                    //}
                     byte[] imageBytes = Convert.FromBase64String(base64image);
 
-                    File.WriteAllBytes(path, imageBytes);
+                    using (var img = Image.Load(imageBytes))
+                    {
+                        img.Save(path);
+                    }
+
                 }
             }
             return images;

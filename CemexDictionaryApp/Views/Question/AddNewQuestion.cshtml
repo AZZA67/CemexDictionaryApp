@@ -164,8 +164,8 @@
 
                         <div class="form-group mb-3 ">
 
-                    <div class="alert alert-success" role="alert">
-                    Images Selected :  0 New : 0 Existing 
+                    <div  id="ImageCounter"class="alert alert-success" role="alert">
+                   @* Images Selected : 0 New : 0 Existing : 0 *@
                    </div>
                     </div>
 
@@ -396,6 +396,10 @@
     <script src="~/Multiselect/js/main.js"></script>
     <script>
 
+
+
+
+
         var tagss = [];
         $(function () { // DOM ready
             
@@ -463,13 +467,10 @@
             });
 
         }
-
-
-
-
         function Reset()
         {
             document.getElementById("photos").value = null;
+            document.getElementById("ImageCounter").innerHTML = "Images Selected : " + array.length + " new : " + 0 + " Existing: " + array.length;
             $(".pip").remove();
         }
 
@@ -493,6 +494,9 @@
                         });
                         fileReader.readAsDataURL(f);
                     }
+                    var neww = document.getElementById("photos").files.length;
+                    var totalcount = neww + array.length;
+                    document.getElementById("ImageCounter").innerHTML = "Images Selected : " + totalcount + " new : " + neww + " Existing: " + array.length;
                 });
             } else {
                 alert("Your browser doesn't support to File API")
@@ -500,7 +504,6 @@
         });
         var array = [];
         function add(image, check) {
-
             if (check.checked == true && array.length < 3) {
                 array.push(image);
             }
@@ -515,12 +518,16 @@
                 check.checked = false;
                 console.log("hi");
             }
+            var neww= document.getElementById("photos").files.length;
+            var totalcount = neww + array.length;
+            document.getElementById("ImageCounter").innerHTML = "Images Selected : " + totalcount + " new : " + neww + " Existing: " + array.length;
             console.log(image, check);
         }
+
+
         function save() {
             console.log(array);
             $.ajax({
-
                 url: "/Question/Add/${array}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",

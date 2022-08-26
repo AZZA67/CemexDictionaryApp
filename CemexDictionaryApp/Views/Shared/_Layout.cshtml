@@ -650,14 +650,11 @@
 
                     },
                     error: function () {
-                        alert("Dynamic content load failed.");
+                         alert("Oops..Question with this Id was not found, try another Id");
                     }
                 });
             }
         }
-
-
-
         function UserQuestionDetails() {
                 var itemid=document.getElementById("QuestionId").value;
             if (itemid != "") {
@@ -676,7 +673,7 @@
 
                     },
                     error: function () {
-                        alert("Dynamic content load failed.");
+                        alert("Oops..Question with this Id was not found, try another Id");
                     }
                 });
             }
