@@ -8,20 +8,24 @@
 
 <div class="modal-body">
     <div class="mb-3">
-        //all categories
+       
+       
+
+
+
         <label class="form-label">Question Details</label>
         <div>
             <div class="stats mt-2">
+                <div class="d-flex justify-content-between p-price">
+                    <span>Question categories</span>
+                    <span>@Model.Category.Name</span>
+                </div>
                 <div class="d-flex justify-content-between p-price">
                     <span>Question Text</span>
                     <span>@Model.Text</span>
                 </div>
 
-                <div class="d-flex justify-content-between p-price">
-                    <span> Answer</span>
-                    <span>@Model.Answer</span>
-                </div>
-
+               
                
 
                 <div class="d-flex justify-content-between p-price">
@@ -33,41 +37,98 @@
                 <div class="d-flex justify-content-between p-price">
                     <span>Question status </span>
                     <span>@Model.Status</span>
-                </div>
-
-                <div class="d-flex justify-content-between p-price">
-                    <span>Video URL</span>
-                    <span>@Model.QuestionMedia.Find(media=>media.Type=="Video").Path</span>
-                </div>
-                <div class="row g-2">
-                    @foreach (var media in Model.QuestionMedia)
-                    {
-
-                        @if (media.Type == "Image")
-                        {
-                            <div class="col-6 col-sm-4">
-                                <label class="mb-2">
-                                    <span >
-                                        @if (media.User.Role == "Admin")
-                                        {
-
-
-                                            <img src="~/images/CustomerQuestions/CustomerQuestions_Answers/@media.Path" alt="Breakfast served with tea, bread and eggs">
-                                        }
-                                        else
-                                        {
-
-                                            <img src="~/images/CustomerQuestions/@media.Path" alt="Breakfast served with tea, bread and eggs" >
-                                        }
-
-                                    </span>
-                                </label>
-                            </div>
-
-                        }
+                    @if(@Model.Status=="Pending"){
+                        
+                        <span>
+                            <a href="/Question/AnswerQuestion?questionId=@Model.ID" data-bs-boundary="viewport">Answer</a>
+                        </span>
                     }
                 </div>
+              
 
+                @if (Model.QuestionMedia.Where(m => m.User.Role == "User").ToList().Count() != 0 )
+                {
+
+                    <div class="row g-2">
+                        <label>User Question Media</label>
+                        @foreach (var media in Model.QuestionMedia)
+                        {
+
+                            @if (media.Type == "Image")
+                            {
+                                @if (media.User.Role == "User")
+                                {
+                                    <div class="col-6 col-sm-4">
+                                        <label class="mb-2">
+
+                                            <span>
+
+                                                <img src="~/images/CustomerQuestions/@media.Path" alt="Breakfast served with tea, bread and eggs">
+
+
+
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+
+                    }
+                        }
+                    </div>
+
+                }
+               
+                @if (Model.Answer != null)
+                {
+                    <label>Admin Answer</label>
+                    <div class="d-flex justify-content-between p-price">
+                        <span> Answer</span>
+                        <span>@Model.Answer</span>
+                    </div>
+                }
+
+                @if (Model.QuestionMedia.Where(m => m.User.Role == "Admin").ToList().Count() != 0)
+                {
+
+                    <div class="row ">
+                        <label>Admin Answer Media</label>
+                        @foreach (var media in Model.QuestionMedia)
+                        {
+                            
+                            @if (media.Type == "Image")
+                            {
+                                @if (media.User.Role == "Admin")
+                                {
+                                    <div class="col-6 col-sm-4">
+                                        <label class="mb-2">
+                                            <span>
+
+
+
+                                                <img src="~/images/CustomerQuestions/CustomerQuestions_Answers/@media.Path" alt="Breakfast served with tea, bread and eggs">
+
+
+
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+
+                    }
+                        }
+                    </div>
+
+                }
+
+                @if (Model.QuestionMedia.Find(media => media.Type == "Video") != null)
+                {
+                    <div class="d-flex justify-content-between p-price">
+                        <span>Video URL</span>
+
+                        <span><a href="@Model.QuestionMedia.Find(media=>media.Type=="Video").Path" target="_blank">@Model.QuestionMedia.Find(media=>media.Type=="Video").Path </a></span>
+                    </div>
+                }
+               
 
             </div>
         </div>

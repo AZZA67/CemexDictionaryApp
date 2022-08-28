@@ -70,16 +70,24 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
                                 <div class="card">
-                                    <div class="card-header">
+                                    <div class="row card-header">
+
+
+                                       <div class="col-8">
                                         <h3 class="card-title">Notifications</h3>
                                     </div>
-                                    <div id="viewall">
-                                        <a href="/Question/GetNotificationList?listName=Notification" class="btn btn-link link-secondary"><h5>View All</h5></a>
+
+                                        <div id="viewall" class="col-4 btn btn-primary">
+                                            <a href="/Question/GetNotificationList?listName=Notification"
+                                               class="btn btn-link link-secondary"><h5 style="color:white">View All</h5></a>
+                                        </div>
+
                                     </div>
-                            
+                                   
+
+                                   
+                      
                                     <div class="list-group list-group-flush list-group-hoverable scrollable" id="item">
-
-
                                         <div class="list-group list-group-flush list-group-hoverable scrollable" id="signalRNotifications"></div>
                                         @foreach (CustomerQuestions customer_question in @questionRepo.NotificationList())
                                         {

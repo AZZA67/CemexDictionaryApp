@@ -7,21 +7,15 @@
         <form id="form" asp-action="AnswerQuestion" asp-controller="Question" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6">
-
-
-
                     <div>
                         <input value="@Model.ID" asp-for="ID" class="form-control visually-hidden">
                     </div>
-
-
                     <div class="form-group mb-3 ">
                         <label asp-for="User.UserName" class="form-label">User Name</label>
                         <div>
                             <label asp-for="User.UserName" class="form-control">@Model.User.UserName</label>
                         </div>
                     </div>
-
                     <div class="form-group mb-3 ">
                         <label asp-for="SubmitTime" class="form-label">Submit Date & Time</label>
                         <div>
@@ -35,6 +29,7 @@
                         <div>
                             <label asp-for="Text" class="form-control">@Model.Text</label>
                         </div>
+                      
                     </div>
 
                     <div class="form-group mb-3 ">
@@ -74,7 +69,7 @@
                         <div class="form-group mb-3 ">
                             <label asp-for="Answer" class="form-label">Answer Text</label>
                             <div>
-                                <input asp-for="Answer" class="form-control">
+                                <input asp-for="Answer" class="form-control" required>
                             </div>
                             <span asp-validation-for="@Model.Answer" class="text-danger"></span>
                         </div>
@@ -99,6 +94,15 @@
 
                         </div>
                     </div>
+                    
+                        <div class="form-group mb-3 ">
+
+                    <div  id="ImageCounter"class="alert alert-success" role="alert">
+                   @* Images Selected : 0 New : 0 Existing : 0 *@
+                   </div>
+                    </div>
+
+                      <br />
                     <div class="form-group mb-3 ">
                         <label class="form-label">URL</label>
                         <div>
@@ -106,6 +110,8 @@
                         </div>
                     </div>
                 </div>
+
+
 
                 <div class="form-footer row">
                     <button id="submit" class="btn btn-primary col-6" type="submit">Submit</button>
@@ -353,6 +359,9 @@
                         });
                         fileReader.readAsDataURL(f);
                     }
+                    var neww = document.getElementById("photos").files.length;
+                    var totalcount = neww + array.length;
+                    document.getElementById("ImageCounter").innerHTML = "Images Selected : " + totalcount + " new : " + neww + " Existing: " + array.length;
                 });
             } else {
                 alert("Your browser doesn't support to File API")
@@ -374,6 +383,9 @@
                 check.checked = false;
                 console.log("hi");
             }
+            var neww = document.getElementById("photos").files.length;
+            var totalcount = neww + array.length;
+            document.getElementById("ImageCounter").innerHTML = "Images Selected : " + totalcount + " new : " + neww + " Existing: " + array.length;
             console.log(image, check);
         }
         function save() {
@@ -391,6 +403,7 @@
 
         function Reset() {
             document.getElementById("photos").value = null;
+            document.getElementById("ImageCounter").innerHTML = "Images Selected : " + array.length + " new : " + 0 + " Existing: " + array.length;
             $(".pip").remove();
         }
 
