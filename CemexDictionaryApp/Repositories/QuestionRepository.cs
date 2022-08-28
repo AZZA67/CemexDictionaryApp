@@ -63,7 +63,7 @@ namespace CemexDictionaryApp.Repositories
                 string[] keywords = Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
                 var QuestionsWithCategories = context.Questions
-                    .Where(q => q.TopQuestion == true && q.Question_category.
+                    .Where(q => q.Question_category.
                     Any(c => categories.Contains(c.CategoryId))).Include(q => q.QuestionMedia).
                     Include(q => q.Admin).
                      Include(q => q.Question_category).
@@ -79,7 +79,7 @@ namespace CemexDictionaryApp.Repositories
             else
             {
 
-                var result = context.Questions.Where(q => q.TopQuestion == true)
+                var result = context.Questions
                        .Include(q => q.QuestionMedia).
                     Include(q => q.Admin).
                      Include(q => q.Question_category).

@@ -11,7 +11,13 @@
                         Overview
                     </div>
                     <h2 class="page-title">
-                        All Notifications 
+                              @if ((string)TempData["listname"] == "Notification"){
+                    <span> | Notifications :  @Model.Count()</span>
+                }
+
+                else{
+                    <span> | Pending Questions :  @Model.Count()</span>
+                }
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -46,7 +52,7 @@
                 }
 
                 else{
-                    <span> | Pending Notifications @Model.Count()</span>
+                    <span> | Pending Questions @Model.Count()</span>
                 }
                        
                     
@@ -110,7 +116,7 @@
                             </td>
                             <td style="vertical-align:central; text-align:center">
                                 <span class="text-muted">
-                                    <a href="/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport">Answer</a>
+                                    <a href="/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport" class="btn-btn-primary">Answer</a>
                                 </span>
                             </td>
 
