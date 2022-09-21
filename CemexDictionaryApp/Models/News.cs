@@ -11,9 +11,9 @@ namespace CemexDictionaryApp.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
+        public string Image { get; set; } // URL
         [RegularExpression(@"(Active|InActive)", ErrorMessage = "Status Must be Active or InActive")]
-        public string Status { get; set; }
+        public string Status { get; set; } // Active  1 
         public virtual List<NewsLog> NewsLogs { get; set; }
 
     }
