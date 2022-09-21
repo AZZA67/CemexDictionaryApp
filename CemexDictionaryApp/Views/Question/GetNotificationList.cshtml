@@ -11,7 +11,13 @@
                         Overview
                     </div>
                     <h2 class="page-title">
-                        All Notifications 
+                              @if ((string)TempData["listname"] == "Notification"){
+                    <span> | Notifications :  @Model.Count()</span>
+                }
+
+                else{
+                    <span> | Pending Questions :  @Model.Count()</span>
+                }
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -39,8 +45,18 @@
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-easel3" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8.5 13.134V12h5a1.5 1.5 0 0 0 1.5-1.5V2h.5a.5.5 0 0 0 0-1H.5a.5.5 0 0 0 0 1H1v8.5A1.5 1.5 0 0 0 2.5 12h5v1.134a1 1 0 1 0 1 0ZM2 2v8.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V2H2Z" />
-                </svg> |  Notifications @Model.Count()
 
+                </svg> 
+                @if ((string)TempData["listname"] == "Notification"){
+                    <span> | Notifications @Model.Count()</span>
+                }
+
+                else{
+                    <span> | Pending Questions @Model.Count()</span>
+                }
+                       
+                    
+               
             </h3>
         </div>
         @*                  <div class="card-body border-bottom py-3">
@@ -60,6 +76,7 @@
                 </div>
               </div>
             </div>*@
+
         <div class="card-header">
             <div class="table-responsive">
                 <table class="table card-table table-vcenter text-nowrap datatable" id="TblInfo">
@@ -69,6 +86,8 @@
                             <th style="vertical-align:central; text-align:center"> Customer Name </th>
                             <th style="vertical-align:central; text-align:center"> State</th>
                             <th style="vertical-align:central; text-align:center">Zone</th>
+                            <th style="vertical-align:central; text-align:center">Category</th>
+                            <th style="vertical-align:central; text-align:center">Occupation</th>
                             <th style="vertical-align:central; text-align:center">Date Time</th>
                             <th style="vertical-align:central; text-align:center">Action</th>
                         </tr>
@@ -85,13 +104,19 @@
                             <td style="vertical-align:central; text-align:center">
                                 @item.User.Zone
                             </td>
+                             <td style="vertical-align:central; text-align:center">
+                                @item.User.Category
+                            </td>
+                                <td style="vertical-align:central; text-align:center">
+                                    @item.User.Occupation
+                                </td>
 
                             <td style="vertical-align:central; text-align:center">
                                 @item.SubmitTime
                             </td>
                             <td style="vertical-align:central; text-align:center">
                                 <span class="text-muted">
-                                    <a href="/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport">Answer</a>
+                                    <a href="/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport" class="btn btn-primary">Answer</a>
                                 </span>
                             </td>
 

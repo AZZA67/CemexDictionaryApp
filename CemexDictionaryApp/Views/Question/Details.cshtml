@@ -1,54 +1,66 @@
 ﻿@{Layout = null;}
 @model CemexDictionaryApp.Models.Question
 
-
-
-
 <div class="modal-body">
     <div class="mb-3">
-        //all categories
-        <label class="form-label">Question Details</label>
         <div>
             <div class="stats mt-2">
                 <div class="d-flex justify-content-between p-price">
-                    <span>Question Text</span>
-                    <span>@Model.Text</span>
+                    <span><b>Question  : </b> @Model.Text</span>
                 </div>
 
                 <div class="d-flex justify-content-between p-price">
-                    <span> Answer</span>
-                    <span>@Model.Answer</span>
+                      <span><b>Answer  : </b> @Model.Answer</span>
                 </div>
 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Tags</span>
-                    <span>@Model.Tags</span>
+                <div class="d-flex justify-content-between p-price"> 
+                   <span><b>Category  : </b> 
+                       
+                            @foreach (var _category in Model.Question_category)
+                                   {
+                               
+                                            <span>@_category.category.Name</span>
+                                
+                                    }    
+                   </span>
                 </div>
 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Question's submit Date and Time</span>
-                    <span>@Model.SubmitTime</span>
+                 <div class="d-flex justify-content-between p-price"> 
+                   <span><b>Tags  : </b> @Model.Tags</span>
                 </div>
 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Top Question?</span>
-                    <span>@Model.TopQuestion</span>
+                    <div class="d-flex justify-content-between p-price"> 
+                   <span><b>Top Question  : </b> @Model.TopQuestion</span>
+                </div>
+<br />
+
+                 <div class="d-flex justify-content-between p-price"> 
+                   <span><b>Uploaded By  : </b> @Model.Admin</span>
                 </div>
 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Video URL</span>
-                    <span>@Model.QuestionMedia.Find(media=>media.Type=="Video")</span>
+                 <div class="d-flex justify-content-between p-price"> 
+                   <span><b>Submit Date  : </b> @Model.SubmitTime</span>
                 </div>
+
+             
+                <br />
+                <div class="d-flex justify-content-between p-price">
+                    <span><b>Video URL : </b>
+                    <a href="@Model.QuestionMedia.Find(media=>media.Type=="Video").Path" target="_blank">@Model.QuestionMedia.Find(media=>media.Type=="Video").Path </a></span>
+                </div>
+
+
                 <div class="row g-2">
+                    <span><b>Images : </b></span>
                     @foreach (var media in Model.QuestionMedia)
                     {
 
                         @if (media.Type == "Image")
                         {
                             <div class="col-6 col-sm-4">
-                                <label class="form-imagecheck mb-2">
-                                    <span class="form-imagecheck-figure">
-                                        <img src="~/images/Questions/@media.Path" alt="Breakfast served with tea, bread and eggs" class="form-imagecheck-image">
+                                <label class="mb-2">
+                                    <span >
+                                        <img src="~/images/Questions/@media.Path" alt="Breakfast served with tea, bread and eggs" >
                                     </span>
                                 </label>
                             </div>

@@ -23,6 +23,8 @@ namespace CemexDictionaryApp.DTO
         public string Address { get; set; }
         [Required(ErrorMessage = "Mobile Number is required ")]
         [Display(Name = "Mobile Number")]
+        [RegularExpression(@"^(011|012|010|015)[0-9]{8}",
+            ErrorMessage = "Phone is not valid")]
         public string Mobileno { get; set; }
         [Required(ErrorMessage = "Category is required ")]
         public string Category { get; set; }

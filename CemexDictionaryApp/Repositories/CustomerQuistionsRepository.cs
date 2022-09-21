@@ -1,11 +1,17 @@
 ﻿using CemexDictionaryApp.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using static System.Net.WebRequestMethods;
+//using static System.Net.Mime.MediaTypeNames;
 
 namespace CemexDictionaryApp.Repositories
 {
@@ -34,7 +40,6 @@ namespace CemexDictionaryApp.Repositories
                  Include(question => question.Category).
                  Include(question => question.User).
                Where(question => question.CategoryId == _categoryId).ToList();
-
             return Questions;
         }
 
@@ -47,18 +52,16 @@ namespace CemexDictionaryApp.Repositories
             {
                 if (base64image != null)
                 {
-
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     string imageName = Guid.NewGuid().ToString() + ".jpg";
                     images.Add(imageName);
-
                     string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
                     count++;
-
-                 
                     byte[] imageBytes = Convert.FromBase64String(base64image);
-
-                    File.WriteAllBytes(path, imageBytes);
+                    using (var img = Image.Load(imageBytes))
+                    {
+                        img.Save(path);
+                    }
                 }
             }
             return images;
@@ -74,7 +77,7 @@ namespace CemexDictionaryApp.Repositories
                 {
                     string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    string path = Path.Combine(uploadsFolder + @"\images\Questions\", images[count]);
+                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\CustomerQuestions_Answers", images[count]);
                     count++;
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
@@ -93,13 +96,14 @@ namespace CemexDictionaryApp.Repositories
         public CustomerQuestions GetById(int QuestionId)
         {
             CustomerQuestions question = context.customer_Questions.
-                Include(question => question.QuestionMedia).
+                
                 Include(q => q.Category).
                  Include(question => question.User).
+                 Include(question => question.QuestionMedia).
+                 ThenInclude(questionmedia=>questionmedia.User).
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
-
         public int AnswerQuestion(int QuestionId, CustomerQuestions questionWithAnswer)
         {
             CustomerQuestions question = context.customer_Questions.

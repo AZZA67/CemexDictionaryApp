@@ -14,6 +14,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="VideoLibrary" Version="3.1.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\CustomerQuestions\" />
+    <Folder Include="wwwroot\images\CustomerQuestions\CustomerQuestions_Answers\" />
     <Folder Include="wwwroot\images\News\" />
     <Folder Include="wwwroot\images\Questions\" />
     <Folder Include="wwwroot\images\Products\" />

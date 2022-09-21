@@ -23,10 +23,10 @@ namespace CemexDictionaryApp.WebApi
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
         //EntityContext context;
-        DBContext dbcontext;
+        private readonly DBContext dbcontext;
         private readonly SignInManager<ApplicationUser> signinmanager;
         private readonly IHttpContextAccessor httpContextAccessor;
-
+      
         public UserController(IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signinmanager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, DBContext _dbcontext)
         {
             this.httpContextAccessor = httpContextAccessor;
@@ -41,7 +41,8 @@ namespace CemexDictionaryApp.WebApi
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await userManager.FindByNameAsync(model.Username);
+            var user = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == model.Mobile_Number);
+            //var user = await userManager.FindByNameAsync(model.Username);
           
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
