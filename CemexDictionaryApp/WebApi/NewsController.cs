@@ -1,29 +1,29 @@
 ﻿using CemexDictionaryApp.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 namespace CemexDictionaryApp.WebApi
 {
     [Route("api/[controller]")]
     [ApiController]
     public class NewsController : ControllerBase
     {
-        INewsRepository News_Repository;
-        public NewsController(INewsRepository _news_Repository)
+        readonly INewsRepository NewsRepository;
+        public NewsController(INewsRepository newsRepository)
         {
-            News_Repository = _news_Repository;
+            NewsRepository = newsRepository;
         }
-        [HttpGet("getAll")]
-        public IActionResult getAll()
+
+        /// <summary>
+        /// List All Actie News
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAll")]
+        public IActionResult NewsList()
         {
-            if (News_Repository.GetAll_Active_Newss() != null)
-            {
-                return Ok(News_Repository.GetAll_Active_Newss());
-            }
-            return BadRequest("No News are found !");
+            var _result = NewsRepository.ActiveNews();
+            if(_result != null && _result.Count>0)
+                return Ok(new { Flag = true, Message =ApiMessages.Done, Data = _result });
+            else
+                return BadRequest(new { Flag = false, Message =ApiMessages.EmptyNewsList, Data = 0 });
         }
     }
 }

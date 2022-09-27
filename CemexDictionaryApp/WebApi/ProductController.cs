@@ -1,31 +1,30 @@
-﻿using CemexDictionaryApp.Models;
-using CemexDictionaryApp.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using CemexDictionaryApp.Repositories;
+using CemexDictionaryApp.WebApi.ApiModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 namespace CemexDictionaryApp.WebApi
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
-        IProductRepository Product_Repository;
-        public ProductController(IProductRepository _product_Repository)
+        readonly IProductRepository ProductRepository;
+        public ProductController(IProductRepository productRepository)
         {
-            Product_Repository = _product_Repository;
+            ProductRepository = productRepository;
         }
     
-        [HttpGet("getAll")]
-        public IActionResult getAll()
+        /// <summary>
+        /// List All Active Products
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetAll")]
+        public IActionResult Products()
         {
-            if (Product_Repository.GetAll_Active_Products() != null)
-            {
-                return Ok(Product_Repository.GetAll_Active_Products());
-            }
-            return BadRequest("No Products are found !");
+            var _result = ProductRepository.ActiveProducts();
+            if (_result != null && _result.Count>0)
+                return Ok(new { Flag = true, Message = ApiMessages.Done, Data = ApiProductMapping.Mapping(_result)});
+            else
+                return BadRequest(new { Flag = false, Message =ApiMessages.EmptyProductList, Data = 0 });
         }
     }
 }

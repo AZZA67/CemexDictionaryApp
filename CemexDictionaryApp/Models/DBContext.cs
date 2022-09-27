@@ -37,6 +37,10 @@ namespace CemexDictionaryApp.Models
         public DbSet<QuestionPerCategory> questionPerCategories { get; set; }
         public DbSet<CustomerQuestions> customer_Questions { get; set; }
         public DbSet<CustomerQuestionMedia> CustomerQuestionMedias { get; set; }
+        public DbSet<State> States { get; set; }
+        public DbSet<Zone> Zones { get; set; }
+
+        public DbSet<Occupation> Occupations { get; set; }
 
         public DbSet<ApplicationUser> app_users { get; set; }
     }

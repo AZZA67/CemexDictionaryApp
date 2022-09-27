@@ -93,10 +93,6 @@ namespace CemexDictionaryApp.Repositories
 
             }
         }
-
-
-
-
         public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
         {
             List<QuestionPerCategory> Questions = context.questionPerCategories
@@ -105,7 +101,6 @@ namespace CemexDictionaryApp.Repositories
                 ThenInclude(question => question.QuestionMedia).ToList();
             return Questions;
         }
-
         public List<string> UploadFile(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();
@@ -127,14 +122,11 @@ namespace CemexDictionaryApp.Repositories
             }
             return images;
         }
-
         public int Insert(Question question)
         {
             context.Questions.Add(question);
             return context.SaveChanges();
         }
-
-
         public Question GetById(int QuestionId)
         {
             Question question = context.Questions.Include(question => question.QuestionMedia).
@@ -144,6 +136,5 @@ namespace CemexDictionaryApp.Repositories
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
-
     }
 }

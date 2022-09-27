@@ -1,5 +1,7 @@
 ﻿using CemexDictionaryApp.DTO;
 using CemexDictionaryApp.Models;
+using CemexDictionaryApp.Repositories;
+using CemexDictionaryApp.WebApi.ApiModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +24,13 @@ namespace CemexDictionaryApp.WebApi
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
-        //EntityContext context;
         private readonly DBContext dbcontext;
         private readonly SignInManager<ApplicationUser> signinmanager;
         private readonly IHttpContextAccessor httpContextAccessor;
-      
-        public UserController(IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signinmanager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, DBContext _dbcontext)
+        ICustomerQuistionsRepository CustomerQuestion;
+
+        public UserController(IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signinmanager, UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager, IConfiguration configuration, DBContext _dbcontext, ICustomerQuistionsRepository customerQuestion)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
@@ -35,94 +38,112 @@ namespace CemexDictionaryApp.WebApi
             _configuration = configuration;
             this.dbcontext = _dbcontext;
             this.signinmanager = signinmanager;
+            CustomerQuestion = customerQuestion;
         }
 
         [HttpPost]
-        [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            var user = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == model.Mobile_Number);
-            //var user = await userManager.FindByNameAsync(model.Username);
-          
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            if(login !=null)
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
-                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, user.UserName));
-                await userManager.AddClaimAsync(user, new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-                var authClaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id)
-                };
-
-                foreach (var userRole in userRoles)
+                var _checkUser = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == login.Mobileno);
+                if (_checkUser != null)
                 {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    if (await userManager.CheckPasswordAsync(_checkUser, login.Password))
+                    {
+                        var userRoles = await userManager.GetRolesAsync(_checkUser);
+                        await userManager.AddClaimAsync(_checkUser, new Claim(ClaimTypes.NameIdentifier, _checkUser.Id));
+                        await userManager.AddClaimAsync(_checkUser, new Claim(ClaimTypes.Name, _checkUser.UserName));
+                        await userManager.AddClaimAsync(_checkUser, new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+                        var authClaims = new List<Claim>{
+                        new Claim(ClaimTypes.Name, _checkUser.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(ClaimTypes.NameIdentifier, _checkUser.Id)
+                        };
+
+                        foreach (var userRole in userRoles)
+                        {
+                            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                        }
+
+                        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
+                        return Ok(new { Flag = true, Message =ApiMessages.Done, Data = new { id = _checkUser.Id, mobileNo = _checkUser.PhoneNumber } });
+                    }
+                    return BadRequest(new { Flag = false, Message =ApiMessages.WrongPassword, Data = 0 });
                 }
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
-
-
-                //getuser(authClaims);
-                return Ok(user);
-                
+                return BadRequest(new { Flag = false, Message =ApiMessages.MobileNotExist, Data = 0 });
             }
-            return Unauthorized();
+            return BadRequest(new { Flag = false, Message =ApiMessages.EmptyObject, Data = 0 });
         }
        //return object have user data
+       
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register(RegisterModel userDTO)
+        public async Task<IActionResult> Register(ApiUser registerUser)
         {
-            if (!ModelState.IsValid)
+            if(registerUser != null)
             {
-                return BadRequest(ModelState);
-            }
-            var userExists = await userManager.FindByNameAsync(userDTO.Username);
-            if (userExists != null)
-                return BadRequest(error: "User already exists!");
-            ApplicationUser user = new ApplicationUser()
-            {
-                //Email = userDTO.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = userDTO.Username,
-                Zone= userDTO.Zone,
-                State= userDTO.State,
-                Category=userDTO.Category,
-                Occupation=userDTO.Occupation,
-                PhoneNumber=userDTO.Mobileno,
-                Role = "User"
+                var _check = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == registerUser.Mobileno);
+                if(_check == null)
+                {
+                    ApplicationUser _newUser = new()
+                    {
+                        SecurityStamp = Guid.NewGuid().ToString(),
+                        UserName = registerUser.Mobileno,
+                        Zone = registerUser.Zone,
+                        State = registerUser.State,
+                        Category = registerUser.Occupation,
+                        Occupation = registerUser.Occupation,
+                        PhoneNumber = registerUser.Mobileno,
+                        Role = "User",
+                        Address = registerUser.Address,
+                        Name = registerUser.Username
+                    };
 
-            };
-            if(userDTO.Email==null)
-            {
-                user.Email = userDTO.Mobileno + "@cemex.com";
-            }
-            else
-            {
-                user.Email = userDTO.Email;
-            }
-            var result = await userManager.CreateAsync(user, userDTO.Password);
-            if (await roleManager.RoleExistsAsync("User") == false)
-            {
-                IdentityRole role = new IdentityRole();
-                role.Name = "User";
-                await roleManager.CreateAsync(role);
-                await userManager.AddToRoleAsync(user, "User");
-            }
-            else
-            {
-                await userManager.AddToRoleAsync(user, "User");
-            }
+                    if (registerUser.Email == null || string.IsNullOrEmpty(registerUser.Email))
+                        _newUser.Email = registerUser.Mobileno + "@cemex.com";
+                    else
+                        _newUser.Email = registerUser.Email;
 
-            if (!result.Succeeded)
-                return BadRequest(result.Errors.FirstOrDefault().Description);
-            return Ok(user);
+                    var _createPass = await userManager.CreateAsync(_newUser, registerUser.Password);
+                    if (await roleManager.RoleExistsAsync("User") == false)
+                    {
+                        IdentityRole role = new();
+                        role.Name = "User";
+                        await roleManager.CreateAsync(role);
+                        await userManager.AddToRoleAsync(_newUser, "User");
+                    }
+                    else
+                        await userManager.AddToRoleAsync(_newUser, "User");
+
+                    if (_createPass.Succeeded)
+                        return Ok(new { Flag = true, Message =ApiMessages.ConfirmRegistration, Data = new { id = _newUser.Id, mobileNo = _newUser.PhoneNumber } });
+
+                    return BadRequest(new { Flag = false, Message =ApiMessages.RegistrationError, Data = 0 });
+                }
+                return BadRequest(new { Flag = false, Message =ApiMessages.MobileExist, Data = 0 });
+            }
+            return BadRequest(new { Flag = false, Message =ApiMessages.EmptyObject, Data = 0 });
         }
 
+        [HttpPost]
+        [Route("Profile")]
+        public async Task<IActionResult> UserProfile([FromBody] ApiUser user)
+        {
+            if (user != null)
+            {
+                //ApplicationUser  _checkUser = dbcontext.app_users.FirstOrDefault(u => u.Id.Contains(user.Id));
+                ApplicationUser _userModel = await userManager.FindByIdAsync(user.Id);
 
-
-
+                if (_userModel != null)
+                {
+                      var _questions =   CustomerQuestion.QuestionStatusPerCustomer(user.Id);
+                      return Ok(new { Flag = true, Message = ApiMessages.Done, User = ApiUserMapping.Mapping(_userModel) , Questions = _questions});
+                }
+                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
+            }
+            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
+        }
     }
 }

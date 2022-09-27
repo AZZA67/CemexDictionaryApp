@@ -10,7 +10,7 @@ namespace CemexDictionaryApp.Repositories
     {
         int Delete(int id);
         List<News> GetAll();
-        List<News> GetAll_Active_Newss();
+        List<News> ActiveNews();
         News GetById(int NewsId);
         Task<int> Insert(News news);
         int NewssCount();

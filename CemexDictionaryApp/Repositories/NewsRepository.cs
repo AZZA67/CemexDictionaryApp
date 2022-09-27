@@ -20,11 +20,11 @@ namespace CemexDictionaryApp.Repositories
             context = _context;
             hostEnvironment = _hostEnvironment;
         }
-        public List<News> GetAll_Active_Newss()
+        public List<News> ActiveNews()
         {
-            List<News> news = context.news.
+            List<News> _newsList = context.news.
                 Where(New => New.Status == "Active").ToList();
-            return news;
+            return _newsList;
         }
         public List<News> GetAll()
         {

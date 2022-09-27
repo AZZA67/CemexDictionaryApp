@@ -17,5 +17,6 @@ namespace CemexDictionaryApp.Repositories
         int RejectQuestion(int QuestionId, string comment);
         List<string> UploadFile(List<string> base64Images);
         List<string> UploadImagesByAdmin(List<IFormFile> FormFile);
+        Dictionary<string, int> QuestionStatusPerCustomer(string userId);
     }
 }

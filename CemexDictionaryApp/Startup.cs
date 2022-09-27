@@ -28,7 +28,8 @@ namespace CemexDictionaryApp
             //services.AddMvc
             services.AddControllers().AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+               // options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.ReferenceHandler = null;
             });
 
             services.AddControllersWithViews();
@@ -48,6 +49,7 @@ namespace CemexDictionaryApp
             services.AddScoped<ICustomerQuistionsRepository, CustomerQuistionsRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
+            services.AddScoped<MasterDataRepository, MasterDataRepository>();
 
             services.AddCors(opt =>
             {

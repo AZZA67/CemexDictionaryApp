@@ -42,7 +42,6 @@ namespace CemexDictionaryApp.Repositories
                Where(question => question.CategoryId == _categoryId).ToList();
             return Questions;
         }
-
         public List<string> UploadFile(List<string> base64Images)
         {
             List<string> images = new List<string>();
@@ -92,7 +91,6 @@ namespace CemexDictionaryApp.Repositories
             context.customer_Questions.Add(question);
             return context.SaveChanges();
         }
-
         public CustomerQuestions GetById(int QuestionId)
         {
             CustomerQuestions question = context.customer_Questions.
@@ -136,9 +134,6 @@ namespace CemexDictionaryApp.Repositories
             context.SaveChanges();
             return question.ID;
         }
-
-
-
         public List<CustomerQuestions> GetAllPendingQuestions()
         {
             List<CustomerQuestions> Pending_questions = context.customer_Questions.
@@ -147,7 +142,6 @@ namespace CemexDictionaryApp.Repositories
            Where(question => question.Status == "Pending" && question.IsRead == true).ToList();
             return Pending_questions;
         }
-
         public void change_IsRead_Property(int questionId)
         {
             CustomerQuestions question = context.customer_Questions.
@@ -158,7 +152,6 @@ namespace CemexDictionaryApp.Repositories
             context.customer_Questions.Update(question);
             context.SaveChanges();
         }
-
         public List<CustomerQuestions> NotificationList()
         {
             List<CustomerQuestions> Pending_questions = context.customer_Questions.
@@ -169,7 +162,23 @@ namespace CemexDictionaryApp.Repositories
                 Pending_questions.Reverse();
             return Pending_questions;
         }
-
+        public Dictionary<string, int> QuestionStatusPerCustomer(string userId)
+        {
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var query = context.customer_Questions
+                   .Where(n => n.UserId.Contains(userId))
+                   .GroupBy(p => p.Status)
+                   .Select(g => new { name = g.Key, count = g.Count() });
+                Dictionary<string, int> _result = new();
+                foreach (var item in query)
+                {
+                    _result.Add(item.name, item.count);
+                }
+                return _result;
+            }
+            return null;
+        }
 
     }
 }

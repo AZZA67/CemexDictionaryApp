@@ -16,33 +16,31 @@ namespace CemexDictionaryApp.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        DBContext context;
-        private readonly IWebHostEnvironment hostEnvironment;
+        readonly DBContext Context;
+        private readonly IWebHostEnvironment HostEnvironment;
 
-        public ProductRepository(DBContext _context, IWebHostEnvironment _hostEnvironment)
+        public ProductRepository(DBContext context, IWebHostEnvironment hostEnvironment)
         {
-            context = _context;
-            hostEnvironment = _hostEnvironment;
-
+            Context = context;
+            HostEnvironment = hostEnvironment;
         }
-        public List<Product> GetAll_Active_Products()
+        public List<Product> ActiveProducts()
         {
-
-            List<Product> products = context.products.Include(Product => Product.productType).
+            List<Product> _productsList = Context.products.Include(Product => Product.productType).
                 Where(product => product.Status == "Active").ToList();
-            return products;
+            return _productsList;
         }
   
         public List<Product> GetAll()
         {
-            List<Product> products = context.products.
+            List<Product> products = Context.products.
                 ToList();
             return products;
         }
 
         public int ProductsCount()
         {
-            return context.products.ToList().Count();
+            return Context.products.ToList().Count();
         }
         public string UploadedFile([Bind("Id", "ProductImage")] ProductViewModel ProductViewModel)
         {
@@ -50,7 +48,7 @@ namespace CemexDictionaryApp.Repositories
 
             if (ProductViewModel.ProductImage != null)
             {
-                string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                string uploadsFolder = Path.Combine(HostEnvironment.WebRootPath);
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + ProductViewModel.ProductImage.FileName;
                 string path = Path.Combine(uploadsFolder + @"\images\Products\", uniqueFileName);
                 using (var fileStream = new FileStream(path, FileMode.Create))
@@ -62,12 +60,12 @@ namespace CemexDictionaryApp.Repositories
         }
         public int Insert(Product product)
         {
-            context.products.Add(product);
-            return context.SaveChanges();
+            Context.products.Add(product);
+            return Context.SaveChanges();
         }
         public int Update(int id, Product product)
         {
-            Product OldProduct = context.products.Include(Product => Product.productType).
+            Product OldProduct = Context.products.Include(Product => Product.productType).
                 FirstOrDefault(product => product.Id == id);
             if (OldProduct != null)
             {
@@ -77,19 +75,19 @@ namespace CemexDictionaryApp.Repositories
                 OldProduct.productType.Type = product.productType.Type;
                 OldProduct.Description = product.Description;
 
-                return context.SaveChanges();
+                return Context.SaveChanges();
             }
             return 0;
         }
         public int Delete(int id)
         {
-            Product OldProduct = context.products.FirstOrDefault(product => product.Id == id);
-            context.Remove(OldProduct);
-            return context.SaveChanges();
+            Product OldProduct = Context.products.FirstOrDefault(product => product.Id == id);
+            Context.Remove(OldProduct);
+            return Context.SaveChanges();
         }
         public Product GetById(int ProductId)
         {
-            Product Product = context.products.Include(Product => Product.productType).
+            Product Product = Context.products.Include(Product => Product.productType).
                 FirstOrDefault(product => product.Id == ProductId);
             return Product;
         }

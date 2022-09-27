@@ -9,7 +9,7 @@ namespace CemexDictionaryApp.Repositories
     {
         int Delete(int id);
         List<Product> GetAll();
-        List<Product> GetAll_Active_Products();
+        List<Product> ActiveProducts();
         Product GetById(int ProductId);
         int Insert(Product product);
         int ProductsCount();
