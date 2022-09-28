@@ -17,8 +17,9 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
 
         public List<string> ImagesPaths { get; set; } = new List<string>();
         public List<string> VideoPaths { get; set; } = new List<string>();
-        public  List<QuestionCategory> Question_category { get; set; } = new List<QuestionCategory>();
-
+        public  List<string> Question_category { get; set; } = new List<string>();
+        //LIST OF string of categories names 
+        //var _questioncategory = QuestionCategory.GetAll().Select(p => p.Name).ToList();
     }
 
     public class ApiQuestionMapping
@@ -53,7 +54,7 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
                     }
                     foreach (var questionCategory in question.Question_category)
                     {
-                        _question.Question_category.Add(questionCategory.category);
+                        _question.Question_category.Add(questionCategory.category.Name_Ar);
                     }
                         _questions.Add(_question);
 

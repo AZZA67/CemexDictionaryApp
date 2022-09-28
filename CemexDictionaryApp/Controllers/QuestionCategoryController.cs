@@ -32,8 +32,8 @@ namespace CemexDictionaryApp.Controllers
             if(ModelState.IsValid)
             {
                 QuestionCategory _questionCategory = new QuestionCategory();
-                _questionCategory.Name = questionCtegory.Name;
-                _questionCategory.الأسم = questionCtegory.الأسم;
+                _questionCategory.Name_En = questionCtegory.Name_En;
+                _questionCategory.Name_Ar = questionCtegory.Name_Ar;
                 QuestionCategoryRepository.Insert(_questionCategory);
                 TempData["Success"] = "true";
                 return RedirectToAction("GetAll");

@@ -24,7 +24,7 @@ namespace CemexDictionaryApp.WebApi
         public IActionResult HomeData()
         {
             var _news = NewsRepository.ActiveNews();
-            var _questioncategory = QuestionCategory.GetAll().Select(p => p.Name).ToList();
+            var _questioncategory = QuestionCategory.GetAll().Select(p => p.Name_En).ToList(); 
             
             if(_questioncategory!=null)
             return Ok(new { Flag = true, Message = ApiMessages.Done, QuestionCategories = _questioncategory, News = _news }); 

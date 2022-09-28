@@ -11,9 +11,9 @@ namespace CemexDictionaryApp.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Name Field Is Required")]
       
-        public string Name { get; set; }
+        public string Name_En { get; set; }
         [Required(ErrorMessage = "خانة الأسم مطلوبة ")]
-        public string الأسم { get; set; }
+        public string Name_Ar { get; set; }
 
         public virtual List<QuestionPerCategory> Question_category { get; set; }
     }

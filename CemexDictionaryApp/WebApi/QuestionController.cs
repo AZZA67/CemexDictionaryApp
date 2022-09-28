@@ -130,5 +130,21 @@ namespace CemexDictionaryApp.WebApi
             return BadRequest(new { Flag = false, Message ="Error,there are no top questions" , Data = 0 });
         }
 
+
+      
+        [HttpGet("GetCustomerQuestionsById")]
+        public IActionResult GetCustomerQuestionsById(string CustomerId)
+        {
+            if (customer_Question.GetAllQuestionsByCustomerId(CustomerId).Count != 0)
+            {
+                return Ok(new
+                {
+                    Flag = true,
+                    Message = "Done",
+                    Data = ApiCustomerQuestionMapping.Mapping(customer_Question.GetAllQuestionsByCustomerId(CustomerId))
+                });
+            }
+            return BadRequest(new { Flag = false, Message = "Error,there are no questions posted by this user", Data = 0 });
+        }
     }
     }

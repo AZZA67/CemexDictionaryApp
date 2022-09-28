@@ -18,5 +18,6 @@ namespace CemexDictionaryApp.Repositories
         List<string> UploadFile(List<string> base64Images);
         List<string> UploadImagesByAdmin(List<IFormFile> FormFile);
         Dictionary<string, int> QuestionStatusPerCustomer(string userId);
+        List<CustomerQuestions> GetAllQuestionsByCustomerId(string CustomerId);
     }
 }

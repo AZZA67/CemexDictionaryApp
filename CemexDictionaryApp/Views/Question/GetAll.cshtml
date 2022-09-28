@@ -69,7 +69,7 @@
                             @foreach (QuestionCategory qc in (List<QuestionCategory>)ViewBag.Categories)
                             {
                                     <a class="list-group-item list-group-item-action d-flex align-items-center active" href="#">
-                                        @qc.Name
+                                        @qc.Name_En
                                         <small class="text-muted ms-auto">@questionRepo.GetAllByCategoryId(@qc.Id).Count() </small>
                                     </a>
                             }

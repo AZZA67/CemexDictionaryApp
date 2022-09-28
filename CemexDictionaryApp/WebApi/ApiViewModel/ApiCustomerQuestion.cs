@@ -10,12 +10,17 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
         public string Text { get; set; }
         //[Required(ErrorMessage = "Answer Question Is required !")]
         public string Answer { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } 
         public DateTime SubmitTime { get; set; }
         public string Comment { get; set; }
-        public QuestionCategory Category { get; set; }
-        public List<string> ImagesPaths { get; set; }
-        public List<string> VideoPaths { get; set; }
+        public string Category_Name { get; set; } //string of category names
+        public List<string> ImagesPaths { get; set; } = new List<string>();
+        //public List<string> VideoPaths { get; set; } = new List<string>();
+        public List<string> Answer_ImagesPaths { get; set; } = new List<string>();
+        public List<string> Answer_VideoPaths { get; set; } = new List<string>();
+
+        //another list of answer videos
+        //another list of answer images
     }
 
     public class ApiCustomerQuestionMapping
@@ -35,21 +40,29 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
                         Status = customer_question.Status,
                         SubmitTime = customer_question.SubmitTime,
                         Comment = customer_question.Comment,
-                        Category = customer_question.Category,
+                        Category_Name = customer_question.Category.Name_Ar,
                     };
+
                     foreach (var questionMedia in customer_question.QuestionMedia)
                     {
-                        if (questionMedia.Type == "image")
+                        if (questionMedia.Type == "Image" && questionMedia.User.Role=="User")
                         {
                             _question.ImagesPaths.Add("/images/CustomerQuestions/" + questionMedia.Path);
                         }
+
+                        else if(questionMedia.Type == "Video")
+                        {
+                            _question.Answer_VideoPaths.Add(questionMedia.Path);
+                        }
+
                         else
                         {
-                            _question.VideoPaths.Add(questionMedia.Path);
+                            _question.Answer_ImagesPaths.Add("/images/CustomerQuestions/CustomerQuestions_Answers/" + questionMedia.Path);
                         }
-                    }
 
-                  
+
+                    }
+             
                     _Customer_questions.Add(_question);
                 }
                 return _Customer_questions;

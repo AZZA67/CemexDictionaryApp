@@ -33,8 +33,8 @@ namespace CemexDictionaryApp.Repositories
             QuestionCategory Old_QuestionCategory = context.QuestionCategories.FirstOrDefault(Question_Category => Question_Category.Id == id);
             if (Old_QuestionCategory != null)
             {
-                Old_QuestionCategory.Name = New_QuestionCategory.Name;
-                Old_QuestionCategory.الأسم = New_QuestionCategory.الأسم;
+                Old_QuestionCategory.Name_En = New_QuestionCategory.Name_En;
+                Old_QuestionCategory.Name_Ar = New_QuestionCategory.Name_Ar;
                 return context.SaveChanges();
             }
             return 0;

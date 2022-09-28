@@ -185,6 +185,7 @@ namespace CemexDictionaryApp.Repositories
             List<CustomerQuestions> Questions = context.customer_Questions
                 .Where(user => user.UserId== CustomerId).
                 Include(question => question.QuestionMedia).
+                ThenInclude(question => question.User).
                 Include(question => question.Category).
                  Include(question => question.User).
                 ToList();
