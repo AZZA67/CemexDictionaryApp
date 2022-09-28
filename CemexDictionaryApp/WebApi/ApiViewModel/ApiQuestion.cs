@@ -14,9 +14,10 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
      
         public DateTime SubmitTime { get; set; }
         public bool TopQuestion { get; set; }
-        public List<string> ImagesPaths = new List<string>();
-        public List<string> VideoPaths = new List<string>();
-        public  List<QuestionCategory> Question_category= new List<QuestionCategory>();
+
+        public List<string> ImagesPaths { get; set; } = new List<string>();
+        public List<string> VideoPaths { get; set; } = new List<string>();
+        public  List<QuestionCategory> Question_category { get; set; } = new List<QuestionCategory>();
 
     }
 

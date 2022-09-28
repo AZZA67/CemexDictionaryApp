@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using CemexDictionaryApp.Hubs;
 using System.Text.Json.Serialization;
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace CemexDictionaryApp
 {
@@ -51,6 +53,14 @@ namespace CemexDictionaryApp
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
             services.AddScoped<MasterDataRepository, MasterDataRepository>();
 
+            services.AddControllers(options =>
+            {
+                options.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
+                options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    ReferenceHandler = ReferenceHandler.Preserve,
+                }));
+            });
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
