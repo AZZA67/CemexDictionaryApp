@@ -9,6 +9,7 @@ namespace CemexDictionaryApp.Repositories
         List<Question> GetAll();
         List<QuestionPerCategory> GetAllByCategoryId(int _categoryId);
         Question GetById(int QuestionId);
+        List<Question> GetTopTenQuestions();
         int Insert(Question question);
         int OrderResult(Question q, string Keyword);
         IEnumerable<Question> Search(string Keyword, int[] categories);

@@ -180,5 +180,17 @@ namespace CemexDictionaryApp.Repositories
             return null;
         }
 
+        public List<CustomerQuestions> GetAllQuestionsByCustomerId(string CustomerId)
+        {
+            List<CustomerQuestions> Questions = context.customer_Questions
+                .Where(user => user.UserId== CustomerId).
+                Include(question => question.QuestionMedia).
+                Include(question => question.Category).
+                 Include(question => question.User).
+                ToList();
+            return Questions;
+        }
+
+
     }
 }

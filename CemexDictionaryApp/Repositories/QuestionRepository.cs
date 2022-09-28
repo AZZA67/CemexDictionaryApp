@@ -24,7 +24,7 @@ namespace CemexDictionaryApp.Repositories
         public List<Question> GetAll()
         {
             List<Question> Questions = context.Questions.Include(question => question.QuestionMedia).
-                Include(q=>q.Admin).
+                Include(q => q.Admin).
                   Include(q => q.Question_category).
                 ThenInclude(qc => qc.category).
                 ToList();
@@ -85,10 +85,10 @@ namespace CemexDictionaryApp.Repositories
                      Include(q => q.Question_category).
                 ThenInclude(qc => qc.category).ToList().
                     Where(q => FilterExpression(q, Keyword))
-                 
+
 
                     .OrderByDescending(q => OrderResult(q, Keyword));
-               
+
                 return result;
 
             }
@@ -131,10 +131,24 @@ namespace CemexDictionaryApp.Repositories
         {
             Question question = context.Questions.Include(question => question.QuestionMedia).
                  Include(q => q.Admin).
-                Include(q=>q.Question_category).
-                ThenInclude(qc=>qc.category).
+                Include(q => q.Question_category).
+                ThenInclude(qc => qc.category).
                 FirstOrDefault(question => question.ID == QuestionId);
             return question;
         }
+
+        public List<Question> GetTopTenQuestions()
+        {
+            List<Question> Questions = context.Questions.
+                Where(question => question.TopQuestion == true).
+                Include(question => question.QuestionMedia).
+                Include(q => q.Admin).
+                  Include(q => q.Question_category).
+                ThenInclude(qc => qc.category).ToList()
+                .AsEnumerable()
+              .TakeLast(10).ToList();
+            return Questions;
+        }
+
     }
 }

@@ -23,5 +23,7 @@ namespace CemexDictionaryApp.WebApi
         public static string ConfirmRegistration = string.Format("تم تسجيل الحساب بنجاح");
         public static string RegistrationError = string.Format("خطأ اثناء تسجيل الحساب");
         public static string UserNotExist = string.Format("العميل غير موجود");
+
+
     }
 }
