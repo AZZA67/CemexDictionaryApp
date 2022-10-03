@@ -30,6 +30,7 @@ namespace CemexDictionaryApp.WebApi
         ICustomerQuistionsRepository customer_Question;
         IHubContext<NotificationHub> hubContext;
 
+
         public QuestionController(UserManager<ApplicationUser> _userManager,  IQuestionRepository _question_Repository,
             IQuestionCategoryRepository _question_Category, ICustomerQuestionMediaRepository _customer_Media,
             ICustomerQuistionsRepository _customer_Question, IHubContext<NotificationHub> _hubContext
@@ -42,6 +43,8 @@ namespace CemexDictionaryApp.WebApi
             Question_Repository = _question_Repository;
             Question_Category = _question_Category;
         }
+
+
         [HttpPost("Search")]
         public IActionResult Search(SearchViewModel searchModel)
         {

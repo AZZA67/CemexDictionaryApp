@@ -167,10 +167,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 <div class="modal modal-blur fade" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -251,7 +247,6 @@
             }
 
         function modal(itemid) {
-
             if (itemid != 0) {
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
@@ -260,27 +255,25 @@
                     contentType: "application/json; charset=utf-8",
                     data: { "productId": itemid },
                     datatype: "json",
-
                     success: function (data) {
-
                         $('#myModalContent').html(data); //card
-                        $('#myModal').modal(options);
-                        $('#exampleModal').modal('show');
-
+                        $('#myModal').modal(options);   
+                        $('#exampleModal').modal('show'); 
                     },
                     error: function () {
-                        alert("Dynamic content load failed.");
+                        alert("Dynamic Content Load Failed.");
                     }
                 });
             }
         }
+
 
         function modaladd() {
             var options = { "backdrop": "static", keyboard: true };
             $.ajax({
 
                 type: "GET",
-                url: "/Dictionary/Product/AddNewProduct",
+                url: "/Product/AddNewProduct",
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
 

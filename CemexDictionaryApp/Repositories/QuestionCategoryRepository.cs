@@ -46,6 +46,13 @@ namespace CemexDictionaryApp.Repositories
             return context.SaveChanges();
         }
 
+        public string GetCategoryNameEnById(int Categoryid)
+        {
+            QuestionCategory QuestionCategory = context.QuestionCategories.FirstOrDefault(Question_Category => Question_Category.Id == Categoryid);
+           
+            return QuestionCategory.Name_En;
+        }
+
 
     }
 }

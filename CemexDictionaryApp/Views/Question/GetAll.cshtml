@@ -1,6 +1,7 @@
 ﻿@model SearchViewModel
 @inject CemexDictionaryApp.Repositories.IQuestionRepository questionRepo
-@{ SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name"); }
+@{ SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name_En"); }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <div class="page">
     <div class="page-wrapper">
 @*
@@ -76,15 +77,23 @@
                         </div>
                     </div>
                     <div class="col-9">
+                      
                         <form class="row" asp-action="Search_question" asp-controller="Question">
                             <div class="col-3">
                                 <div class=" justify-content-center align-items-center">
                                     <div class="inline w-100 field">
-                                        <select placeholder="select category" name="Selected_categories" id="Selected_categories" asp-items="categories" multiple="" class="label ui selection fluid dropdown">
+
+                                        <select placeholder="select category" name="Selected_categories" id="Selected_categories" 
+                                            asp-items="categories" multiple=""  class="label ui selection fluid dropdown">
+                                            <option value="">Select Category</option>
                                         </select>
+                                       
+
+
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="col-9">
                                 <div class="input-group rounded ">
@@ -112,9 +121,21 @@
                          {
                           <h2 class="page-title">Search Results</h2> 
                            <div class="text-muted mt-1"> Result Count :  0 </div>
-                         }
 
-                         <br />
+                         }
+                         <br/>
+                        @if (TempData["SelectedCategories"] != null)
+                        {
+
+                            <div class="text-muted mt-1">Selected categories :</div>
+                        
+                            @foreach (var item in (List<string>)TempData["SelectedCategories"])
+                            {
+                             <div class="btn btn-info"> @item </div>
+                            }
+                        }
+
+                        <br />
                         @if (TempData["searchResult"] != null)
                         {
                             @foreach (Question question in (List<Question>)TempData["searchResult"])
@@ -128,22 +149,22 @@
                                                 <div class="col">
                                                     <div>
 
-<b>Question : </b>@question.Text
+                                      <b>Question : </b>@question.Text
                                                     </div>
                                                     <div class="text-truncate">
 
 
-<b>Uploaded By :</b>  @question.Admin.UserName
+                                       <b>Uploaded By :</b>  @question.Admin.UserName
                                                     </div>
 
                                                      <div class="text-truncate">
 
-<b>Media  :  </b>Images : @question.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @question.QuestionMedia.Where(q => q.Type == "Video").Count()
+                                        <b>Media  :  </b>Images : @question.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @question.QuestionMedia.Where(q => q.Type == "Video").Count()
                                                     </div>
 
                                                 </div>
                                                 <div class="col-auto align-self-center">
-                                                    <div class="badge bg-primary"></div>
+                                                 @*   <div class="badge bg-primary"></div>*@
                                                     <span class="text-muted">
                                                         <button onclick="modal(@question.ID)" class="btn align-text-top" id="details" data-id="@question.ID" data-bs-boundary="viewport">Details</button>
                                                     </span>

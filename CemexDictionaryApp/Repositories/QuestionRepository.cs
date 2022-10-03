@@ -85,10 +85,7 @@ namespace CemexDictionaryApp.Repositories
                      Include(q => q.Question_category).
                 ThenInclude(qc => qc.category).ToList().
                     Where(q => FilterExpression(q, Keyword))
-
-
                     .OrderByDescending(q => OrderResult(q, Keyword));
-
                 return result;
 
             }

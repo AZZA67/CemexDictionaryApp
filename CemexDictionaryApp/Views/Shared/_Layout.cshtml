@@ -31,6 +31,8 @@
     <link href="~/css/form.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+@*       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>*@
+  @*  <script src="~/select_new/multiselect-dropdown.js"></script>*@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
 </head>
 <body>
@@ -89,15 +91,16 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /></svg>
                                 <span id="notificationCount" class="badge bg-red">@questionRepo.NotificationList().Count()</span>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                            <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card" style="width : 350px">
                                 <div class="card">
+
                                     <div class="row card-header">
-                                       <div class="col-12">
+                                       <div class="col-6">
                                         <h3 class="card-title">Notifications</h3>
                                     </div>
-                                        <div id="viewall" class="col-md-12">
+                                        <div id="viewall" class="col-md-6">
                                             <a href="/Question/GetNotificationList?listName=Notification"
-                                           class="btn btn-primary"><h5 style="color:white">View All</h5></a>
+                                           class="btn btn-primary"><h5 style="color:white; width:100px;">View All</h5></a>
                                         </div>
                                     </div>
                                     <div class="list-group list-group-flush list-group-hoverable scrollable" id="item">
@@ -128,9 +131,10 @@
             </div>
 
 
+
                                 <div class="nav-item dropdown">
                         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
-                                    <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                 <img class="avatar avatar-sm" src="~/demo/static/avatars/profile.png">
                             <div class="d-xl-block ps-2">
                                 <div>@User.Identity.Name</div>
                                 <div class="mt-1 small text-muted">@User.FindFirstValue(ClaimTypes.Email)</div>
@@ -542,38 +546,6 @@
         <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
 
-        @*<script>
-
-            var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationHub").build();
-            connection.start().then(() => { //alert("connected")
-            }
-            );
-            connection.on("ReciveQuestions", function (message) {
-                var notificationsCount = document.getElementById("notificationCount").innerHTML;
-                notificationsCount = parseInt(notificationsCount) + 1;
-                document.getElementById("notificationCount").innerHTML = notificationsCount;
-
-
-
-
-                var question = JSON.parse(message);
-                console.log(document.getElementById("item"));
-               /* console.log(document.querySelectorAll(".loadnotifications")[0]);*/
-                var list = document.getElementById("item");
-                list.insertBefore(document.querySelectorAll(".list-group-item")[0], `<div  class="list-group-item">
-        <div class="row align-items-center">
-            <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
-            <div class="col text-truncate">
-                <a href="/Question/AnswerQuestion?questionId=${question.ID}" class="text-body d-block">${question.User.UserName}</a>
-                <div class="d-block text-muted text-truncate mt-n1">
-                ${question.SubmitTime}
-                </div>
-            </div>
-       </div>
-    </div>`);
-
-            });
-        </script>*@
 
 
         @await RenderSectionAsync("Scripts", required: false)

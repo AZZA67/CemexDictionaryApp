@@ -9,5 +9,6 @@ namespace CemexDictionaryApp.Repositories
         List<QuestionCategory> GetAll();
         int Insert(QuestionCategory QuestionCategory);
         int Update(int id, QuestionCategory New_QuestionCategory);
+        string GetCategoryNameEnById(int Categoryid);
     }
 }
