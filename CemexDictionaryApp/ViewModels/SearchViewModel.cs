@@ -10,6 +10,7 @@ namespace CemexDictionaryApp.ViewModels
     {
         [Required]
         public string SearchKeyword { get; set; }
+        public List<string> SearchCategories { get; set; }
         public int[] Selected_categories { get; set; }
     }
 }
