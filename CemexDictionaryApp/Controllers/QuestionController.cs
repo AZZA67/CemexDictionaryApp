@@ -164,6 +164,20 @@ namespace CemexDictionaryApp.Controllers
 
         public IActionResult Search_question( SearchViewModel search_viewmodel)
         {
+
+            List<string> categories_name_En = new List<string>();
+           
+                if (search_viewmodel.Selected_categories.Count() !=0)
+            {
+                foreach (var item in search_viewmodel.Selected_categories)
+                {
+                    string CategoryName_En = QuestionCategoryRepository.GetCategoryNameEnById(item);
+                    categories_name_En.Add(CategoryName_En);
+                }
+
+                TempData["SelectedCategories"] = categories_name_En;
+            }
+            
             if (search_viewmodel.SearchKeyword != null)
             {
                 var searchresult = QuestionRepository.Search(search_viewmodel.SearchKeyword, search_viewmodel.Selected_categories);

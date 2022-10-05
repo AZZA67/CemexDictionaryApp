@@ -4,6 +4,8 @@ using CemexDictionaryApp.Hubs;
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
+using CemexDictionaryApp.WebApi.ApiModels;
+using CemexDictionaryApp.WebApi.ApiViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +30,7 @@ namespace CemexDictionaryApp.WebApi
         ICustomerQuistionsRepository customer_Question;
         IHubContext<NotificationHub> hubContext;
 
+
         public QuestionController(UserManager<ApplicationUser> _userManager,  IQuestionRepository _question_Repository,
             IQuestionCategoryRepository _question_Category, ICustomerQuestionMediaRepository _customer_Media,
             ICustomerQuistionsRepository _customer_Question, IHubContext<NotificationHub> _hubContext
@@ -40,18 +43,26 @@ namespace CemexDictionaryApp.WebApi
             Question_Repository = _question_Repository;
             Question_Category = _question_Category;
         }
+
+
         [HttpPost("Search")]
         public IActionResult Search(SearchViewModel searchModel)
         {
             if (searchModel.SearchKeyword != null)
             {
-                var searchresult = Question_Repository.Search(searchModel.SearchKeyword, searchModel.Selected_categories);
-                return Ok(searchresult.ToList());
+                var searchresult = Question_Repository.Search(searchModel.SearchKeyword,
+                    searchModel.Selected_categories);
+                return Ok(new
+                {
+                    Flag = true,
+                    Message = "Done",
+                    questions = ApiQuestionMapping.Mapping(searchresult.ToList())
+                });
             }
-            return BadRequest("Please, Enter a search Keyword!");
+            return BadRequest(new { Flag = false, Message = "Error_No Search Keyword", Data = 0 });
         }
 
-        [HttpPost("GetCategories")]
+       [HttpPost("GetCategories")]
         public IActionResult GetCategories()
         {
             if (Question_Category.GetAll() != null)
@@ -61,7 +72,6 @@ namespace CemexDictionaryApp.WebApi
             }
             return BadRequest("There are No Categories");
         }
-
 
         [HttpPost("AddQuestion")]
         public async Task<IActionResult> AddQuestionnAsync(QuestionModel questionModel)
@@ -78,9 +88,7 @@ namespace CemexDictionaryApp.WebApi
                 customerQuestion.UserId = questionModel.UserId;
                 customerQuestion.User = UserModel;
                 customer_Question.Insert(customerQuestion);
-               
-
-
+              
                 if (questionModel.QuestionImage != null)
                 {
                     List<string> Images = customer_Question.UploadFile(questionModel.QuestionImage);
@@ -114,6 +122,32 @@ namespace CemexDictionaryApp.WebApi
 
         }
 
-
+        [HttpGet("GetTopTenQuestions")]
+        public IActionResult GetTopTenQuestions()
+        {
+            if (Question_Repository.GetTopTenQuestions() != null)
+            {
+                return Ok(new { Flag = true, Message ="Done",
+                    Data = ApiQuestionMapping.Mapping(Question_Repository.GetTopTenQuestions()) });
+            }
+            return BadRequest(new { Flag = false, Message ="Error,there are no top questions" , Data = 0 });
         }
+
+
+      
+        [HttpGet("GetCustomerQuestionsById")]
+        public IActionResult GetCustomerQuestionsById(string CustomerId)
+        {
+            if (customer_Question.GetAllQuestionsByCustomerId(CustomerId).Count != 0)
+            {
+                return Ok(new
+                {
+                    Flag = true,
+                    Message = "Done",
+                    Data = ApiCustomerQuestionMapping.Mapping(customer_Question.GetAllQuestionsByCustomerId(CustomerId))
+                });
+            }
+            return BadRequest(new { Flag = false, Message = "Error,there are no questions posted by this user", Data = 0 });
+        }
+    }
     }

@@ -1,5 +1,5 @@
 ﻿@model CemexDictionaryApp.ViewModels.QuestionViewModel
-@{SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name");
+@{SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name_En");
     //data - bs - toggle = "modal" data - bs - target = "#modal-success"
 }
             <div class="page-wrapper">
@@ -44,7 +44,7 @@
     <div class="page">
       <div class="page-wrapper">
         <div class="page-body">
-               <form id="form" asp-action="AddNewQuestion" asp-controller="Question" method="post" enctype="multipart/form-data">
+            <form id="form" asp-action="AddNewQuestion" asp-controller="Question"  method="post" enctype="multipart/form-data">
           <div class="container-xl">
 
             <div class="row row-cards">
@@ -67,7 +67,7 @@
                       <label class="form-label">Question</label>
                       <div >
                          <input asp-for="Text" class="form-control" placeholder="Enter Question Text">
-                        <small class="form-hint">Question Header (Arabic) </small>
+                     @*   <small class="form-hint">Question Header (Arabic) </small>*@
                         
                             <span asp-validation-for="@Model.Text" class="text-danger"></span> 
 
@@ -86,6 +86,7 @@
                        <div class="d-flex justify-content-center align-items-center w-100">
                             <div class="inline w-100 field">
                                 <select placeholder="select category" name="categories_Ids" id="categories_Ids" asp-items="categories" multiple="" class="label ui selection fluid dropdown">
+                                                    <option value="">Select Category</option>
                                 </select>
                             </div>
                         </div>
@@ -99,19 +100,32 @@
                     </div>
              <br />
 
-              <div class="form-group mb-3">
-                         <label class="form-selectgroup-item">
-                                <input asp-for="TopQuestion" type="checkbox" value="true" class="form-selectgroup-input">
+              <div class="form-group row">
+                         <label class="form-control">
+                             @*   <input asp-for="TopQuestion" type="checkbox" value="true" class="form-selectgroup-input">
+
                                 <span class="form-selectgroup-label d-flex align-items-center p-3">
                                     <span class="me-3">
                                         <span class="form-selectgroup-check"></span>
                                     </span>
+
                                     <span class="form-selectgroup-label-content">
                                         <span class="form-selectgroup-title strong mb-1">Top Question</span>
                                     </span>
-                                </span>
+                                </span>*@
+
+                                            <div class="col ">
+                                                <label class="form-check">
+                                                    <input class="form-check-input" asp-for="TopQuestion" type="checkbox" value="true" >
+                                                    <span class="form-check-label">Top  Question </span>
+                                                </label>
+
+                                            </div>
                             </label>
                  </div>
+
+
+                                
                 </div>
               </div>
             </div>
@@ -409,7 +423,14 @@
     <script>
 
 
-
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
 
 
         var tagss = [];
@@ -417,6 +438,8 @@
             
             // ::: TAGS BOX
 
+
+         
          
             $("#tags input").on({
 
