@@ -42,6 +42,11 @@ namespace CemexDictionaryApp.Repositories
                Where(question => question.CategoryId == _categoryId).ToList();
             return Questions;
         }
+
+
+
+ 
+
         public List<string> UploadFile(List<string> base64Images)
         {
             List<string> images = new List<string>();
@@ -65,6 +70,30 @@ namespace CemexDictionaryApp.Repositories
             }
             return images;
         }
+
+        public List<string> UploadImagesByUser(List<IFormFile> FormFile)
+        {
+            List<string> images = new List<string>();
+            long size = FormFile.Sum(f => f.Length);
+            int count = 0;
+            foreach (var formFile in FormFile)
+            {
+                if (formFile.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                    images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
+                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
+                    count++;
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        formFile.CopyTo(fileStream);
+                    }
+                }
+            }
+            return images;
+        }
+
+
         public List<string> UploadImagesByAdmin(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();

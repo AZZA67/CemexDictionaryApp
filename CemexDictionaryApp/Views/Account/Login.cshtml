@@ -30,24 +30,49 @@
                     <h2 class="card-title text-center mb-4">Login to your account</h2>
                     <div class="mb-3">
                         <label  asp-for="@Model.Email" class="form-label">Email address</label>
-                        <input asp-for="@Model.Email" type="email" class="form-control" placeholder="Enter email" autocomplete="off">
+                        <input asp-for="@Model.Email" type="email" class="form-control" placeholder="Enter email" autocomplete="off" required>
                         <span asp-validation-for="@Model.Email" class="text-danger"></span> 
                     </div>
                     <div class="mb-2">
                         <label  asp-for="@Model.Password"  class="form-label">
                             Password
-                            <span class="form-label-description">
+                           @* <span class="form-label-description">
                                 <a href="">I forgot password</a>
-                            </span>
+                            </span>*@
                         </label>
                         <div class="input-group input-group-flat">
-                            <input  asp-for="@Model.Password" type="password" class="form-control" placeholder="Password" autocomplete="off">
+                            <input  id="myInput" asp-for="@Model.Password" type="password" class="form-control" placeholder="Password" autocomplete="off" required>
                             
                             <span class="input-group-text">
-                                <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
+                               @* <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" 
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" 
+                                    stroke-linecap="round" stroke-linejoin="round"><path stroke="none" 
+                                        d="M0 0h24v24H0z" fill="none" /><circle cx="12" cy="12" r="2" />
+                                        <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg>
+                                </a>*@
+
+                                <!-- Password field -->
+                              @*  Password: <input type="password" value="FakePSW" id="myInput">*@
+
+                                <!-- An element to toggle between password visibility -->
+                                <a  onclick="myFunction()" > 
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                                    <svg  xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none"
+                                              d="M0 0h24v24H0z" fill="none" />
+                                        <circle cx="12" cy="12" r="2" />
+                                        <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" />
+                                    </svg>
                                 </a>
+
+
+
+
+
                             </span>
                         </div>
                     </div>
@@ -91,5 +116,15 @@
     <!-- Tabler Core -->
     <script src="~/dist/js/tabler.min.js" defer></script>
     <script src="~/dist/js/demo.min.js" defer></script>
+    <script>
+        function myFunction() {
+  var x = document.getElementById("myInput");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+    </script>
 </body>
 </html>

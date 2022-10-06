@@ -397,6 +397,18 @@
     <script src="~/Multiselect/js/main.js"></script>
     <script>
 
+
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+
+
         // $(function () {
         //    var success = '@TempData["Answered_successfully"]';
         //    console.log(success);
@@ -409,11 +421,6 @@
         $(function () { // DOM ready
 
             // ::: TAGS BOX
-
-
-
-
-
             $("#tags input").on({
 
                 focusout: function () {

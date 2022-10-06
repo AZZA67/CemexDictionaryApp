@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,8 +13,11 @@ namespace CemexDictionaryApp.ViewModels
 
         [Required(ErrorMessage = "User Name is required")]
         public string Name { get; set; }
+
         [EmailAddress]
         [Required(ErrorMessage = "Email is required")]
+        [Remote(action: "CheckEmail", controller: "Account",
+             ErrorMessage = "Email Already Exist Choose Another one")]
         public string Email { get; set; }
 
 

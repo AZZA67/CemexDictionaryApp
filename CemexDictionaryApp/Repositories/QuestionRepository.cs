@@ -90,6 +90,7 @@ namespace CemexDictionaryApp.Repositories
 
             }
         }
+
         public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
         {
             List<QuestionPerCategory> Questions = context.questionPerCategories
@@ -98,6 +99,11 @@ namespace CemexDictionaryApp.Repositories
                 ThenInclude(question => question.QuestionMedia).ToList();
             return Questions;
         }
+
+
+
+
+
         public List<string> UploadFile(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();

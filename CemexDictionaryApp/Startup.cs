@@ -52,7 +52,6 @@ namespace CemexDictionaryApp
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
             services.AddScoped<MasterDataRepository, MasterDataRepository>();
-
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();

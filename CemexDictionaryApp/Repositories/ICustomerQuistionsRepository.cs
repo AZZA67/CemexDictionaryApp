@@ -19,5 +19,6 @@ namespace CemexDictionaryApp.Repositories
         List<string> UploadImagesByAdmin(List<IFormFile> FormFile);
         Dictionary<string, int> QuestionStatusPerCustomer(string userId);
         List<CustomerQuestions> GetAllQuestionsByCustomerId(string CustomerId);
+        List<string> UploadImagesByUser(List<IFormFile> FormFile);
     }
 }
