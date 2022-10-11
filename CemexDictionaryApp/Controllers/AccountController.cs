@@ -66,7 +66,19 @@ namespace CemexDictionaryApp.Controllers
         }
 
 
-       
+        public IActionResult CheckEmail(string Email)
+        {
+            ApplicationUser admin = dbcontext.Users.
+            FirstOrDefault(admin => admin.Email == Email);
+            if (admin == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
 
         [HttpGet]
         public IActionResult Register()

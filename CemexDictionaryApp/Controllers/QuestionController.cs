@@ -64,6 +64,8 @@ namespace CemexDictionaryApp.Controllers
             ViewData["Categories"] = categories;
             return View();
         }
+
+
         public int OrderResult(Question _question, string Keyword)
         {
             return _question.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries).
@@ -93,6 +95,13 @@ namespace CemexDictionaryApp.Controllers
         {
             tags.Remove(removed_tag);
         }
+
+
+
+
+
+
+
         [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
