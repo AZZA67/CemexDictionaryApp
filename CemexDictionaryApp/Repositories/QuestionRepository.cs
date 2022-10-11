@@ -91,12 +91,6 @@ namespace CemexDictionaryApp.Repositories
             }
         }
 
-        //public int[] CategoryId (List<string> CategoryList)
-        //{
-        //    List<int> x = context.QuestionCategories.Where(r => CategoryList.Contains(r.Name_Ar)).Select(x => new { x.Id }).ToList();
-        //    int[] a = roles.ToArray();
-        //}
-
         public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
         {
             List<QuestionPerCategory> Questions = context.questionPerCategories
@@ -105,6 +99,11 @@ namespace CemexDictionaryApp.Repositories
                 ThenInclude(question => question.QuestionMedia).ToList();
             return Questions;
         }
+
+
+
+
+
         public List<string> UploadFile(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();

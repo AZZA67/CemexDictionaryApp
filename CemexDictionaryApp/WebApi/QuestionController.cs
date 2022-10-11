@@ -70,6 +70,71 @@ namespace CemexDictionaryApp.WebApi
             return BadRequest("There are No Categories");
         }
 
+
+        //var _questionText = HttpContext.Request.Form["QuestionText"];
+        //var _questionDesc = HttpContext.Request.Form["QuestionDesc"];
+        //var _questionCategory = HttpContext.Request.Form["QuestionCateory"];
+        //var ImageOne = HttpContext.Request.Form.Files[0];
+        //var ImageTwo = HttpContext.Request.Form.Files[1].FileName;
+
+
+        [HttpPost("AddQuestion_formdata")]
+        public async Task<IActionResult> AddQuestion([FromForm] QuestionModel questionModel)
+        {
+            if (HttpContext.Request.Form["QuestionText"].ToString() != null && HttpContext.Request.Form["CategoryId"] != 0)
+            {
+                ApplicationUser UserModel =
+              await userManager.FindByIdAsync(HttpContext.Request.Form["UserId"].ToString());
+                CustomerQuestions customerQuestion = new CustomerQuestions();
+                customerQuestion.Text = HttpContext.Request.Form["QuestionText"].ToString();
+                customerQuestion.CategoryId = Convert.ToInt32(HttpContext.Request.Form["CategoryId"]);
+                customerQuestion.Status = Question_Status.Pending.ToString();
+                customerQuestion.SubmitTime = DateTime.Now;
+                customerQuestion.UserId = HttpContext.Request.Form["UserId"].ToString();
+                customerQuestion.User = UserModel;
+                customer_Question.Insert(customerQuestion);
+
+                if (HttpContext.Request.Form.Files != null)
+                {
+
+                    List<string> Images = customer_Question.UploadImagesByUser((List<IFormFile>)HttpContext.Request.Form.Files);
+                    foreach (var item in Images)
+                    {
+                        CustomerQuestionMedia media = new CustomerQuestionMedia();
+                        media.Path = item;
+                        media.Type = MediaTypes.Image.ToString();
+                        media.QuestionId = customerQuestion.ID;
+                        media.UserId = HttpContext.Request.Form["UserId"].ToString();
+                        Customer_Media.Insert(media);
+
+                    }
+                }
+
+
+
+                string jsonObject = JsonConvert.SerializeObject(customerQuestion, new JsonSerializerSettings()
+                {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                    Formatting = Formatting.Indented
+                });
+
+                //   JsonConvert.SerializeObject(question);
+
+                await hubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
+                return Ok(customerQuestion);
+            }
+            else
+            {
+                return BadRequest("please add a valid question ");
+            }
+
+        }
+
+
+
+
+
+
         [HttpPost("AddQuestion")]
         public async Task<IActionResult> AddQuestionnAsync(QuestionModel questionModel)
         {

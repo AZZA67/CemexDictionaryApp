@@ -14,6 +14,7 @@ namespace CemexDictionaryApp.DTO
         public string Description { get; set; }
 
         public int CategoryId { get; set; } //1
+
         public List<string> QuestionImage { get; set; }
     }
 }
