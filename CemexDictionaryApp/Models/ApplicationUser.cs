@@ -22,6 +22,7 @@ namespace CemexDictionaryApp.Models
         public string Occupation { get; set; }
         public string Address { get; set; }
         public string Name { get; set; }
+        public string Token { get; set; }
         public virtual List<ProductLog> ProductLogs { get; set; }
     }
 }

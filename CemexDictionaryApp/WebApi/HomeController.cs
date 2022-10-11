@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CemexDictionaryApp.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using CemexDictionaryApp.Repositories;
+using CemexDictionaryApp.WebApi.ApiViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CemexDictionaryApp.WebApi
 {
@@ -14,23 +11,25 @@ namespace CemexDictionaryApp.WebApi
     {
         readonly INewsRepository NewsRepository;
         readonly IQuestionCategoryRepository QuestionCategory;
-        public HomeController(INewsRepository newsRepository, IQuestionCategoryRepository questionCategory)
+        IQuestionRepository QuestionRepository;
+        public HomeController(INewsRepository newsRepository, IQuestionCategoryRepository questionCategory, IQuestionRepository questionRepository)
         {
             NewsRepository = newsRepository;
             QuestionCategory = questionCategory;
+            QuestionRepository = questionRepository;
         }
 
         [HttpGet("Data")]
         public IActionResult HomeData()
         {
             var _news = NewsRepository.ActiveNews();
-            var _questioncategory = QuestionCategory.GetAll().Select(p => p.Name_En).ToList(); 
-            
-            if(_questioncategory!=null)
-            return Ok(new { Flag = true, Message = ApiMessages.Done, QuestionCategories = _questioncategory, News = _news }); 
+            var _questionCategory = QuestionCategory.GetAll().Select(p => p.Name_Ar).ToList();
+         //   var _topQuestions = QuestionRepository.GetTopTenQuestions();
+
+            if (_questionCategory != null)
+                return Ok(new { Flag = true, Message = ApiMessages.Done, QuestionCategories = _questionCategory, News = _news, TopQuestions= ApiQuestionMapping.Mapping(QuestionRepository.GetTopTenQuestions()) });
             else
                 return BadRequest(new { Flag = false, Message = ApiMessages.EmptyNewsList, Data = 0 });
         }
-
     }
 }

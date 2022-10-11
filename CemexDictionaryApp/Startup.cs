@@ -30,7 +30,7 @@ namespace CemexDictionaryApp
             //services.AddMvc
             services.AddControllers().AddJsonOptions(options =>
             {
-               // options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+               //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 options.JsonSerializerOptions.ReferenceHandler = null;
             });
 
@@ -58,7 +58,7 @@ namespace CemexDictionaryApp
                 options.OutputFormatters.RemoveType<SystemTextJsonOutputFormatter>();
                 options.OutputFormatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions(JsonSerializerDefaults.Web)
                 {
-                    ReferenceHandler = ReferenceHandler.Preserve,
+                    //ReferenceHandler = ReferenceHandler.,
                 }));
             });
             services.AddCors(opt =>

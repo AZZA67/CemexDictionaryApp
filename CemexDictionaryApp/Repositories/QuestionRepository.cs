@@ -90,6 +90,13 @@ namespace CemexDictionaryApp.Repositories
 
             }
         }
+
+        //public int[] CategoryId (List<string> CategoryList)
+        //{
+        //    List<int> x = context.QuestionCategories.Where(r => CategoryList.Contains(r.Name_Ar)).Select(x => new { x.Id }).ToList();
+        //    int[] a = roles.ToArray();
+        //}
+
         public List<QuestionPerCategory> GetAllByCategoryId(int _categoryId)
         {
             List<QuestionPerCategory> Questions = context.questionPerCategories

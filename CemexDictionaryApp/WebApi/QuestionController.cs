@@ -22,14 +22,12 @@ namespace CemexDictionaryApp.WebApi
     [ApiController]
     public class QuestionController : ControllerBase
     {
-
         private UserManager<ApplicationUser> userManager;
         IQuestionRepository Question_Repository;
         IQuestionCategoryRepository Question_Category;
         ICustomerQuestionMediaRepository Customer_Media;
         ICustomerQuistionsRepository customer_Question;
         IHubContext<NotificationHub> hubContext;
-
 
         public QuestionController(UserManager<ApplicationUser> _userManager,  IQuestionRepository _question_Repository,
             IQuestionCategoryRepository _question_Category, ICustomerQuestionMediaRepository _customer_Media,
@@ -43,7 +41,6 @@ namespace CemexDictionaryApp.WebApi
             Question_Repository = _question_Repository;
             Question_Category = _question_Category;
         }
-
 
         [HttpPost("Search")]
         public IActionResult Search(SearchViewModel searchModel)
@@ -133,21 +130,19 @@ namespace CemexDictionaryApp.WebApi
             return BadRequest(new { Flag = false, Message ="Error,there are no top questions" , Data = 0 });
         }
 
-
-      
-        [HttpGet("GetCustomerQuestionsById")]
-        public IActionResult GetCustomerQuestionsById(string CustomerId)
+        [HttpPost("CustomerQuestions")]
+        public IActionResult GetCustomerQuestionsById(ApiUser user)
         {
-            if (customer_Question.GetAllQuestionsByCustomerId(CustomerId).Count != 0)
+            if (customer_Question.GetAllQuestionsByCustomerId(user.Id).Count != 0)
             {
                 return Ok(new
                 {
                     Flag = true,
                     Message = "Done",
-                    Data = ApiCustomerQuestionMapping.Mapping(customer_Question.GetAllQuestionsByCustomerId(CustomerId))
+                    Questions = ApiCustomerQuestionMapping.Mapping(customer_Question.GetAllQuestionsByCustomerId(user.Id))
                 });
             }
-            return BadRequest(new { Flag = false, Message = "Error,there are no questions posted by this user", Data = 0 });
+            return BadRequest(new { Flag = false, Message = "Error,there are no questions posted by this user", Questions = 0 });
         }
     }
     }

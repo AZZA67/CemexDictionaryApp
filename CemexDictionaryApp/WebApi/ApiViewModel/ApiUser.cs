@@ -1,8 +1,4 @@
 ﻿using CemexDictionaryApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CemexDictionaryApp.WebApi.ApiModels
 {
@@ -17,6 +13,7 @@ namespace CemexDictionaryApp.WebApi.ApiModels
         public string Mobileno { get; set; }
         public string Occupation { get; set; }
         public string Password { get; set; }
+        public string Token { get; set; }
     }
 
        public class ApiUserMapping
@@ -34,7 +31,8 @@ namespace CemexDictionaryApp.WebApi.ApiModels
                     Occupation = user.Occupation,
                     State = user.State,
                     Username = user.Name,
-                    Zone = user.Zone
+                    Zone = user.Zone,
+                    Token = user.Token
                 };
                 return _mappedUser;
             }

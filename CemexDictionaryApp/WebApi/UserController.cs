@@ -43,23 +43,23 @@ namespace CemexDictionaryApp.WebApi
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            if(login !=null)
+            if(model != null)
             {
-                var _checkUser = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == login.Mobileno);
-                if (_checkUser != null)
+                var _user = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == model.Mobileno);
+                if (_user != null)
                 {
-                    if (await userManager.CheckPasswordAsync(_checkUser, login.Password))
+                    if (await userManager.CheckPasswordAsync(_user, model.Password))
                     {
-                        var userRoles = await userManager.GetRolesAsync(_checkUser);
-                        await userManager.AddClaimAsync(_checkUser, new Claim(ClaimTypes.NameIdentifier, _checkUser.Id));
-                        await userManager.AddClaimAsync(_checkUser, new Claim(ClaimTypes.Name, _checkUser.UserName));
-                        await userManager.AddClaimAsync(_checkUser, new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+                        var userRoles = await userManager.GetRolesAsync(_user);
+                        await userManager.AddClaimAsync(_user, new Claim(ClaimTypes.NameIdentifier, _user.Id));
+                        await userManager.AddClaimAsync(_user, new Claim(ClaimTypes.Name, _user.UserName));
+                        await userManager.AddClaimAsync(_user, new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
                         var authClaims = new List<Claim>{
-                        new Claim(ClaimTypes.Name, _checkUser.UserName),
+                        new Claim(ClaimTypes.Name, _user.UserName),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, _checkUser.Id)
+                        new Claim(ClaimTypes.NameIdentifier, _user.Id)
                         };
 
                         foreach (var userRole in userRoles)
@@ -68,7 +68,8 @@ namespace CemexDictionaryApp.WebApi
                         }
 
                         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
-                        return Ok(new { Flag = true, Message =ApiMessages.Done, Data = new { id = _checkUser.Id, mobileNo = _checkUser.PhoneNumber } });
+                        return Ok(new { Flag = true, Message =ApiMessages.Done, Data = ApiUserMapping.Mapping(_user)});
+                        //new { id = _user.Id, mobileNo = _user.PhoneNumber }
                     }
                     return BadRequest(new { Flag = false, Message =ApiMessages.WrongPassword, Data = 0 });
                 }
@@ -76,37 +77,36 @@ namespace CemexDictionaryApp.WebApi
             }
             return BadRequest(new { Flag = false, Message =ApiMessages.EmptyObject, Data = 0 });
         }
-       //return object have user data
        
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register(ApiUser registerUser)
+        public async Task<IActionResult> Register(ApiUser model)
         {
-            if(registerUser != null)
+            if(model != null)
             {
-                var _check = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == registerUser.Mobileno);
-                if(_check == null)
+                var _user = dbcontext.app_users.FirstOrDefault(user => user.PhoneNumber == model.Mobileno);
+                if(_user == null)
                 {
                     ApplicationUser _newUser = new()
                     {
                         SecurityStamp = Guid.NewGuid().ToString(),
-                        UserName = registerUser.Mobileno,
-                        Zone = registerUser.Zone,
-                        State = registerUser.State,
-                        Category = registerUser.Occupation,
-                        Occupation = registerUser.Occupation,
-                        PhoneNumber = registerUser.Mobileno,
-                        Role = "User",
-                        Address = registerUser.Address,
-                        Name = registerUser.Username
+                        UserName = model.Mobileno,
+                        Zone = model.Zone,
+                        State = model.State,
+                        Category = model.Occupation,
+                        Occupation = model.Occupation,
+                        PhoneNumber = model.Mobileno,
+                        Address = model.Address,
+                        Name = model.Username,
+                        Role = "User"
                     };
 
-                    if (registerUser.Email == null || string.IsNullOrEmpty(registerUser.Email))
-                        _newUser.Email = registerUser.Mobileno + "@cemex.com";
+                    if (model.Email == null || string.IsNullOrEmpty(model.Email))
+                        _newUser.Email = model.Mobileno + "@cemex.com";
                     else
-                        _newUser.Email = registerUser.Email;
+                        _newUser.Email = model.Email;
 
-                    var _createPass = await userManager.CreateAsync(_newUser, registerUser.Password);
+                    var _createPass = await userManager.CreateAsync(_newUser, model.Password);
                     if (await roleManager.RoleExistsAsync("User") == false)
                     {
                         IdentityRole role = new();
@@ -118,7 +118,9 @@ namespace CemexDictionaryApp.WebApi
                         await userManager.AddToRoleAsync(_newUser, "User");
 
                     if (_createPass.Succeeded)
-                        return Ok(new { Flag = true, Message =ApiMessages.ConfirmRegistration, Data = new { id = _newUser.Id, mobileNo = _newUser.PhoneNumber } });
+                        return Ok(new { Flag = true, Message =ApiMessages.ConfirmRegistration, Data = ApiUserMapping.Mapping(_newUser) });
+
+                    // new { id = _newUser.Id, mobileNo = _newUser.PhoneNumber }
 
                     return BadRequest(new { Flag = false, Message =ApiMessages.RegistrationError, Data = 0 });
                 }
@@ -129,18 +131,33 @@ namespace CemexDictionaryApp.WebApi
 
         [HttpPost]
         [Route("Profile")]
-        public async Task<IActionResult> UserProfile([FromBody] ApiUser user)
+        public async Task<IActionResult> UserProfile([FromBody] ApiUser model)
         {
-            if (user != null)
+            if (model != null)
             {
-                //ApplicationUser  _checkUser = dbcontext.app_users.FirstOrDefault(u => u.Id.Contains(user.Id));
-                ApplicationUser _userModel = await userManager.FindByIdAsync(user.Id);
-
+                ApplicationUser _userModel = await userManager.FindByIdAsync(model.Id);
                 if (_userModel != null)
                 {
-                      var _questions =   CustomerQuestion.QuestionStatusPerCustomer(user.Id);
+                      var _questions =   CustomerQuestion.QuestionStatusPerCustomer(model.Id);
                       return Ok(new { Flag = true, Message = ApiMessages.Done, User = ApiUserMapping.Mapping(_userModel) , Questions = _questions});
                 }
+                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
+            }
+            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
+        }
+
+        [HttpPost]
+        [Route("Token")]
+        public async Task<IActionResult> UserToken([FromBody] ApiUser model)
+        {
+            if (model != null)
+            {
+                ApplicationUser _user = await userManager.FindByIdAsync(model.Id);
+                _user.Token = model.Token; 
+                var _result  = await userManager.UpdateAsync(_user);
+
+                if (_result.Succeeded)
+                    return Ok(new { Flag = true, Message = ApiMessages.Done, UserId = _user.Id });
                 return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
             }
             return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
