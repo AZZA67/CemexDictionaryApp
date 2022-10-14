@@ -91,9 +91,11 @@
 
 
                                     </div>
+                                  
                                 </div>
+                             
                             </div>
-
+                         
 
                             <div class="col-9">
                                 <div class="input-group rounded ">
@@ -110,7 +112,15 @@
                             </div>
                         </form>
                         <br />
-
+                        <div class="col-6">
+                            @if ((string)TempData["categories"] != null)
+                            {
+                                if (TempData["categories"].ToString() == "empty")
+                                {
+                                    <span id="error_span" class="text-danger">Please Select At Least One Category to search with !</span>
+                                }
+                            }
+                        </div>
                      @if (TempData["searchResult"] != null)
                         {
                             <h2 class="page-title">Search Results</h2>
@@ -177,6 +187,7 @@
                             }
 
                         }
+                      
                     </div>
 
                     

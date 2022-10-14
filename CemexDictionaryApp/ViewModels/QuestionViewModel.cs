@@ -24,7 +24,7 @@ namespace CemexDictionaryApp.ViewModels
         public List<string> existing_images { get; set; }
        //public  string[] existing_images = new string[1000];
       /*  public string check { get; set; }*/ //Ask about it again 
-        //[Required(ErrorMessage = "Please Select category")]
+        
         public List<QuestionCategory> QuestionCategories { get; set; }
     }
 }

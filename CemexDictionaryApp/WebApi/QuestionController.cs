@@ -92,6 +92,7 @@ namespace CemexDictionaryApp.WebApi
                 customerQuestion.SubmitTime = DateTime.Now;
                 customerQuestion.UserId = HttpContext.Request.Form["UserId"].ToString();
                 customerQuestion.User = UserModel;
+               
                 customer_Question.Insert(customerQuestion);
 
                 if (HttpContext.Request.Form.Files != null)
@@ -149,6 +150,7 @@ namespace CemexDictionaryApp.WebApi
                 customerQuestion.SubmitTime = DateTime.Now;
                 customerQuestion.UserId = questionModel.UserId;
                 customerQuestion.User = UserModel;
+              
                 customer_Question.Insert(customerQuestion);
               
                 if (questionModel.QuestionImage != null)
