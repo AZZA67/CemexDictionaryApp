@@ -160,13 +160,30 @@
 @*@TempData["Success"]*@
 
 
-<div class="modal" id="exampleModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div id='myModalContent' class="card p-3 bg-white"></div>
+<div class="modal" id="exampleModal" >
+    <div class="modal-dialog " >
+        <div class="modal-content p-3">
+            <div id='myModalContent' class="bg-white"></div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
     </div>
 </div>
+
+
+@*<div class="modal modal-blur fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id='myModalContent'>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
 <div class="modal modal-blur fade" id="modal-report" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -175,6 +192,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
                 </div>
             </div>
         </div>

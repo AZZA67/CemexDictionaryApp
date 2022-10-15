@@ -1,7 +1,7 @@
 ﻿@model CemexDictionaryApp.Models.News
-
+@*
     <div class="d-flex justify-content-center container mt-5">
-        <div class="card p-3 bg-white">
+        <div class="card p-3 bg-white">*@
             <div class="about-product text-center mt-2">
                 <img src="~/images/News/@Url.Content(@Model.Image)" width="300">
                 <br />
@@ -9,7 +9,7 @@
                     <h4>News # : @Model.Id </h4>
                 </div>
             </div>
-            <div class="stats mt-2">
+            <div class="stats mt-2 text-center" style="width :300px; margin-left:100px;">
                  
                 <div class="d-flex justify-content-between p-price">
                      <span>Title</span>
@@ -28,9 +28,9 @@
             
             </div>   
                 <br />
-                <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>
-        </div>
-    </div>
+               @* <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>*@
+       @* </div>
+    </div>*@
     <br />
 
 

@@ -1,7 +1,7 @@
 ﻿@model CemexDictionaryApp.Models.Product
 
-    <div class="d-flex justify-content-center container mt-5">
-        <div class="card p-3 bg-white">
+    @*<div class="d-flex justify-content-center container mt-5">*@
+        @*<div class="card p-3 bg-white">*@
             <div class="about-product text-center mt-2">
                 <img src="~/images/Products/@Url.Content(@Model.Image)" width="300">
                 <br />
@@ -9,8 +9,8 @@
                     <h4>Product# : @Model.Id </h4>
                 </div>
             </div>
-            <div class="stats mt-2">
-                <div class="d-flex justify-content-between p-price">
+            <div class="stats mt-2 text-center" style="width :300px; margin-left:100px;" >
+                <div class="d-flex justify-content-between p-price text-center">
                     <span>Name</span>
                     <span>@Model.Name</span>
                 </div>
@@ -30,11 +30,11 @@
                     <span>@Model.Description</span>
                 </div>
             
-            </div>   
+           </div>  
                 <br />
-                <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>
-        </div>
-    </div>
+               @* <button type="button" s class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>*@
+       @* </div>*@
+   @* </div>*@
         <br />
 @section Scripts {
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

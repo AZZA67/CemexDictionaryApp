@@ -1,0 +1,361 @@
+﻿
+@model SearchViewModel
+@inject CemexDictionaryApp.Repositories.IQuestionRepository questionRepo
+@{ SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name_En"); }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="page">
+    <div class="page-wrapper">
+
+
+                    <div class="container-xl">
+                <!-- Page title -->
+                <div class="page-header d-print-none">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <!-- Page pre-title -->
+                            <div class="page-pretitle">
+                                Search By Category
+                            </div>
+                            <h3 class="page-title">
+                                       Questions Search
+                            </h3>
+                        </div>
+                        <!-- Page title actions -->
+                        <div class="col-12 col-md-auto ms-auto d-print-none">
+                            <div class="btn-list">
+                       @*         <span class="d-none d-sm-inline">
+                                    <a href="#" class="btn btn-white">
+                                        New view
+                                    </a>
+                                </span>
+                           @*     <a href="#" class="btn btn-primary d-none d-sm-inline-block" @*data-bs-toggle="modal" data-bs-target="#modal-report"  onclick="modaladd()">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                     Add Product
+                                </a>*@
+     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row g-4">
+                    <div class="col-3">
+                        <div class="mb-2">
+                              <h3>Question Count (Per Categoy) </h3> 
+                            </div>
+                        <div class="list-group list-group-transparent mb-3">
+                            @foreach (QuestionCategory qc in (List<QuestionCategory>)ViewBag.Categories)
+                            {
+                                    <a class="list-group-item list-group-item-action d-flex align-items-center active" href="#">
+                                        @qc.Name_En
+                                        <small class="text-muted ms-auto">@questionRepo.GetAllByCategoryId(@qc.Id).Count() </small>
+                                    </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-9">
+                      
+                        <form class="row" asp-action="SearchByQuestionId" asp-controller="Question">
+                            <div class="col-3">
+                                <div class=" justify-content-center align-items-center">
+                                    <div class="inline w-100 field">
+
+                                        <select placeholder="select Question Type" name="QuestionType" id="QuestionType"
+                                                class="label ui selection fluid dropdown">
+                                            <option value="">Select Question Type</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Admin">Admin</option>
+                                        </select>
+                                       
+
+
+                                    </div>
+                                  
+                                </div>
+                             
+                            </div>
+                         
+
+                            <div class="col-9">
+                                <div class="input-group rounded ">
+                                   @* @if (TempData["searchKeyWord"] != null)
+                                    {
+                                        <input asp-for="SearchKeyword" value="@TempData["searchKeyWord"]" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    }
+                                    else
+                                    {*@
+                                    <input id="QuestionId" name="QuestionId" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    @*}*@
+                                    <button type="submit" class="input-group-text border-0"><i class="fa fa-search "></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <br />
+                        <div class="col-6">
+                            @if ((string)TempData["QuestionType"] != null)
+                            {
+                                if (TempData["QuestionType"].ToString() == "empty")
+                                {
+                                    <span id="error_span" class="text-danger">Please Select Question Type To search with !</span>
+                                }
+                            }
+                        </div>
+                        @if (TempData["question"] != null)
+                        {
+                            <h2 class="page-title">Search Results</h2>
+                           @* int x = ((List<Question>)TempData["question"]).Count();*@
+                           <div class="text-muted mt-1">Result Count : 1</div>
+                        }
+                       else
+                         {
+                          <h2 class="page-title">Search Results</h2> 
+                           <div class="text-muted mt-1"> Result Count :  0 </div>
+
+                         }
+                    @*     <br/>
+                        @if (TempData["SelectedCategories"] != null)
+                        {
+
+                            <div class="text-muted mt-1">Selected categories :</div>
+                        
+                            @foreach (var item in (List<string>)TempData["SelectedCategories"])
+                            {
+                             <div class="btn btn-info"> @item </div>
+                            }
+                        }*@
+
+                        <br />
+                        @if (TempData["question"] != null)
+                        {
+                            @* @foreach (Question question in (List<Question>)TempData["searchResult"])
+                            {*@
+                          
+                            <div class="card">
+
+
+                                @if (TempData["QuestionType"]!=null)
+                                {
+                                    @if (TempData["QuestionType"].ToString()=="Customer")
+                                    {
+                                        CustomerQuestions q = TempData["question"] as CustomerQuestions;
+
+                                          <div class="card-header"><h4 class="card-title">   Question ID # <strong>  @q.ID</strong> (Customer Question) </h4></div>
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div>
+                                                   
+                                                    <b>Question : </b> @q.Text
+                                                    
+                                                    </div>
+                                                    <div class="text-truncate">
+
+
+                                                    <b>Uploaded By :</b>  @q.User.UserName
+                                                    </div>
+
+                                                     <div class="text-truncate">
+
+                                                    <b>Media  :  </b>Images : @q.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @q.QuestionMedia.Where(q => q.Type == "Video").Count()
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-auto align-self-center">
+                                                 @*   <div class="badge bg-primary"></div>*@
+                                                    <span class="text-muted">
+                                                            <button onclick="UserQuestionDetails(@q.ID)" class="btn align-text-top" id="details" data-id="@q.ID" data-bs-boundary="viewport">Details</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    else{
+                                        Question q = TempData["question"] as Question;
+
+                                        <div class="card-header"><h4 class="card-title">   Question ID # <strong>  @q.ID</strong> (Admin Question)</h4></div>
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div>
+                                                   
+                                                    <b>Question : </b> @q.Text
+                                                    
+                                                    </div>
+                                                    <div class="text-truncate">
+
+
+                                                    <b>Uploaded By :</b>  @q.Admin.UserName
+                                                    </div>
+
+                                                     <div class="text-truncate">
+
+                                                    <b>Media  :  </b>Images : @q.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @q.QuestionMedia.Where(q => q.Type == "Video").Count()
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-auto align-self-center">
+                                                 @*   <div class="badge bg-primary"></div>*@
+                                                    <span class="text-muted">
+                                                    <button onclick="modal(@q.ID)" class="btn align-text-top" id="details" data-id="@q.ID" data-bs-boundary="viewport">Details</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+
+
+
+                                }
+
+                              
+
+                              
+                                </div>
+                                <br />
+                       
+
+                        }
+                      
+                    </div>
+
+                    
+                   
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal modal-blur fade " id="modal-scrollable" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable w-100" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Question Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+   
+    <script>
+
+        function modal(itemid) {
+
+            if (itemid != 0) {
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: "/Question/Details/${itemid}",
+                    contentType: "application/json; charset=utf-8",
+                    data: { "QuestionId": itemid },
+                    datatype: "json",
+                    success: function (data) {
+                        console.log("bye");
+                        $('.modal-body').html(data); //card
+                        $('#myModal').modal(options);
+                        $('#modal-scrollable').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            }
+        }
+
+
+        function UserQuestionDetails(itemid) {
+               //var itemid=document.getElementById("QuestionId").value;
+            if (itemid != "") {
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                        url: "/Question/CustomerQuestionDetails/${itemid}",
+                    contentType: "application/json; charset=utf-8",
+                    data: { "QuestionId": itemid },
+                    datatype: "json",
+                    success: function (data) {
+                        console.log("bye");
+                        $('.modal-body').html(data); //card
+                        $('#myModal').modal(options);
+                        $('#modal-scrollable').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Oops..Question with this Id was not found, try another Id");
+                    }
+                });
+            }
+        }
+
+
+
+
+
+
+        function search(search_view_model) {
+            var options = { "backdrop": "static", keyboard: true };
+            @*console.log('@Model.SearchKeyword');*@
+            console.log(search_view_model);
+            console.log(JSON.parse(search_view_model));
+            $.ajax({
+
+                type: "POST",
+                url: "/Question/Search/${search_view_model}",
+                contentType: "application/json; charset=utf-8",
+                data: { "search_viewmodel": search_view_model },
+                datatype: "json",
+                
+                success: function (data) {
+                    debugger
+                    console.log(data);
+                    
+                
+                },
+                error: function () {
+                    alert("Dynamic content load failed.");
+                }
+            });
+
+
+        }
+
+
+        //function show(questiionId) {
+        //    console.log(questiionId);
+        //    $.ajax({
+
+        //        url: "/Question/AnswerQuestion",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: { "questionId": questiionId },
+        //        datatype: "json",
+        //        success: function (result) {
+        //            console.log("done");
+        //            console.log(result);
+
+        //        }
+        //    })
+        //}
+    </script>
+
+}

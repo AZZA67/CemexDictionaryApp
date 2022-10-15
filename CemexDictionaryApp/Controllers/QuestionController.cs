@@ -11,9 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-
-
 namespace CemexDictionaryApp.Controllers
 {
     public class QuestionController : Controller
@@ -25,7 +22,6 @@ namespace CemexDictionaryApp.Controllers
         IMediaRepository mediaRepository;
         IQuestionPerCategoryRepository questionPerCategoryRepository;
         ICustomerQuestionMediaRepository CustomerQuestionMedia;
-
         ICustomerQuistionsRepository Customer_QuestionRepository;
         public QuestionController(IQuestionPerCategoryRepository _questionPerCategoryRepository,
             IMediaRepository _mediaRepository, UserManager<ApplicationUser> _userManager,
@@ -44,7 +40,6 @@ namespace CemexDictionaryApp.Controllers
             Customer_QuestionRepository = _customer_QuestionRepository;
         }
 
-
         public IActionResult GetAll()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
@@ -52,17 +47,13 @@ namespace CemexDictionaryApp.Controllers
             return View();
         }
 
-
         [HttpGet]
         public IActionResult AddNewQuestion()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
-     
             List<string> images = mediaRepository.GetAll_uploaded_photos();
-          
             ViewData["Images"] = images;
             ViewData["Categories"] = categories;
-
             return View();
         }
 
@@ -96,13 +87,6 @@ namespace CemexDictionaryApp.Controllers
         {
             tags.Remove(removed_tag);
         }
-
-
-
-
-
-
-
         [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
@@ -117,7 +101,7 @@ namespace CemexDictionaryApp.Controllers
                 question.AdminId = userManager.GetUserId(HttpContext.User);
                 question.TopQuestion = questionViewModel.TopQuestion;
                 QuestionRepository.Insert(question);
-                if (photos != null)
+                if (photos.Count()>0)
                 {
                     List<string> images = QuestionRepository.UploadFile(photos);
                     foreach (var item in images)
@@ -129,28 +113,33 @@ namespace CemexDictionaryApp.Controllers
                         mediaRepository.Insert(media);
                     }
                 }
-
                 if (TempData["selectedImages"] != null)
                 {
-                    IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
-                    foreach (var item in existing_images)
+                    if (((IEnumerable<string>)TempData["selectedImages"]).Count() > 0)
                     {
-                        Media media = new Media();
-                        media.Path = item;
-                        media.Type = MediaTypes.Image.ToString();
-                        media.QuestionId = question.ID;
-                        mediaRepository.Insert(media);
+                        IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
+                        foreach (var item in existing_images)
+                        {
+                            Media media = new Media();
+                            media.Path = item;
+                            media.Type = MediaTypes.Image.ToString();
+                            media.QuestionId = question.ID;
+                            mediaRepository.Insert(media);
+                        }
                     }
                 }
-                if (questionViewModel.Videos_URLs != null)
+                if (questionViewModel.Videos_URLs.Count>0)
                 {
                     foreach (var item in questionViewModel.Videos_URLs)
                     {
-                        Media media = new Media();
-                        media.Path = item;
-                        media.Type = MediaTypes.Video.ToString();
-                        media.QuestionId = question.ID;
-                        mediaRepository.Insert(media);
+                        if (!String.IsNullOrEmpty(item))
+                        {
+                            Media media = new Media();
+                            media.Path = item;
+                            media.Type = MediaTypes.Video.ToString();
+                            media.QuestionId = question.ID;
+                            mediaRepository.Insert(media);
+                        }
                     }
                 }
                 foreach (var item in categories_Ids)
@@ -347,21 +336,41 @@ namespace CemexDictionaryApp.Controllers
             return Json(notifications);
         }
 
+        [HttpPost]
+        public ActionResult SearchByQuestionId(string QuestionType, int QuestionId)
+        {
+            if (!String.IsNullOrEmpty(QuestionType))
+            {
+                if (QuestionType == "Customer")
+                {
+                    CustomerQuestions _question = Customer_QuestionRepository.GetById(QuestionId);
+                    TempData["question"] = _question;
+                    TempData["QuestionType"] = "Customer";
+                }
+                else
+                {
+                    Question _question = QuestionRepository.GetById(QuestionId);
+                    TempData["question"] = _question;
+                    TempData["QuestionType"] = "Admin";
+                }
+            }
+            else
+            {
+                TempData["QuestionType"] = "empty";
 
-        //public ActionResult SearchByQuestionId(int QuestionType,int QuestionId)
-        //{
-        //    if (QuestionType == 1)
-        //    {
-        //        CustomerQuestions _question = Customer_QuestionRepository.GetById(QuestionId);
-               
-        //    }
-        //    else
-        //    {
-        //        Question _question=QuestionRepository.GetById(QuestionType);
-        //    }
-        //    return View("SearchByQuestionId");
-        //}
-
+                //return View("SearchByQuestionId");
+            }
+            List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
+            ViewData["Categories"] = categories;
+            return View("SearchByQuestionId");
+        }
+        [HttpGet]
+        public ActionResult SearchByQuestionId()
+        {
+            List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
+            ViewData["Categories"] = categories;
+            return View();
+        }
 
     }
 }
