@@ -218,7 +218,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/Question/Details/${itemid}",
+                    url: "/Dictionary/Question/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "QuestionId": itemid },
                     datatype: "json",
@@ -249,7 +249,7 @@
             $.ajax({
 
                 type: "POST",
-                url: "/Question/Search/${search_view_model}",
+                url: "/Dictionary/Question/Search/${search_view_model}",
                 contentType: "application/json; charset=utf-8",
                 data: { "search_viewmodel": search_view_model },
                 datatype: "json",

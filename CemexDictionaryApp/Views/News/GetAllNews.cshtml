@@ -62,7 +62,7 @@
                          <th style="vertical-align:central; text-align:center"> News No.</th>
                          <th style="vertical-align:central; text-align:center"> Title </th>
                          <th style="vertical-align:central; text-align:center"> Image</th>
-                        <th style="vertical-align:central; text-align:center">  Description</th>
+                        @*<th style="vertical-align:central; text-align:center">  Description</th>*@
                          <th style="vertical-align:central; text-align:center"> Status</th>
                        <th style="vertical-align:central; text-align:center">   Details</th>
                        <th style="vertical-align:central; text-align:center"> Change Status</th>
@@ -83,9 +83,9 @@
                                     <Img class="avatar me-2" src="~/images/News/@item.Image"  style="vertical-align:central; text-align:center">
                         
                             </td>
-                            <td style="vertical-align:central; text-align:center">
+                            @*<td style="vertical-align:central; text-align:center">
                                 @item.Description
-                            </td>
+                            </td>*@
 
                             <td id="@item.Id"  style="vertical-align:central; text-align:center">
 
@@ -215,7 +215,7 @@
                 $.ajax(
                     {
                         type: "GET",
-                        url: "/News/ChangeNewsStatusById",
+                        url: "/Dictionary/News/ChangeNewsStatusById",
                         data: { "NewsId": itemid },
                         success: function (result) {
                             console.log(result);
@@ -232,7 +232,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/News/Details/${itemid}",
+                    url: "/Dictionary/News/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "NewsId": itemid },
                     datatype: "json",
@@ -254,7 +254,7 @@
             var options = { "backdrop": "static", keyboard: true };
             $.ajax({
                 type: "GET",
-                url: "/News/AddNewNews",
+                url: "/Dictionary/News/AddNewNews",
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
 

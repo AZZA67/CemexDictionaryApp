@@ -21,12 +21,12 @@ namespace CemexDictionaryApp.WebApi.ApiModels
 
     public class StateMapping
     {
-        public static  List<ApiState> Mapping (List<State> states)
+        public static List<ApiState> Mapping(List<State> states)
         {
             if (states != null)
             {
                 List<ApiState> _stateList = new();
-                
+
                 foreach (var item in states)
                 {
                     ApiState p = new();

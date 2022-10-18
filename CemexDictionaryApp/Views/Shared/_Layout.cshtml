@@ -56,7 +56,7 @@
                   <!--Buttons -->
                           <div class="nav-item d-none d-md-flex me-3">
                           <div class="btn-list">
-                            <a  href="/Question/GetNotificationList?listName=Pending" id="pendingCount" class="btn btn-info" >
+                            <a  href="/Dictionary/Question/GetNotificationList?listName=Pending" id="pendingCount" class="btn btn-info" >
                               <!-- Download SVG icon from http://tabler-icons.io/i/brand-github -->
                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bell-ringing-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -99,7 +99,7 @@
                                         <h3 class="card-title">Notifications</h3>
                                     </div>
                                         <div id="viewall" class="col-md-6">
-                                            <a href="/Question/GetNotificationList?listName=Notification"
+                                            <a href="/Dictionary/Question/GetNotificationList?listName=Notification"
                                            class="btn btn-primary"><h5 style="color:white; width:100px;">View All</h5></a>
                                         </div>
                                     </div>
@@ -111,11 +111,9 @@
                                                 <div class="row align-items-center">
                                                     <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
                                                     <div class="col text-truncate">
-                                                        <a href="/Question/AnswerQuestion?questionId=@customer_question.ID" class="text-body d-block">
+                                                        <a href="/Dictionary/Question/AnswerQuestion?questionId=@customer_question.ID" class="text-body d-block">
                                                             @customer_question.User.UserName
-
                                                         </a>
-
                                                         <div class="d-block text-muted text-truncate mt-n1">
                                                             @customer_question.SubmitTime
                                                         </div>
@@ -400,7 +398,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/Question/Details/${itemid}",
+                    url: "/Dictionary/Question/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "QuestionId": itemid },
                     datatype: "json",
@@ -423,7 +421,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                        url: "/Question/CustomerQuestionDetails/${itemid}",
+                    url: "/Dictionary/Question/CustomerQuestionDetails/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "QuestionId": itemid },
                     datatype: "json",
@@ -451,7 +449,7 @@
 
                 $.ajax({
                     type: "post",
-                    url: "/Question/Searchquestions/${test}",
+                    url: "/Dictionary/Question/Searchquestions/${test}",
                     contentType: "application/json; charset=utf-8",
                     data: { "SearchKeyword": test },
                     datatype: "json",
@@ -469,7 +467,7 @@
 
               $.ajax({
                   type: "post",
-                  url: "/Question/GetNotifications",
+                  url: "/Dictionary/Question/GetNotifications",
                   contentType: "application/json; charset=utf-8",
                   traditional: true,
                   datatype: "json",
@@ -484,7 +482,7 @@
         <div class="row align-items-center">
             <div class="col-auto"><span class="status-dot status-dot-animated bg-red d-block"></span></div>
             <div class="col text-truncate">
-                <a href="/Question/AnswerQuestion?questionId=${x[i].id}" class="text-body d-block">${x[i].userName}</a>
+                <a href="/Dictionary/Question/AnswerQuestion?questionId=${x[i].id}" class="text-body d-block">${x[i].userName}</a>
                 <div class="d-block text-muted text-truncate mt-n1">
                   ${x[i].submitTime}
                 </div>
@@ -511,7 +509,7 @@
                 console.log(questiionId);
                 $.ajax({
                     type: "Get",
-                    url: "/Question/AnswerQuestion",
+                    url: "/Dictionary/Question/AnswerQuestion",
                     contentType: "application/json; charset=utf-8",
                     data: { "questionId": questiionId },
                     datatype: "json",

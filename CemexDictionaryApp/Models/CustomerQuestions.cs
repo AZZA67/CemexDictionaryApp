@@ -34,5 +34,6 @@ namespace CemexDictionaryApp.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public virtual List<CustomerQuestionMedia> QuestionMedia { get; set; }
+        public string Description { get; set; }
     }
 }

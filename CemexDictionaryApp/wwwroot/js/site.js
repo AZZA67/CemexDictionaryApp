@@ -1,5 +1,5 @@
 ﻿
-    var connection = new signalR.HubConnectionBuilder().withUrl("/NotificationHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/Dictionary/NotificationHub").build();
             connection.start().then(() => { //alert("connected")
     }
     );

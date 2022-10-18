@@ -48,9 +48,6 @@ namespace CemexDictionaryApp.Controllers
         {
             List<ProductType> productTypes = ProductTypeRepository.GetAll();
             ViewData["ProductTypes"] = productTypes;
-        
-
-
             return PartialView();
         }
         public IActionResult Details(int productId)
@@ -61,37 +58,31 @@ namespace CemexDictionaryApp.Controllers
        
         public async Task<IActionResult> ChangeProductStatusByIdAsync(int productId)
         {
-
             Product product = ProductRepository.GetById(productId);
-         
-
-
             if (product.Status == "Active")
                 product.Status = "InActive";
             else
-            {
                 product.Status = "Active";
-            }
+
             ProductRepository.Update( productId, product);
             var user = await GetCurrentUserAsync();
             ProductLog _productlog = new ProductLog
             {
-
                 UserId = userManager.GetUserId(HttpContext.User),
-            DateTime = DateTime.Now,
+                DateTime = DateTime.Now,
                 Action = product.Status,
                 ProductId = product.Id
             };
             ProductLogRepository.Insert(_productlog);
             return Json(product.Status);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddNewProductAsync(ProductViewModel model)
         {
             if (ModelState.IsValid)
             {
                 string uniqueFileName = ProductRepository.UploadedFile(model);
-
                 Product product = new Product
                 {
                     Name = model.Name,

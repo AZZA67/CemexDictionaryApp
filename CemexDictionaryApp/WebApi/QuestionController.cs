@@ -1,5 +1,4 @@
-﻿
-using CemexDictionaryApp.DTO;
+﻿using CemexDictionaryApp.DTO;
 using CemexDictionaryApp.Hubs;
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
@@ -22,24 +21,23 @@ namespace CemexDictionaryApp.WebApi
     [ApiController]
     public class QuestionController : ControllerBase
     {
-        private UserManager<ApplicationUser> userManager;
-        IQuestionRepository Question_Repository;
-        IQuestionCategoryRepository Question_Category;
-        ICustomerQuestionMediaRepository Customer_Media;
-        ICustomerQuistionsRepository customer_Question;
-        IHubContext<NotificationHub> hubContext;
+        private UserManager<ApplicationUser> UserManager;
+        IQuestionRepository QuestionRepository;
+        IQuestionCategoryRepository QuestionCategory;
+        ICustomerQuestionMediaRepository CustomerMedia;
+        ICustomerQuistionsRepository CustomerQuestion;
+        IHubContext<NotificationHub> HubContext;
 
-        public QuestionController(UserManager<ApplicationUser> _userManager,  IQuestionRepository _question_Repository,
-            IQuestionCategoryRepository _question_Category, ICustomerQuestionMediaRepository _customer_Media,
-            ICustomerQuistionsRepository _customer_Question, IHubContext<NotificationHub> _hubContext
-            )
+        public QuestionController(UserManager<ApplicationUser> userManager, IQuestionRepository questionRepository,
+            IQuestionCategoryRepository questionCategory, ICustomerQuestionMediaRepository customerMedia,
+            ICustomerQuistionsRepository customerQuestion, IHubContext<NotificationHub> hubContext)
         {
-            userManager = _userManager;
-            hubContext = _hubContext;
-             customer_Question = _customer_Question;
-            Customer_Media = _customer_Media;
-            Question_Repository = _question_Repository;
-            Question_Category = _question_Category;
+            UserManager = userManager;
+            HubContext = hubContext;
+            CustomerQuestion = customerQuestion;
+            CustomerMedia = customerMedia;
+            QuestionRepository = questionRepository;
+            QuestionCategory = questionCategory;
         }
 
         [HttpPost("Search")]
@@ -47,113 +45,91 @@ namespace CemexDictionaryApp.WebApi
         {
             if (searchModel.SearchKeyword != null)
             {
-                var searchresult = Question_Repository.Search(searchModel.SearchKeyword,
-                    searchModel.Selected_categories);
+                if(searchModel.SearchCategories != null && searchModel.SearchCategories.Count>0)
+                    searchModel.SelectedCategories = QuestionRepository.GetCategoriesId(searchModel.SearchCategories);
+                
+                var _searchResult = QuestionRepository.Search(searchModel.SearchKeyword,searchModel.SelectedCategories);
                 return Ok(new
                 {
                     Flag = true,
                     Message = "Done",
-                    questions = ApiQuestionMapping.Mapping(searchresult.ToList())
+                    questions = ApiQuestionMapping.Mapping(_searchResult.ToList())
                 });
             }
-            return BadRequest(new { Flag = false, Message = "Error_No Search Keyword", Data = 0 });
+            return BadRequest(new { Flag = false, Message =ApiMessages.EmptySearchText, Data = 0 });
         }
 
-       [HttpPost("GetCategories")]
-        public IActionResult GetCategories()
+        [HttpPost("PostQuestion")]
+        public async Task<IActionResult> AddQuestion([FromForm] QuestionModel model)
         {
-            if (Question_Category.GetAll() != null)
+            if (HttpContext.Request.Form["QuestionText"].ToString() != null && HttpContext.Request.Form["Category"] != 0)
             {
-              
-                return Ok(Question_Category.GetAll());
-            }
-            return BadRequest("There are No Categories");
-        }
+                List<string> categories = new();
+                categories.Add(HttpContext.Request.Form["Category"].ToString());
+                int[] CategoryId = QuestionRepository.GetCategoriesId(categories);
 
-
-        //var _questionText = HttpContext.Request.Form["QuestionText"];
-        //var _questionDesc = HttpContext.Request.Form["QuestionDesc"];
-        //var _questionCategory = HttpContext.Request.Form["QuestionCateory"];
-        //var ImageOne = HttpContext.Request.Form.Files[0];
-        //var ImageTwo = HttpContext.Request.Form.Files[1].FileName;
-
-
-        [HttpPost("AddQuestion_formdata")]
-        public async Task<IActionResult> AddQuestion([FromForm] QuestionModel questionModel)
-        {
-            if (HttpContext.Request.Form["QuestionText"].ToString() != null && HttpContext.Request.Form["CategoryId"] != 0)
-            {
-                ApplicationUser UserModel =
-              await userManager.FindByIdAsync(HttpContext.Request.Form["UserId"].ToString());
-                CustomerQuestions customerQuestion = new CustomerQuestions();
-                customerQuestion.Text = HttpContext.Request.Form["QuestionText"].ToString();
-                customerQuestion.CategoryId = Convert.ToInt32(HttpContext.Request.Form["CategoryId"]);
-                customerQuestion.Status = Question_Status.Pending.ToString();
-                customerQuestion.SubmitTime = DateTime.Now;
-                customerQuestion.UserId = HttpContext.Request.Form["UserId"].ToString();
-                customerQuestion.User = UserModel;
-                customer_Question.Insert(customerQuestion);
-
-                if (HttpContext.Request.Form.Files != null)
+                ApplicationUser _user = await UserManager.FindByIdAsync(HttpContext.Request.Form["UserId"].ToString());
+                if (_user != null)
                 {
-
-                    List<string> Images = customer_Question.UploadImagesByUser((List<IFormFile>)HttpContext.Request.Form.Files);
-                    foreach (var item in Images)
+                    CustomerQuestions _customerQuestion = new()
                     {
-                        CustomerQuestionMedia media = new CustomerQuestionMedia();
-                        media.Path = item;
-                        media.Type = MediaTypes.Image.ToString();
-                        media.QuestionId = customerQuestion.ID;
-                        media.UserId = HttpContext.Request.Form["UserId"].ToString();
-                        Customer_Media.Insert(media);
+                        Text = HttpContext.Request.Form["QuestionText"].ToString(),
+                        CategoryId = CategoryId[0],
+                        Description = HttpContext.Request.Form["Description"].ToString(),
+                        Status = Question_Status.Pending.ToString(),
+                        SubmitTime = DateTime.Now,
+                        UserId = HttpContext.Request.Form["UserId"].ToString(),
+                        User = _user
+                    };
+                    CustomerQuestion.Insert(_customerQuestion);
 
+                    //Images
+                    if (HttpContext.Request.Form.Files != null)
+                    {
+                        List<string> Images = CustomerQuestion.UploadImagesByUser((List<IFormFile>)HttpContext.Request.Form.Files);
+                        foreach (var item in Images)
+                        {
+                            CustomerQuestionMedia media = new();
+                            media.Path = item;
+                            media.Type = MediaTypes.Image.ToString();
+                            media.QuestionId = _customerQuestion.ID;
+                            media.UserId = HttpContext.Request.Form["UserId"].ToString();
+                            CustomerMedia.Insert(media);
+                        }
                     }
+
+                    string jsonObject = JsonConvert.SerializeObject(_customerQuestion, new JsonSerializerSettings()
+                    {
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                        Formatting = Formatting.Indented
+                    });
+
+                    await HubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
+                    return Ok(new { Flag = true, Message = ApiMessages.QuestionPosted, QuestionID = _customerQuestion.ID  });
                 }
-
-
-
-                string jsonObject = JsonConvert.SerializeObject(customerQuestion, new JsonSerializerSettings()
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                    Formatting = Formatting.Indented
-                });
-
-                //   JsonConvert.SerializeObject(question);
-
-                await hubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
-                return Ok(customerQuestion);
+                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
             }
-            else
-            {
-                return BadRequest("please add a valid question ");
-            }
-
+            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
         }
-
-
-
-
-
 
         [HttpPost("AddQuestion")]
         public async Task<IActionResult> AddQuestionnAsync(QuestionModel questionModel)
         {
-            if (questionModel.Text !=null && questionModel.CategoryId !=0)
+            if (questionModel.Text != null && questionModel.CategoryId != 0)
             {
-                ApplicationUser UserModel =
-              await userManager.FindByIdAsync(questionModel.UserId);
-                CustomerQuestions customerQuestion = new CustomerQuestions();
+                ApplicationUser UserModel = await UserManager.FindByIdAsync(questionModel.UserId);
+                CustomerQuestions customerQuestion = new();
                 customerQuestion.Text = questionModel.Text;
                 customerQuestion.CategoryId = questionModel.CategoryId;
                 customerQuestion.Status = Question_Status.Pending.ToString();
                 customerQuestion.SubmitTime = DateTime.Now;
                 customerQuestion.UserId = questionModel.UserId;
                 customerQuestion.User = UserModel;
-                customer_Question.Insert(customerQuestion);
-              
+                CustomerQuestion.Insert(customerQuestion);
+
                 if (questionModel.QuestionImage != null)
                 {
-                    List<string> Images = customer_Question.UploadFile(questionModel.QuestionImage);
+                    List<string> Images = CustomerQuestion.UploadFile(questionModel.QuestionImage);
                     foreach (var item in Images)
                     {
                         CustomerQuestionMedia media = new CustomerQuestionMedia();
@@ -161,8 +137,7 @@ namespace CemexDictionaryApp.WebApi
                         media.Type = MediaTypes.Image.ToString();
                         media.QuestionId = customerQuestion.ID;
                         media.UserId = questionModel.UserId;
-                        Customer_Media.Insert(media);
-
+                        CustomerMedia.Insert(media);
                     }
                 }
 
@@ -174,40 +149,44 @@ namespace CemexDictionaryApp.WebApi
 
                 //   JsonConvert.SerializeObject(question);
 
-               await hubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
+                await HubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
                 return Ok(customerQuestion);
             }
             else
             {
                 return BadRequest("please add a valid question ");
             }
-
         }
 
         [HttpGet("GetTopTenQuestions")]
         public IActionResult GetTopTenQuestions()
         {
-            if (Question_Repository.GetTopTenQuestions() != null)
-            {
-                return Ok(new { Flag = true, Message ="Done",
-                    Data = ApiQuestionMapping.Mapping(Question_Repository.GetTopTenQuestions()) });
-            }
-            return BadRequest(new { Flag = false, Message ="Error,there are no top questions" , Data = 0 });
-        }
-
-        [HttpPost("CustomerQuestions")]
-        public IActionResult GetCustomerQuestionsById(ApiUser user)
-        {
-            if (customer_Question.GetAllQuestionsByCustomerId(user.Id).Count != 0)
+            if (QuestionRepository.GetTopTenQuestions() != null)
             {
                 return Ok(new
                 {
                     Flag = true,
                     Message = "Done",
-                    Questions = ApiCustomerQuestionMapping.Mapping(customer_Question.GetAllQuestionsByCustomerId(user.Id))
+                    Data = ApiQuestionMapping.Mapping(QuestionRepository.GetTopTenQuestions())
                 });
             }
-            return BadRequest(new { Flag = false, Message = "Error,there are no questions posted by this user", Questions = 0 });
+            return BadRequest(new { Flag = false, Message = "Error,there are no top questions", Data = 0 });
+        }
+
+        [HttpPost("CustomerQuestions")]
+        public IActionResult GetCustomerQuestionsById(ApiUser user)
+        {
+            var _customerQuestions = CustomerQuestion.GetAllQuestionsByCustomerId(user.Id);
+            if (_customerQuestions != null   && _customerQuestions.Count > 0)
+            {
+                return Ok(new
+                {
+                    Flag = true,
+                    Message = "Done",
+                    Questions = ApiCustomerQuestionMapping.Mapping(_customerQuestions)
+                });
+            }
+            return BadRequest(new { Flag = false, Message =ApiMessages.CustomerEmptyQuestons, Questions = 0 });
         }
     }
-    }
+}

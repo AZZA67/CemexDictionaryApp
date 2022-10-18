@@ -48,9 +48,9 @@ namespace CemexDictionaryApp.Repositories
 
             if (ProductViewModel.ProductImage != null)
             {
-                string uploadsFolder = Path.Combine(HostEnvironment.WebRootPath);
+              //  string uploadsFolder = Path.Combine(HostEnvironment.WebRootPath);
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + ProductViewModel.ProductImage.FileName;
-                string path = Path.Combine(uploadsFolder + @"\images\Products\", uniqueFileName);
+                string path = Path.Combine(ServerConfig.ImagePath + @"\images\Products\", uniqueFileName);
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     ProductViewModel.ProductImage.CopyTo(fileStream);

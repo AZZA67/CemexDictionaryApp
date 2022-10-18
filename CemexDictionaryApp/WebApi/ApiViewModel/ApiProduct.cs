@@ -30,7 +30,7 @@ namespace CemexDictionaryApp.WebApi.ApiModels
                     {
                         Id = item.Id,
                         Description = item.Description,
-                        Image = item.Image,
+                        Image = string.Format(ServerConfig.ServerPath + "/images/Products/" + item.Image),
                         Name = item.Name,
                         Status = item.Status,
                         Type = item.Type,

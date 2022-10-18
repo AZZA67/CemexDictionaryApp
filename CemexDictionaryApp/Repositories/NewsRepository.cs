@@ -41,9 +41,9 @@ namespace CemexDictionaryApp.Repositories
 
             if (NewsViewModel.NewsImage != null)
             {
-                string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                //string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + NewsViewModel.NewsImage.FileName;
-                string path = Path.Combine(uploadsFolder + @"\images\News\", uniqueFileName);
+                string path = Path.Combine(ServerConfig.ImagePath + @"\images\News\", uniqueFileName);
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     NewsViewModel.NewsImage.CopyTo(fileStream);

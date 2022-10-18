@@ -84,10 +84,10 @@
                         <tr style="vertical-align:central; text-align:center">
                             <th style="vertical-align:central; text-align:center">Question No.</th>
                             <th style="vertical-align:central; text-align:center"> Customer Name </th>
+                            <th style="vertical-align:central; text-align:center">Occupation</th>
+                            <th style="vertical-align:central; text-align:center">Mobile</th>
                             <th style="vertical-align:central; text-align:center"> State</th>
                             <th style="vertical-align:central; text-align:center">Zone</th>
-                            <th style="vertical-align:central; text-align:center">Category</th>
-                            <th style="vertical-align:central; text-align:center">Occupation</th>
                             <th style="vertical-align:central; text-align:center">Date Time</th>
                             <th style="vertical-align:central; text-align:center">Action</th>
                         </tr>
@@ -99,16 +99,16 @@
                             <td style="vertical-align:central; text-align:center"><span class="text-muted">@item.ID </span></td>
                             <td style="vertical-align:central; text-align:center"><a href="invoice.html" class="text-reset" tabindex="-1">@item.User.UserName</a></td>
                             <td style="vertical-align:central; text-align:center">
-                                @item.User.State
+                                @item.User.Occupation
                             </td>
                             <td style="vertical-align:central; text-align:center">
-                                @item.User.Zone
+                                @item.User.PhoneNumber
                             </td>
                              <td style="vertical-align:central; text-align:center">
-                                @item.User.Category
+                                @item.User.State
                             </td>
                                 <td style="vertical-align:central; text-align:center">
-                                    @item.User.Occupation
+                                    @item.User.Zone
                                 </td>
 
                             <td style="vertical-align:central; text-align:center">
@@ -116,7 +116,7 @@
                             </td>
                             <td style="vertical-align:central; text-align:center">
                                 <span class="text-muted">
-                                    <a href="/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport" class="btn btn-primary">Answer</a>
+                                    <a href="/Dictionary/Question/AnswerQuestion?questionId=@item.ID" data-bs-boundary="viewport" class="btn btn-primary">Answer</a>
                                 </span>
                             </td>
 

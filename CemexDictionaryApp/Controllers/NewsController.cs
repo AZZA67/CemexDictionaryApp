@@ -43,11 +43,10 @@ namespace CemexDictionaryApp.Controllers
             if (news.Status == "Active")
                 news.Status = "InActive";
             else
-            {
                 news.Status = "Active";
-            }
+
             NewsRepository.Update(NewsId, news);
-            NewsLog _newId = new NewsLog
+            NewsLog _newId = new()
             {
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 DateTime = DateTime.Now,
@@ -64,7 +63,7 @@ namespace CemexDictionaryApp.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = NewsRepository.UploadedFile(model);
-                News news = new News
+                News news = new()
                 {
                     Title = model.Title,
                     Description = model.Description,
@@ -72,7 +71,7 @@ namespace CemexDictionaryApp.Controllers
                     Image = uniqueFileName,
                 };
                 await NewsRepository.Insert(news);
-                NewsLog _newslog = new NewsLog
+                NewsLog _newslog = new()
                 {
                     UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                     DateTime = DateTime.Now,

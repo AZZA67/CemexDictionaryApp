@@ -56,6 +56,23 @@ namespace CemexDictionaryApp.Repositories
               + q.Tags.Split(" ", StringSplitOptions.RemoveEmptyEntries)
               .Intersect(Keyword.Split(" ", StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count();
         }
+
+        public int[] GetCategoriesId(List<string> categories)
+        {
+            if (categories != null && categories.Count > 0)
+            {
+                int[] _categoryId = new int[categories.Count];
+                for (int i = 0; i < categories.Count; i++)
+                {
+                    var _id = context.QuestionCategories.Where(t => t.Name_Ar.Contains(categories[i])).FirstOrDefault();
+                    if(_id != null)
+                        _categoryId[i] = _id.Id;
+                }
+                return _categoryId;
+            }
+            return null;
+        }
+
         public IEnumerable<Question> Search(string Keyword, int[] categories)
         {
             if (categories != null)
@@ -100,22 +117,18 @@ namespace CemexDictionaryApp.Repositories
             return Questions;
         }
 
-
-
-
-
         public List<string> UploadFile(List<IFormFile> FormFile)
         {
-            List<string> images = new List<string>();
+            List<string> images = new();
             long size = FormFile.Sum(f => f.Length);
             int count = 0;
             foreach (var formFile in FormFile)
             {
                 if (formFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                  //  string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    string path = Path.Combine(uploadsFolder + @"\images\Questions\", images[count]);
+                    string path = Path.Combine(ServerConfig.ImagePath + @"\images\Questions\", images[count]);
                     count++;
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
@@ -152,6 +165,5 @@ namespace CemexDictionaryApp.Repositories
               .TakeLast(10).ToList();
             return Questions;
         }
-
     }
 }

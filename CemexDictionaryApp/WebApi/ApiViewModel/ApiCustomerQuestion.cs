@@ -6,75 +6,52 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
 {
     public class ApiCustomerQuestion
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string QuestionTitle { get; set; }
-        public string QuestionDescription { get; set; }
         public string QuestionAnswer { get; set; }
         public List<string> QuestionImagesUrls { get; set; } = new List<string>();
-        //public List<string> VideoPaths { get; set; } = new List<string>();
         public List<string> QuestionAnswerImagesUrls { get; set; } = new List<string>();
         public List<string> QuestionAnswerVideosUrls { get; set; } = new List<string>();
         public string Status { get; set; }
-
-        //public int ID { get; set; }
-        //public string Text { get; set; }
-        ////[Required(ErrorMessage = "Answer Question Is required !")]
-        //public string Answer { get; set; }
+        public string QuestionDescription { get; set; }
         public DateTime SubmitTime { get; set; }
         public string Comment { get; set; }
-        public string Category{ get; set; } //string of category names
-        //public List<string> ImagesPaths { get; set; } = new List<string>();
-        ////public List<string> VideoPaths { get; set; } = new List<string>();
-        //public List<string> Answer_ImagesPaths { get; set; } = new List<string>();
-        //public List<string> Answer_VideoPaths { get; set; } = new List<string>();
-
-        //another list of answer videos
-        //another list of answer images
+        public string Category{ get; set; }
     }
 
     public class ApiCustomerQuestionMapping
     {
-        public static List<ApiCustomerQuestion> Mapping(List<CustomerQuestions> Customer_questions)
+        public static List<ApiCustomerQuestion> Mapping(List<CustomerQuestions> customerQuestions)
         {
-            if (Customer_questions != null)
+            if (customerQuestions != null)
             {
-                List<ApiCustomerQuestion> _Customer_questions = new();
-                foreach (var customer_question in Customer_questions)
+                List<ApiCustomerQuestion> _questionList = new();
+                foreach (var question in customerQuestions)
                 {
-                    ApiCustomerQuestion _question = new()
+                    ApiCustomerQuestion _apiCustomerQuestion = new()
                     {
-                        //Id = question.ID,
-                        QuestionTitle = customer_question.Text,
-                        QuestionAnswer = customer_question.Answer,
-                        Status = customer_question.Status,
-                        SubmitTime = customer_question.SubmitTime,
-                        Comment = customer_question.Comment,
-                        Category = customer_question.Category.Name_Ar,
+                        Id = question.ID,
+                        QuestionTitle = question.Text,
+                        QuestionAnswer = question.Answer,
+                        Status = question.Status,
+                        SubmitTime = question.SubmitTime,
+                        Comment = question.Comment,
+                        Category = question.Category.Name_Ar,
+                        QuestionDescription = question.Description
                     };
 
-                    foreach (var questionMedia in customer_question.QuestionMedia)
+                    foreach (var questionMedia in question.QuestionMedia)
                     {
                         if (questionMedia.Type == "Image" && questionMedia.User.Role=="User")
-                        {
-                            _question.QuestionImagesUrls.Add("/images/CustomerQuestions/" + questionMedia.Path);
-                        }
-
+                            _apiCustomerQuestion.QuestionImagesUrls.Add(ServerConfig.ServerPath + "/images/CustomerQuestions/" + questionMedia.Path);
                         else if(questionMedia.Type == "Video")
-                        {
-                            _question.QuestionAnswerVideosUrls.Add(questionMedia.Path);
-                        }
-
+                            _apiCustomerQuestion.QuestionAnswerVideosUrls.Add(questionMedia.Path);
                         else
-                        {
-                            _question.QuestionAnswerImagesUrls.Add("/images/CustomerQuestions/CustomerQuestions_Answers/" + questionMedia.Path);
-                        }
-
-
+                            _apiCustomerQuestion.QuestionAnswerImagesUrls.Add(ServerConfig.ServerPath  + "/images/CustomerQuestions/CustomerQuestions_Answers/" + questionMedia.Path);
                     }
-             
-                    _Customer_questions.Add(_question);
+                    _questionList.Add(_apiCustomerQuestion);
                 }
-                return _Customer_questions;
+                return _questionList;
             }
             return null;
         }

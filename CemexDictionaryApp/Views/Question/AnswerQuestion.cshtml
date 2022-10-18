@@ -459,7 +459,7 @@
 
             $.ajax({
 
-                url: "/Question/add_Tag/${txt}",
+                url: "/Dictionary/Question/add_Tag/${txt}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "new_tag": txt },
@@ -473,7 +473,7 @@
             console.log(comment_txt);
 
             $.ajax({
-                url: "/Question/savecomment",
+                url: "/Dictionary/Question/savecomment",
                 contentType: "application/json; charset=utf-8",
                 data: {
                 "comment": comment_txt},
@@ -493,7 +493,7 @@
 
             $.ajax({
 
-                url: "/Question/remove_Tag/${txt}",
+                url: "/Dictionary/Question/remove_Tag/${txt}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "removed_tag": txt },
@@ -556,7 +556,7 @@
             console.log(array);
             $.ajax({
 
-                url: "/Question/Add/${array}",
+                url: "/Dictionary/Question/Add/${array}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "images": array },

@@ -14,5 +14,6 @@ namespace CemexDictionaryApp.Repositories
         int OrderResult(Question q, string Keyword);
         IEnumerable<Question> Search(string Keyword, int[] categories);
         List<string> UploadFile(List<IFormFile> FormFile);
+        public int[] GetCategoriesId(List<string> categories);
     }
 }

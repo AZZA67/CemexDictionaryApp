@@ -25,5 +25,11 @@ namespace CemexDictionaryApp.WebApi
         public static string UserNotExist = string.Format("العميل غير موجود");
 
 
+        //Questions
+        public static string QuestionPosted = string.Format("تم تسجيل السؤال بنجاح");
+        public static string EmptySearchText = string.Format("خطأ لا يوجد نص للبحث");
+        public static string CustomerEmptyQuestons = string.Format("لا توجد أسئلة للعميل");
+
+
     }
 }

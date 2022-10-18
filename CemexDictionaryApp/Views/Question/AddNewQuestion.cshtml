@@ -63,72 +63,73 @@
                       </h3>
                 </div>
                 <div class="card-body">
-                    <div class="form-group mb-3 ">
-                      <label class="form-label">Question</label>
-                      <div >
-                         <input asp-for="Text" class="form-control" placeholder="Enter Question Text">
-                     @*   <small class="form-hint">Question Header (Arabic) </small>*@
-                        
-                            <span asp-validation-for="@Model.Text" class="text-danger"></span> 
+                    <div class="form-group row">
+                        @*<label class="form-control">*@
+                        @*   <input asp-for="TopQuestion" type="checkbox" value="true" class="form-selectgroup-input">
 
-                      </div>
+            <span class="form-selectgroup-label d-flex align-items-center p-3">
+                <span class="me-3">
+                    <span class="form-selectgroup-check"></span>
+                </span>
+
+                <span class="form-selectgroup-label-content">
+                    <span class="form-selectgroup-title strong mb-1">Top Question</span>
+                </span>
+            </span>*@
+
+                        <div class="col ">
+                            <label class="form-check">
+                                <input class="form-check-input" asp-for="TopQuestion" type="checkbox" value="true">
+                                <span class="form-check-label">Top  Question </span>
+                            </label>
+
+                        </div>
+                        @*</label>*@
                     </div>
                     <div class="form-group mb-3 ">
-                          <label asp-for="Answer" class="form-label">Answer</label>
-                          <textarea asp-for="Answer" class="form-control" rows="3"></textarea>
-                          
-                            <span asp-validation-for="@Model.Answer" class="text-danger"></span> 
+                        <label class="form-label">Question</label>
+                        <div>
+                            <input asp-for="Text" class="form-control" placeholder="Enter Question Text">
+                            @*   <small class="form-hint">Question Header (Arabic) </small>*@
+
+                            <span asp-validation-for="@Model.Text" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="form-group mb-3 ">
+                        <label asp-for="Answer" class="form-label">Answer</label>
+                        <textarea asp-for="Answer" class="form-control" rows="3"></textarea>
+
+                        <span asp-validation-for="@Model.Answer" class="text-danger"></span>
 
                     </div>
 
-                           <div class="form-group mb-3 ">
-                      <label class="form-label">Question Category</label>
-                       <div class="d-flex justify-content-center align-items-center w-100">
+                    <div class="form-group mb-3 ">
+                        <label class="form-label">Question Category</label>
+                        <div class="d-flex justify-content-center align-items-center w-100">
                             <div class="inline w-100 field">
                                 <select placeholder="select category" name="categories_Ids" id="categories_Ids"
-                                                        asp-items="categories" multiple="" class="label ui selection fluid dropdown" >
-                                                    <option value="">Select Category</option>
+                                        asp-items="categories" multiple="" class="label ui selection fluid dropdown">
+                                    <option value="">Select Category</option>
                                 </select>
                             </div>
-                                     
-                                        </div>
-                                        <span id="error_span" class="text-danger"></span>
+
+                        </div>
+                        <span id="error_span" class="text-danger"></span>
                     </div>
 
-                   <div class="form-group mb-3 " >
-                                       <div> <label asp-for="Tags" class="form-label"> <span>Tags <h5 style="color:blue"> Enter Tags with comma separated like :Sales,Marketing,Quality, etc</h5>  </span></label></div>
-                       <div class="form-group mb-3 " id="tags" style="width:100%">
+                    <div class="form-group mb-3 ">
+                        <div> <label asp-for="Tags" class="form-label"> <span>Tags <h5 style="color:blue"> Enter Tags with comma separated like :Sales,Marketing,Quality, etc</h5>  </span></label></div>
+                        <div class="form-group mb-3 " id="tags" style="width:100%">
                             <input asp-for="Tags" class="form-control" placeholder="Enter Question Tags" style="width:98%">
                         </div>
                     </div>
-             <br />
-
-              <div class="form-group row">
-                         <label class="form-control">
-                             @*   <input asp-for="TopQuestion" type="checkbox" value="true" class="form-selectgroup-input">
-
-                                <span class="form-selectgroup-label d-flex align-items-center p-3">
-                                    <span class="me-3">
-                                        <span class="form-selectgroup-check"></span>
-                                    </span>
-
-                                    <span class="form-selectgroup-label-content">
-                                        <span class="form-selectgroup-title strong mb-1">Top Question</span>
-                                    </span>
-                                </span>*@
-
-                                            <div class="col ">
-                                                <label class="form-check">
-                                                    <input class="form-check-input" asp-for="TopQuestion" type="checkbox" value="true" >
-                                                    <span class="form-check-label">Top  Question </span>
-                                                </label>
-
-                                            </div>
-                            </label>
-                 </div>
+                    <br />
 
 
-                                
+
+
+
                 </div>
               </div>
             </div>
@@ -505,7 +506,7 @@
            
             $.ajax({
 
-                url: "/Question/add_Tag/${txt}",
+                url: "/Dictionary/Question/add_Tag/${txt}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "new_tag": txt },
@@ -519,7 +520,7 @@
 
             $.ajax({
 
-                url: "/Question/remove_Tag/${txt}",
+                url: "/Dictionary/Question/remove_Tag/${txt}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "removed_tag": txt },
@@ -589,7 +590,7 @@
         function save() {
             console.log(array);
             $.ajax({
-                url: "/Question/Add/${array}",
+                url: "/Dictionary/Question/Add/${array}",
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 data: { "images": array },

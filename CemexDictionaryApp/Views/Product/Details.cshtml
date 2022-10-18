@@ -11,29 +11,40 @@
             </div>
             <div class="stats mt-2">
                 <div class="d-flex justify-content-between p-price">
-                    <span>Name</span>
-                    <span>@Model.Name</span>
+                    <span><b>Name</b></span>
                 </div>
-                 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Type</span>
-                    <span>@Model.Type</span>
-                </div>
-                
-                <div class="d-flex justify-content-between p-price">
-                    <span>Status</span>
-                    <span>@Model.Status</span>
-                </div>
+                <div class="stats mt-2">
+                    <div class="d-flex justify-content-between p-price">
+                        <span>@Model.Name</span>
+                    </div>
+                    <br />
 
-                <div class="d-flex justify-content-between p-price">
-                    <span>Description</span>
-                    <span>@Model.Description</span>
+                    <div class="d-flex justify-content-between p-price">
+                        <span><b>Type</b></span>
+                    </div>
+                    <div class="d-flex justify-content-between p-price">
+                        <span>@Model.Type</span>
+                    </div>
+                    <br />
+                    <div class="d-flex justify-content-between p-price">
+                        <span><b>Status</b></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between p-price">
+                        <span>@Model.Status</span>
+                    </div>
+                    <br />
+                    <div class="d-flex justify-content-between p-price">
+                        <span><b>Description</b></span>
+                    </div>
+                    <div class="d-flex justify-content-between p-price">
+                        <span>@Model.Description</span>
+                    </div>
+
                 </div>
-            
-            </div>   
                 <br />
                 <button type="button" class="btn me-auto" data-bs-dismiss="modal" style="vertical-align:central; text-align:center;">Close</button>
-        </div>
+            </div>
     </div>
         <br />
 @section Scripts {

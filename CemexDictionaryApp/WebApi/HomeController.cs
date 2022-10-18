@@ -24,10 +24,15 @@ namespace CemexDictionaryApp.WebApi
         {
             var _news = NewsRepository.ActiveNews();
             var _questionCategory = QuestionCategory.GetAll().Select(p => p.Name_Ar).ToList();
-         //   var _topQuestions = QuestionRepository.GetTopTenQuestions();
 
             if (_questionCategory != null)
-                return Ok(new { Flag = true, Message = ApiMessages.Done, QuestionCategories = _questionCategory, News = _news, TopQuestions= ApiQuestionMapping.Mapping(QuestionRepository.GetTopTenQuestions()) });
+                return Ok(new { 
+                    Flag = true, 
+                    Message = ApiMessages.Done, 
+                    QuestionCategories = _questionCategory, 
+                    News = ApiNewsMapping.Mapping(_news), 
+                    TopQuestions= ApiQuestionMapping.Mapping(QuestionRepository.GetTopTenQuestions()) 
+                });
             else
                 return BadRequest(new { Flag = false, Message = ApiMessages.EmptyNewsList, Data = 0 });
         }

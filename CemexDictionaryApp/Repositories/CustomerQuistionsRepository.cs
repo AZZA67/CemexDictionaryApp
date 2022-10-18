@@ -43,10 +43,6 @@ namespace CemexDictionaryApp.Repositories
             return Questions;
         }
 
-
-
- 
-
         public List<string> UploadFile(List<string> base64Images)
         {
             List<string> images = new List<string>();
@@ -62,10 +58,8 @@ namespace CemexDictionaryApp.Repositories
                     string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
                     count++;
                     byte[] imageBytes = Convert.FromBase64String(base64image);
-                    using (var img = Image.Load(imageBytes))
-                    {
-                        img.Save(path);
-                    }
+                    using var img = Image.Load(imageBytes);
+                    img.Save(path);
                 }
             }
             return images;
@@ -73,21 +67,19 @@ namespace CemexDictionaryApp.Repositories
 
         public List<string> UploadImagesByUser(List<IFormFile> FormFile)
         {
-            List<string> images = new List<string>();
+            List<string> images = new();
             long size = FormFile.Sum(f => f.Length);
             int count = 0;
             foreach (var formFile in FormFile)
             {
                 if (formFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                   // string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
+                    string path = Path.Combine(ServerConfig.ImagePath + @"\images\CustomerQuestions\", images[count]);
                     count++;
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        formFile.CopyTo(fileStream);
-                    }
+                    using var fileStream = new FileStream(path, FileMode.Create);
+                    formFile.CopyTo(fileStream);
                 }
             }
             return images;
@@ -103,9 +95,9 @@ namespace CemexDictionaryApp.Repositories
             {
                 if (formFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                   // string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     images.Add(Guid.NewGuid().ToString() + "_" + formFile.FileName);
-                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\CustomerQuestions_Answers", images[count]);
+                    string path = Path.Combine(ServerConfig.ImagePath + @"\images\CustomerQuestions\CustomerQuestions_Answers", images[count]);
                     count++;
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {

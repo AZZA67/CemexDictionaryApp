@@ -44,14 +44,12 @@ namespace CemexDictionaryApp.Controllers
             Customer_QuestionRepository = _customer_QuestionRepository;
         }
 
-
         public IActionResult GetAll()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
             ViewData["Categories"] = categories;
             return View();
         }
-
 
         [HttpGet]
         public IActionResult AddNewQuestion()
@@ -64,7 +62,6 @@ namespace CemexDictionaryApp.Controllers
             ViewData["Categories"] = categories;
             return View();
         }
-
 
         public int OrderResult(Question _question, string Keyword)
         {
@@ -96,19 +93,13 @@ namespace CemexDictionaryApp.Controllers
             tags.Remove(removed_tag);
         }
 
-
-
-
-
-
-
         [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
             int check = (TempData["selectedImages"] == null) ? 0 : ((IEnumerable<string>)TempData["selectedImages"]).Count();
             if (ModelState.IsValid && (check + photos?.Count() <=3) )
             {
-                Question question = new Question();
+                Question question = new();
                 question.Text= questionViewModel.Text;
                 question.Answer = questionViewModel.Answer;
                 question.Tags = string.Join(",", tags);
@@ -121,7 +112,7 @@ namespace CemexDictionaryApp.Controllers
                     List<string> images = QuestionRepository.UploadFile(photos);
                     foreach (var item in images)
                     {
-                        Media media = new Media();
+                        Media media = new();
                         media.Path = item;
                         media.Type = MediaTypes.Image.ToString();
                         media.QuestionId = question.ID;
@@ -134,7 +125,7 @@ namespace CemexDictionaryApp.Controllers
                     IEnumerable<string> existing_images = (IEnumerable<string>)TempData["selectedImages"];
                     foreach (var item in existing_images)
                     {
-                        Media media = new Media();
+                        Media media = new();
                         media.Path = item;
                         media.Type = MediaTypes.Image.ToString();
                         media.QuestionId = question.ID;
@@ -154,7 +145,7 @@ namespace CemexDictionaryApp.Controllers
                 }
                 foreach (var item in categories_Ids)
                 {
-                    QuestionPerCategory questionPerCategory = new QuestionPerCategory();
+                    QuestionPerCategory questionPerCategory = new();
                     questionPerCategory.CategoryId = item;
                     questionPerCategory.QuestionId = question.ID;
                     questionPerCategoryRepository.Insert(questionPerCategory);
@@ -169,16 +160,19 @@ namespace CemexDictionaryApp.Controllers
                 ViewData["Images"] = images;
                 return View("AddNewQuestion");
             }
+
+
+
         }
 
         public IActionResult Search_question( SearchViewModel search_viewmodel)
         {
 
-            List<string> categories_name_En = new List<string>();
-           
-                if (search_viewmodel.Selected_categories.Count() !=0)
+            List<string> categories_name_En = new();
+
+            if (search_viewmodel.SelectedCategories != null && search_viewmodel.SelectedCategories.Length > 0)
             {
-                foreach (var item in search_viewmodel.Selected_categories)
+                foreach (var item in search_viewmodel.SelectedCategories)
                 {
                     string CategoryName_En = QuestionCategoryRepository.GetCategoryNameEnById(item);
                     categories_name_En.Add(CategoryName_En);
@@ -189,7 +183,7 @@ namespace CemexDictionaryApp.Controllers
             
             if (search_viewmodel.SearchKeyword != null)
             {
-                var searchresult = QuestionRepository.Search(search_viewmodel.SearchKeyword, search_viewmodel.Selected_categories);
+                var searchresult = QuestionRepository.Search(search_viewmodel.SearchKeyword, search_viewmodel.SelectedCategories);
                 ViewBag.searchresult = searchresult.ToList();
                 TempData["searchResult"] = searchresult.ToList();
             }
@@ -224,7 +218,6 @@ namespace CemexDictionaryApp.Controllers
             return PartialView("CustomerQuestionDetails", _question);
         }
 
-
         [HttpGet]
         public IActionResult AnswerQuestion(int questionId)
         {
@@ -235,11 +228,13 @@ namespace CemexDictionaryApp.Controllers
            
             return View( question);
         }
+
         [HttpGet]
         public void savecomment(string comment)
         {
             TempData["comment"] = comment;   
         }
+
         [HttpPost]
         public IActionResult AnswerQuestion(CustomerQuestions question,List<IFormFile>photos, string videoURL)
         {
@@ -297,6 +292,7 @@ namespace CemexDictionaryApp.Controllers
            
             return View("AnswerQuestion", q);
         }
+
         public IActionResult RejectQuestion(int questionId)
         {
             string comment="";
@@ -308,6 +304,7 @@ namespace CemexDictionaryApp.Controllers
             int x = Customer_QuestionRepository.RejectQuestion(questionId, comment);
             return RedirectToAction("HomePage","Home");
         }
+
         public IActionResult GetNotificationList(string listName)
         {
             TempData["listname"]=listName;
@@ -351,7 +348,6 @@ namespace CemexDictionaryApp.Controllers
 
 
         //}
-
 
     }
 }

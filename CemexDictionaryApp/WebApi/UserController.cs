@@ -69,7 +69,6 @@ namespace CemexDictionaryApp.WebApi
 
                         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
                         return Ok(new { Flag = true, Message =ApiMessages.Done, Data = ApiUserMapping.Mapping(_user)});
-                        //new { id = _user.Id, mobileNo = _user.PhoneNumber }
                     }
                     return BadRequest(new { Flag = false, Message =ApiMessages.WrongPassword, Data = 0 });
                 }

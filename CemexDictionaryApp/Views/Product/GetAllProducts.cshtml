@@ -75,7 +75,7 @@
                         <th style="vertical-align:central; text-align:center">Product No.</th>
                         <th style="vertical-align:central; text-align:center"> Name </th>
                         <th style="vertical-align:central; text-align:center"> Image</th>
-                        <th style="vertical-align:central; text-align:center">Description</th>
+                        @*<th style="vertical-align:central; text-align:center">Description</th>*@
                         <th style="vertical-align:central; text-align:center">Type</th>
                         <th style="vertical-align:central; text-align:center">Status</th>
                         <th style="vertical-align:central; text-align:center">Details</th>
@@ -94,9 +94,9 @@
                          
                                 </div>*@
                             </td>
-                            <td style="vertical-align:central; text-align:center">
+                            @*<td style="vertical-align:central; text-align:center">
                                 @item.Description
-                            </td>
+                            </td>*@
                             <td style="vertical-align:central; text-align:center">
                                 @item.Type
                             </td>
@@ -246,7 +246,7 @@
                 $.ajax(
                     {
                         type: "GET",
-                        url: "/Product/ChangeProductStatusById",
+                        url: "/Dictionary/Product/ChangeProductStatusById",
                         data: { "productId": itemid },
                         success: function (result) {
                             console.log(result);
@@ -262,7 +262,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/Product/Details/${itemid}",
+                    url: "/Dictionary/Product/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "productId": itemid },
                     datatype: "json",
@@ -284,7 +284,7 @@
             $.ajax({
 
                 type: "GET",
-                url: "/Product/AddNewProduct",
+                url: "/Dictionary/Product/AddNewProduct",
                 contentType: "application/json; charset=utf-8",
                 datatype: "json",
 

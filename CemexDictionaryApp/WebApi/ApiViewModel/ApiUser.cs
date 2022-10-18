@@ -16,7 +16,7 @@ namespace CemexDictionaryApp.WebApi.ApiModels
         public string Token { get; set; }
     }
 
-       public class ApiUserMapping
+    public class ApiUserMapping
     {
         public static ApiUser Mapping(ApplicationUser user)
         {

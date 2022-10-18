@@ -1,4 +1,5 @@
 ﻿using CemexDictionaryApp.Repositories;
+using CemexDictionaryApp.WebApi.ApiViewModel;
 using Microsoft.AspNetCore.Mvc;
 namespace CemexDictionaryApp.WebApi
 {
@@ -21,7 +22,7 @@ namespace CemexDictionaryApp.WebApi
         {
             var _result = NewsRepository.ActiveNews();
             if(_result != null && _result.Count>0)
-                return Ok(new { Flag = true, Message =ApiMessages.Done, Data = _result });
+                return Ok(new { Flag = true, Message =ApiMessages.Done, Data = ApiNewsMapping.Mapping(_result) });
             else
                 return BadRequest(new { Flag = false, Message =ApiMessages.EmptyNewsList, Data = 0 });
         }

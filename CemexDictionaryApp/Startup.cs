@@ -12,6 +12,7 @@ using CemexDictionaryApp.Hubs;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using CemexDictionaryApp.Firebase;
 
 namespace CemexDictionaryApp
 {
@@ -48,6 +49,7 @@ namespace CemexDictionaryApp
             services.AddScoped<IMediaRepository, MediaRepository>();
             services.AddScoped<IQuestionPerCategoryRepository, QuestionPerCategoryRepository>();
             services.AddScoped<ICustomerQuestionMediaRepository, CustomerQuestionMediaRepository>();
+            services.AddScoped<IFirebaseNotificationService, FirebaseNotificationService>();
             services.AddScoped<ICustomerQuistionsRepository, CustomerQuistionsRepository>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<DBContext>();
