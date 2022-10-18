@@ -1,30 +1,11 @@
-﻿@model SearchViewModel
+﻿
+@model SearchViewModel
 @inject CemexDictionaryApp.Repositories.IQuestionRepository questionRepo
 @{ SelectList categories = new SelectList(ViewBag.Categories, "Id", "Name_En"); }
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <div class="page">
     <div class="page-wrapper">
-@*
-        <div class="container-xl">
-            <!-- Page title -->
-            <div class="page-header d-print-none">
-                <div class="row g-2 align-items-center">
-                    <div class="col">
-                        @if (TempData["searchResult"] != null)
-                        {
-                            <h2 class="page-title">Search Results</h2>
-                            int x = ((List<Question>)TempData["searchResult"]).Count();
-                           <div class="text-muted mt-1">Question Count : @x</div>
-                        }
-                       else
-                         {
-                          <h2 class="page-title">Search Results</h2> 
-                           <div class="text-muted mt-1"> Question Count :  0 </div>
-                         }
-                    </div>
-                </div>
-            </div>
-        </div>*@
+
 
                     <div class="container-xl">
                 <!-- Page title -->
@@ -78,14 +59,16 @@
                     </div>
                     <div class="col-9">
                       
-                        <form class="row" asp-action="Search_question" asp-controller="Question">
+                        <form class="row" asp-action="SearchByQuestionId" asp-controller="Question">
                             <div class="col-3">
                                 <div class=" justify-content-center align-items-center">
                                     <div class="inline w-100 field">
 
-                                        <select placeholder="select category" name="Selected_categories" id="Selected_categories" 
-                                            asp-items="categories" multiple=""  class="label ui selection fluid dropdown">
-                                            <option value="">Select Category</option>
+                                        <select placeholder="select Question Type" name="QuestionType" id="QuestionType"
+                                                class="label ui selection fluid dropdown">
+                                            <option value="">Select Question Type</option>
+                                            <option value="Customer">Customer</option>
+                                            <option value="Admin">Admin</option>
                                         </select>
                                        
 
@@ -99,33 +82,33 @@
 
                             <div class="col-9">
                                 <div class="input-group rounded ">
-                                    @if (TempData["searchKeyWord"] != null)
+                                   @* @if (TempData["searchKeyWord"] != null)
                                     {
                                         <input asp-for="SearchKeyword" value="@TempData["searchKeyWord"]" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                                     }
                                     else
-                                    {
-                                        <input asp-for="SearchKeyword" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                    }
+                                    {*@
+                                    <input id="QuestionId" name="QuestionId" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    @*}*@
                                     <button type="submit" class="input-group-text border-0"><i class="fa fa-search "></i></button>
                                 </div>
                             </div>
                         </form>
                         <br />
                         <div class="col-6">
-                            @if ((string)TempData["categories"] != null)
+                            @if ((string)TempData["QuestionType"] != null)
                             {
-                                if (TempData["categories"].ToString() == "empty")
+                                if (TempData["QuestionType"].ToString() == "empty")
                                 {
-                                    <span id="error_span" class="text-danger">Please Select At Least One Category to search with !</span>
+                                    <span id="error_span" class="text-danger">Please Select Question Type To search with !</span>
                                 }
                             }
                         </div>
-                     @if (TempData["searchResult"] != null)
+                        @if (TempData["question"] != null)
                         {
                             <h2 class="page-title">Search Results</h2>
-                            int x = ((List<Question>)TempData["searchResult"]).Count();
-                           <div class="text-muted mt-1">Result Count : @x</div>
+                           @* int x = ((List<Question>)TempData["question"]).Count();*@
+                           <div class="text-muted mt-1">Result Count : 1</div>
                         }
                        else
                          {
@@ -133,7 +116,7 @@
                            <div class="text-muted mt-1"> Result Count :  0 </div>
 
                          }
-                         <br/>
+                    @*     <br/>
                         @if (TempData["SelectedCategories"] != null)
                         {
 
@@ -143,48 +126,101 @@
                             {
                              <div class="btn btn-info"> @item </div>
                             }
-                        }
+                        }*@
 
                         <br />
-                        @if (TempData["searchResult"] != null)
+                        @if (TempData["question"] != null)
                         {
-                            @foreach (Question question in (List<Question>)TempData["searchResult"])
-                            {
-                                <div class="card">
-                                         <div class="card-header"><h4 class="card-title">   Question ID # <strong>@question.ID</strong> .</h4></div>
+                            @* @foreach (Question question in (List<Question>)TempData["searchResult"])
+                            {*@
+                          
+                            <div class="card">
 
+
+                                @if (TempData["QuestionType"]!=null)
+                                {
+                                    @if (TempData["QuestionType"].ToString()=="Customer")
+                                    {
+                                        CustomerQuestions q = TempData["question"] as CustomerQuestions;
+
+                                          <div class="card-header"><h4 class="card-title">   Question ID # <strong>  @q.ID</strong> (Customer Question) </h4></div>
                                     <div class="card-body">
                                         <div>
                                             <div class="row">
                                                 <div class="col">
                                                     <div>
-
-                                      <b>Question : </b>@question.Text
+                                                   
+                                                    <b>Question : </b> @q.Text
+                                                    
                                                     </div>
                                                     <div class="text-truncate">
 
 
-                                       <b>Uploaded By :</b>  @question.Admin.UserName
+                                                    <b>Uploaded By :</b>  @q.User.UserName
                                                     </div>
 
                                                      <div class="text-truncate">
 
-                                        <b>Media  :  </b>Images : @question.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @question.QuestionMedia.Where(q => q.Type == "Video").Count()
+                                                    <b>Media  :  </b>Images : @q.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @q.QuestionMedia.Where(q => q.Type == "Video").Count()
                                                     </div>
 
                                                 </div>
                                                 <div class="col-auto align-self-center">
                                                  @*   <div class="badge bg-primary"></div>*@
                                                     <span class="text-muted">
-                                                        <button onclick="modal(@question.ID)" class="btn align-text-top" id="details" data-id="@question.ID" data-bs-boundary="viewport">Details</button>
+                                                            <button onclick="UserQuestionDetails(@q.ID)" class="btn align-text-top" id="details" data-id="@q.ID" data-bs-boundary="viewport">Details</button>
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    }
+                                    else{
+                                        Question q = TempData["question"] as Question;
+
+                                        <div class="card-header"><h4 class="card-title">   Question ID # <strong>  @q.ID</strong> (Admin Question)</h4></div>
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div>
+                                                   
+                                                    <b>Question : </b> @q.Text
+                                                    
+                                                    </div>
+                                                    <div class="text-truncate">
+
+
+                                                    <b>Uploaded By :</b>  @q.Admin.UserName
+                                                    </div>
+
+                                                     <div class="text-truncate">
+
+                                                    <b>Media  :  </b>Images : @q.QuestionMedia.Where(q => q.Type == "Image").Count()  : Videos : @q.QuestionMedia.Where(q => q.Type == "Video").Count()
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-auto align-self-center">
+                                                 @*   <div class="badge bg-primary"></div>*@
+                                                    <span class="text-muted">
+                                                    <button onclick="modal(@q.ID)" class="btn align-text-top" id="details" data-id="@q.ID" data-bs-boundary="viewport">Details</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+
+
+
+                                }
+
+                              
+
+                              
                                 </div>
                                 <br />
-                            }
+                       
 
                         }
                       
@@ -229,7 +265,7 @@
                 var options = { "backdrop": "static", keyboard: true };
                 $.ajax({
                     type: "GET",
-                    url: "/Dictionary/Question/Details/${itemid}",
+                    url: "/Question/Details/${itemid}",
                     contentType: "application/json; charset=utf-8",
                     data: { "QuestionId": itemid },
                     datatype: "json",
@@ -248,6 +284,31 @@
         }
 
 
+        function UserQuestionDetails(itemid) {
+               //var itemid=document.getElementById("QuestionId").value;
+            if (itemid != "") {
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                        url: "/Question/CustomerQuestionDetails/${itemid}",
+                    contentType: "application/json; charset=utf-8",
+                    data: { "QuestionId": itemid },
+                    datatype: "json",
+                    success: function (data) {
+                        console.log("bye");
+                        $('.modal-body').html(data); //card
+                        $('#myModal').modal(options);
+                        $('#modal-scrollable').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Oops..Question with this Id was not found, try another Id");
+                    }
+                });
+            }
+        }
+
+
 
 
 
@@ -260,7 +321,7 @@
             $.ajax({
 
                 type: "POST",
-                url: "/Dictionary/Question/Search/${search_view_model}",
+                url: "/Question/Search/${search_view_model}",
                 contentType: "application/json; charset=utf-8",
                 data: { "search_viewmodel": search_view_model },
                 datatype: "json",

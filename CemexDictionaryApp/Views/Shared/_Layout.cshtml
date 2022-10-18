@@ -224,8 +224,8 @@
                                                <a class="dropdown-item"  asp-action="getAll" asp-controller="Question">
                                                 Search By Category
                                             </a>
-                                            <a asp-action="GetAll" asp-controller="QuestionCategory" class="dropdown-item">
-                                                   Search By Type
+                                            <a asp-action="SearchByQuestionId" asp-controller="Question" class="dropdown-item">
+                                                   Search By Question Id
                                             </a>
                                         </div>
                                     </div>
@@ -356,12 +356,12 @@
                         <div class="w-100">
                             <div class="row">
                                 <div class="col">
-                                    <a asp-action="HomePage" asp-controller="Home" class="btn w-100" data-bs-dismiss="modal">
+                                    <a asp-action="HomePage" asp-controller="Home" class="btn w-100" >
                                         Go to dashboard
                                     </a>
                                 </div>
                                 <div class="col">
-                                    <a asp-action="GetAll" asp-controller="Question" asp-route-page_number="1" class="btn btn-success w-100" data-bs-dismiss="modal">
+                                    <a asp-action="getAll" asp-controller="Question" class="btn btn-success w-100" >
                                         Go To Search 
                                     </a>
                                 </div>
@@ -371,6 +371,10 @@
                 </div>
             </div>
         </div>
+
+
+
+
 
 
         <div class="modal modal-blur fade " id="modal-scrollable" tabindex="-1" role="dialog">
@@ -445,8 +449,6 @@
             function search() {
 
                 var test = document.getElementById('searchinput').value;
-
-
                 $.ajax({
                     type: "post",
                     url: "/Dictionary/Question/Searchquestions/${test}",
