@@ -81,7 +81,7 @@
                        <span><b>State : </b> @Model.User.State</span><br />
                        <span><b>Zone : </b> @Model.User.Zone</span><br />
                        <span><b>Occupation : </b> @Model.User.Occupation</span><br />
-                       <span><b>Category : </b> @Model.User.Category</span><br />
+                       @*<span><b>Category : </b> @Model.User.Category</span><br />*@
                        <span><b>Mobile : </b> @Model.User.PhoneNumber</span>
 
                     </div>
@@ -99,12 +99,13 @@
              
                     </div>
 
-                               <div class="form-group mb-3 ">
-                       <span><b>Question : </b> @Model.Text</span><br />
-                       <span><b>Question Category : </b> @Model.Category.Name_En</span><br />
+                     <div class="form-group mb-3 ">
+                         <span><b>Question : <br /> </b> @Model.Text</span><br />
+                         <span><b>Question Category : </b> @Model.Category.Name_En</span><br />
+                         <span><b>Description : <br /> </b> @Model.Description</span><br />
 
 
-                    </div>
+                     </div>
                         <div class="form-group mb-3 ">
                        <span><b>Images </b></span><br />
                      
@@ -348,7 +349,7 @@
 
             <div class="modal-footer">
                 <button   type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Cancel</button>
-          <a href="/Question/RejectQuestion?questionId=@Model.ID"  type="button" class="btn btn-danger">Yes,reject</a>
+          <a href="/Dictionary/Question/RejectQuestion?questionId=@Model.ID"  type="button" class="btn btn-danger">Yes,reject</a>
             </div>
 
         </div>

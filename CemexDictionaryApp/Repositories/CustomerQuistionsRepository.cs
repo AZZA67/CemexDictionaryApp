@@ -42,7 +42,6 @@ namespace CemexDictionaryApp.Repositories
                Where(question => question.CategoryId == _categoryId).ToList();
             return Questions;
         }
-
         public List<string> UploadFile(List<string> base64Images)
         {
             List<string> images = new List<string>();
@@ -52,10 +51,10 @@ namespace CemexDictionaryApp.Repositories
             {
                 if (base64image != null)
                 {
-                    string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
+                   // string uploadsFolder = Path.Combine(hostEnvironment.WebRootPath);
                     string imageName = Guid.NewGuid().ToString() + ".jpg";
                     images.Add(imageName);
-                    string path = Path.Combine(uploadsFolder + @"\images\CustomerQuestions\", images[count]);
+                    string path = Path.Combine(ServerConfig.ImagePath + @"\images\CustomerQuestions\", images[count]);
                     count++;
                     byte[] imageBytes = Convert.FromBase64String(base64image);
                     using var img = Image.Load(imageBytes);
@@ -64,7 +63,6 @@ namespace CemexDictionaryApp.Repositories
             }
             return images;
         }
-
         public List<string> UploadImagesByUser(List<IFormFile> FormFile)
         {
             List<string> images = new();
@@ -84,8 +82,6 @@ namespace CemexDictionaryApp.Repositories
             }
             return images;
         }
-
-
         public List<string> UploadImagesByAdmin(List<IFormFile> FormFile)
         {
             List<string> images = new List<string>();
@@ -115,7 +111,6 @@ namespace CemexDictionaryApp.Repositories
         public CustomerQuestions GetById(int QuestionId)
         {
             CustomerQuestions question = context.customer_Questions.
-                
                 Include(q => q.Category).
                  Include(question => question.User).
                  Include(question => question.QuestionMedia).
@@ -135,7 +130,6 @@ namespace CemexDictionaryApp.Repositories
             question.AdminId = questionWithAnswer.AdminId;
             context.customer_Questions.Update(question);
             context.SaveChanges();
-
             return question.ID;
         }
         public int RejectQuestion(int QuestionId, string comment)
@@ -145,10 +139,8 @@ namespace CemexDictionaryApp.Repositories
                  Include(question => question.User).
             FirstOrDefault(question => question.ID == QuestionId);
 
-            if (comment != null)
-            {
+            if (!string.IsNullOrEmpty(comment))
                 question.Comment = comment;
-            }
 
             question.Status = Question_Status.Rejected.ToString();
             context.customer_Questions.Update(question);
@@ -200,7 +192,6 @@ namespace CemexDictionaryApp.Repositories
             }
             return null;
         }
-
         public List<CustomerQuestions> GetAllQuestionsByCustomerId(string CustomerId)
         {
             List<CustomerQuestions> Questions = context.customer_Questions
@@ -212,7 +203,5 @@ namespace CemexDictionaryApp.Repositories
                 ToList();
             return Questions;
         }
-
-
     }
 }
