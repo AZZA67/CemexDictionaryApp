@@ -298,9 +298,13 @@ namespace CemexDictionaryApp.Controllers
             if (TempData["comment"] !=null)
                 _comment = TempData["comment"].ToString();
            
-            Customer_QuestionRepository.RejectQuestion(questionId, _comment);
+            string adminId= userManager.GetUserId(HttpContext.User);
+
+            Customer_QuestionRepository.RejectQuestion(questionId, _comment, adminId);
             return RedirectToAction("HomePage","Home");
         }
+
+
         public IActionResult GetNotificationList(string listName)
         {
             TempData["listname"]=listName;

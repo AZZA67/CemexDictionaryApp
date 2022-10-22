@@ -11,6 +11,7 @@ using System.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Identity;
 //using static System.Net.Mime.MediaTypeNames;
 
 namespace CemexDictionaryApp.Repositories
@@ -19,10 +20,12 @@ namespace CemexDictionaryApp.Repositories
     {
         DBContext context;
         private readonly IWebHostEnvironment hostEnvironment;
-        public CustomerQuistionsRepository(DBContext _context, IWebHostEnvironment _hostEnvironment)
+        private UserManager<ApplicationUser> userManager;
+        public CustomerQuistionsRepository(DBContext _context, IWebHostEnvironment _hostEnvironment, UserManager<ApplicationUser> _userManager)
         {
             context = _context;
             hostEnvironment = _hostEnvironment;
+            userManager = _userManager;
         }
         public List<CustomerQuestions> GetAll()
         {
@@ -132,7 +135,8 @@ namespace CemexDictionaryApp.Repositories
             context.SaveChanges();
             return question.ID;
         }
-        public int RejectQuestion(int QuestionId, string comment)
+
+        public int RejectQuestion(int QuestionId, string comment,string AdminId)
         {
             CustomerQuestions question = context.customer_Questions.
                 Include(question => question.QuestionMedia).
@@ -143,10 +147,12 @@ namespace CemexDictionaryApp.Repositories
                 question.Comment = comment;
 
             question.Status = Question_Status.Rejected.ToString();
+            question.AdminId = AdminId;
             context.customer_Questions.Update(question);
             context.SaveChanges();
             return question.ID;
         }
+
         public List<CustomerQuestions> GetAllPendingQuestions()
         {
             List<CustomerQuestions> Pending_questions = context.customer_Questions.
@@ -155,6 +161,7 @@ namespace CemexDictionaryApp.Repositories
            Where(question => question.Status == "Pending" && question.IsRead == true).ToList();
             return Pending_questions;
         }
+
         public void change_IsRead_Property(int questionId)
         {
             CustomerQuestions question = context.customer_Questions.
@@ -203,5 +210,28 @@ namespace CemexDictionaryApp.Repositories
                 ToList();
             return Questions;
         }
+
+
+        public List<ApplicationUser> TopFiveAskingUsers()
+        {
+           var Users = context.customer_Questions
+               
+                .GroupBy(user => user.UserId)
+              .Select(result => new { UserId = result.Key, Number_Of_Questions = result.Count() }).
+
+              OrderBy(res => res.Number_Of_Questions).Take(5).ToList();
+
+            List<ApplicationUser> top_users = new List<ApplicationUser>();
+            foreach (var user in Users)
+            {
+                top_users.Add(context.app_users.Include(user=>user.ProductLogs).
+                    FirstOrDefault(_user => _user.Id == user.UserId));
+
+
+            }
+
+            return top_users;
+        }
+
     }
 }

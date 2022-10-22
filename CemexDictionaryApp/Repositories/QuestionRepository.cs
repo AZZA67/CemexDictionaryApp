@@ -165,5 +165,21 @@ namespace CemexDictionaryApp.Repositories
               .TakeLast(10).ToList();
             return Questions;
         }
+
+        public List<Question> GetMostNewestQuestions()
+        {
+            List<Question> Questions = context.Questions.
+         OrderBy(question => question.SubmitTime).
+                Include(question => question.QuestionMedia).
+                Include(q => q.Admin).
+                  Include(q => q.Question_category).
+                ThenInclude(qc => qc.category)
+              .ToList()
+                .AsEnumerable()
+              .TakeLast(5).Reverse().ToList();
+
+            return Questions;
+        }
+
     }
 }

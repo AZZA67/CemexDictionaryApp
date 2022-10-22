@@ -14,7 +14,8 @@ namespace CemexDictionaryApp.Repositories
         CustomerQuestions GetById(int QuestionId);
         int Insert(CustomerQuestions question);
         List<CustomerQuestions> NotificationList();
-        int RejectQuestion(int QuestionId, string comment);
+        int RejectQuestion(int QuestionId, string comment,string AdminId);
+        List<ApplicationUser> TopFiveAskingUsers();
         List<string> UploadFile(List<string> base64Images);
         List<string> UploadImagesByAdmin(List<IFormFile> FormFile);
         Dictionary<string, int> QuestionStatusPerCustomer(string userId);

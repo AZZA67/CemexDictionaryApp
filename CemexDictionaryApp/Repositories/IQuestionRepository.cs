@@ -11,6 +11,7 @@ namespace CemexDictionaryApp.Repositories
         Question GetById(int QuestionId);
         List<Question> GetTopTenQuestions();
         int Insert(Question question);
+        List<Question> GetMostNewestQuestions();
         int OrderResult(Question q, string Keyword);
         IEnumerable<Question> Search(string Keyword, int[] categories);
         List<string> UploadFile(List<IFormFile> FormFile);
