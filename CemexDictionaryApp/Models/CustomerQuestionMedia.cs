@@ -14,7 +14,7 @@ namespace CemexDictionaryApp.Models
 
     public class CustomerQuestionMedia
     {
-        public virtual ApplicationUser User { get; set; } //user or admin 
+        public virtual ApplicationUser User { get; set; } 
         [ForeignKey("User")]
         public string UserId { get; set; }
         public int Id { get; set; }

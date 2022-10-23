@@ -22,9 +22,6 @@ namespace CemexDictionaryApp.Models
         public  int ProductTypeId { get; set; }
         public virtual List<ProductLog> ProductLogs { get; set; }
 
-        //product type table id , type 
-        //Aproduct lOG
-        //pRODUCTid / uSERiD / aCTION (aDD / aCTIVE / dEACTIVATE ) , DATETIME
 
     }
 }

@@ -40,8 +40,7 @@ namespace CemexDictionaryApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var UserModel =
-                //await userManager.FindByEmailAsync(user.Email);
+             
 
                 ApplicationUser UserModel =
                 await userManager.FindByEmailAsync(user.Email);
@@ -50,7 +49,7 @@ namespace CemexDictionaryApp.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result =
                        await signInManager.PasswordSignInAsync
                        (UserModel, user.Password, user.RememberMe, false);
-                    //don't forget Redirect
+                
                     if (result.Succeeded)
                     {
                         return RedirectToAction("HomePage", "Home");
@@ -100,7 +99,7 @@ namespace CemexDictionaryApp.Controllers
                     PasswordHash=model.Password,
                     Role="Admin"
                 };
-                //var result = await userManager.CreateAsync(user,user.PasswordHash);
+               
 
 
                 IdentityResult result =
@@ -122,8 +121,7 @@ namespace CemexDictionaryApp.Controllers
 
                     ClaimsIdentity claims = new ClaimsIdentity();
                     claims.AddClaim(new Claim("Id", user.Id));
-                    //create cookie
-                    //signInManager.SignInWithClaimsAsync(UserModel, false, claims);
+             
                     await signInManager.SignInAsync(user, false);
                     return RedirectToAction("HomePage", "Home");
                 }

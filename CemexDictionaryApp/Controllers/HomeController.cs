@@ -1,4 +1,5 @@
 ﻿using CemexDictionaryApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -17,7 +18,7 @@ namespace CemexDictionaryApp.Controllers
         {
             _logger = logger;
         }
-
+        [Authorize]
         public IActionResult HomePage()
         {
             return View();

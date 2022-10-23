@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
 namespace CemexDictionaryApp.Controllers
 {
     public class QuestionController : Controller
@@ -39,14 +41,14 @@ namespace CemexDictionaryApp.Controllers
             questionPerCategoryRepository = _questionPerCategoryRepository;
             Customer_QuestionRepository = _customer_QuestionRepository;
         }
-
+        [Authorize]
         public IActionResult GetAll()
         {
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
             ViewData["Categories"] = categories;
             return View();
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult AddNewQuestion()
         {
@@ -83,7 +85,7 @@ namespace CemexDictionaryApp.Controllers
         {
             tags.Remove(removed_tag);
         }
-       
+        [Authorize]
         [HttpPost]
         public IActionResult AddNewQuestion(QuestionViewModel questionViewModel, List<IFormFile> photos,int[]categories_Ids)
         {
@@ -159,6 +161,7 @@ namespace CemexDictionaryApp.Controllers
                 return View("AddNewQuestion");
             }
         }
+        [Authorize]
         public IActionResult Search_question( SearchViewModel search_viewmodel)
         {
 
@@ -218,7 +221,7 @@ namespace CemexDictionaryApp.Controllers
             CustomerQuestions _question = Customer_QuestionRepository.GetById(QuestionId);
             return PartialView("CustomerQuestionDetails", _question);
         }
-       
+        [Authorize]
         [HttpGet]
         public IActionResult AnswerQuestion(int questionId)
         {
@@ -235,7 +238,7 @@ namespace CemexDictionaryApp.Controllers
         {
             TempData["comment"] = comment;   
         }
-        
+        [Authorize]
         [HttpPost]
         public IActionResult AnswerQuestion(CustomerQuestions question,List<IFormFile>photos, string videoURL)
         {
@@ -292,6 +295,7 @@ namespace CemexDictionaryApp.Controllers
            
             return View("AnswerQuestion", q);
         }
+        [Authorize]
         public IActionResult RejectQuestion(int questionId)
         {
             string _comment="";
@@ -304,7 +308,7 @@ namespace CemexDictionaryApp.Controllers
             return RedirectToAction("HomePage","Home");
         }
 
-
+        [Authorize]
         public IActionResult GetNotificationList(string listName)
         {
             TempData["listname"]=listName;
@@ -329,7 +333,7 @@ namespace CemexDictionaryApp.Controllers
             
             return Json(notifications);
         }
-
+        [Authorize]
         [HttpPost]
         public ActionResult SearchByQuestionId(string QuestionType, int QuestionId)
         {
@@ -351,13 +355,12 @@ namespace CemexDictionaryApp.Controllers
             else
             {
                 TempData["QuestionType"] = "empty";
-
-                //return View("SearchByQuestionId");
             }
             List<QuestionCategory> categories = QuestionCategoryRepository.GetAll();
             ViewData["Categories"] = categories;
             return View("SearchByQuestionId");
         }
+        [Authorize]
         [HttpGet]
         public ActionResult SearchByQuestionId()
         {

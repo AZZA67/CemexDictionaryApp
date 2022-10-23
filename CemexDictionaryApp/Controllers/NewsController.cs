@@ -1,6 +1,7 @@
 ﻿using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace CemexDictionaryApp.Controllers
             NewsRepository = _newsRepository;
             NewsLogRepository = _newsLogRepository;
         }
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllNews()
         {
@@ -25,12 +27,13 @@ namespace CemexDictionaryApp.Controllers
             List <News> news = NewsRepository.GetAll();
             return View(news);
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult AddNewNews()
         {
             return PartialView();
         }
+        [Authorize]
         public IActionResult Details(int NewsId)
         {
           News news = NewsRepository.GetById(NewsId);
@@ -39,7 +42,7 @@ namespace CemexDictionaryApp.Controllers
         public IActionResult ChangeNewsStatusById(int NewsId)
         {
            News news = NewsRepository.GetById(NewsId);
-            //product.Status = !product.Status;
+          
             if (news.Status == "Active")
                 news.Status = "InActive";
             else
@@ -56,7 +59,7 @@ namespace CemexDictionaryApp.Controllers
             NewsLogRepository.Insert(_newId);
             return Json(news.Status);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewNews(NewsViewModel model)
         {
