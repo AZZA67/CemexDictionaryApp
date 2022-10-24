@@ -54,5 +54,37 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
             }
             return null;
         }
+
+        public static ApiQuestion MappingByObject(Question question)
+        {
+            if (question != null)
+            {
+                ApiQuestion _question = new()
+                {
+                    Id = question.ID,
+                    QuestionTitle = question.Text,
+                    QuestionAnswer = question.Answer,
+                    Tags = question.Tags,
+                    SubmitTime = question.SubmitTime,
+                    TopQuestion = question.TopQuestion,
+                };
+
+                foreach (var questionMedia in question.QuestionMedia)
+                {
+                    if (questionMedia.Type == "Image")
+                        _question.QuestionImagesUrls.Add(ServerConfig.ServerPath + "/images/Questions/" + questionMedia.Path);
+                    else
+                        _question.QuestionAnswerVideosUrls.Add(questionMedia.Path);
+                }
+
+                foreach (var questionCategory in question.Question_category)
+                {
+                    _question.QuestionCategory.Add(questionCategory.category.Name_Ar);
+                }
+
+                return _question;
+            }
+            return null;
+        }
     }
 }

@@ -23,9 +23,8 @@ namespace CemexDictionaryApp.Models
         {
             modelBuilder.Entity<QuestionPerCategory>().HasKey(QC => new { QC.CategoryId, QC.QuestionId });
             base.OnModelCreating(modelBuilder);
-           
-
         }
+
         public DbSet<Product> products { get; set; }
         public DbSet<ProductType> productTypes { get; set; }
         public DbSet<ProductLog> ProductsLog { get; set; }
@@ -39,9 +38,8 @@ namespace CemexDictionaryApp.Models
         public DbSet<CustomerQuestionMedia> CustomerQuestionMedias { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<Zone> Zones { get; set; }
-
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Occupation> Occupations { get; set; }
-
         public DbSet<ApplicationUser> app_users { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CemexDictionaryApp.Repositories;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.WebApi.ApiViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -28,13 +29,13 @@ namespace CemexDictionaryApp.WebApi
             if (_questionCategory != null)
                 return Ok(new { 
                     Flag = true, 
-                    Message = ApiMessages.Done, 
+                    Message = Messages.Done, 
                     QuestionCategories = _questionCategory, 
                     News = ApiNewsMapping.Mapping(_news), 
                     TopQuestions= ApiQuestionMapping.Mapping(QuestionRepository.GetTopTenQuestions()) 
                 });
             else
-                return BadRequest(new { Flag = false, Message = ApiMessages.EmptyNewsList, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.EmptyNewsList, Data = 0 });
         }
     }
 }

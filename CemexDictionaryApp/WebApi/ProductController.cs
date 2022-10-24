@@ -1,4 +1,5 @@
-﻿using CemexDictionaryApp.Repositories;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.WebApi.ApiModels;
 using Microsoft.AspNetCore.Mvc;
 namespace CemexDictionaryApp.WebApi
@@ -24,11 +25,11 @@ namespace CemexDictionaryApp.WebApi
             if (_products != null && _products.Count>0)
                 return Ok(new { 
                     Flag = true, 
-                    Message = ApiMessages.Done, 
+                    Message = Messages.Done, 
                     Data = ApiProductMapping.Mapping(_products)
                 });
             else
-                return BadRequest(new { Flag = false, Message =ApiMessages.EmptyProductList, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.EmptyProductList, Data = 0 });
         }
     }
 }

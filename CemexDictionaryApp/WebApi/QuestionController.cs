@@ -1,4 +1,5 @@
-﻿using CemexDictionaryApp.DTO;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.DTO;
 using CemexDictionaryApp.Hubs;
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
@@ -56,7 +57,7 @@ namespace CemexDictionaryApp.WebApi
                     questions = ApiQuestionMapping.Mapping(_searchResult.ToList())
                 });
             }
-            return BadRequest(new { Flag = false, Message =ApiMessages.EmptySearchText, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptySearchText, Data = 0 });
         }
 
         [HttpPost("PostQuestion")]
@@ -105,11 +106,11 @@ namespace CemexDictionaryApp.WebApi
                     });
 
                     await HubContext.Clients.All.SendAsync("ReciveQuestions", jsonObject);
-                    return Ok(new { Flag = true, Message = ApiMessages.QuestionPosted, QuestionID = _customerQuestion.ID  });
+                    return Ok(new { Flag = true, Message = Messages.QuestionPosted, QuestionID = _customerQuestion.ID  });
                 }
-                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.UserNotExist, Data = 0 });
             }
-            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptyObject, Data = 0 });
         }
 
         [HttpPost("AddQuestion")]
@@ -186,7 +187,7 @@ namespace CemexDictionaryApp.WebApi
                     Questions = ApiCustomerQuestionMapping.Mapping(_customerQuestions)
                 });
             }
-            return BadRequest(new { Flag = false, Message =ApiMessages.CustomerEmptyQuestons, Questions = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.CustomerEmptyQuestons, Questions = 0 });
         }
     }
 }

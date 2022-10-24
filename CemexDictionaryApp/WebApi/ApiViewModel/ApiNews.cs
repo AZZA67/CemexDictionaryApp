@@ -12,7 +12,6 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
         public string Status { get; set; } // Active  1 
     }
 
-
     public class ApiNewsMapping
     {
         public static List<ApiNews> Mapping(List<News> news)
@@ -33,6 +32,23 @@ namespace CemexDictionaryApp.WebApi.ApiViewModel
                     _news.Add(n);
                 }
                 return _news;
+            }
+            return null;
+        }
+
+        public static ApiNews MappingByObject(News news)
+        {
+            if (news != null)
+            {
+                ApiNews _apiNews = new()
+                {
+                    Id = news.Id,
+                    Title = news.Title,
+                    Description = news.Description,
+                    Image = string.Format(ServerConfig.ServerPath + "/images/News/" + news.Image),
+                    Status = news.Status
+                };
+                return _apiNews;
             }
             return null;
         }

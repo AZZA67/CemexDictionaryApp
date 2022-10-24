@@ -1,4 +1,5 @@
 ﻿using CemexDictionaryApp.Models;
+using CemexDictionaryApp.WebApi.ApiViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,25 @@ namespace CemexDictionaryApp.WebApi.ApiModels
                     _products.Add(p);
                 }
                 return _products;
+            }
+            return null;
+        }
+
+        public static ApiProduct MappingByObject(Product product)
+        {
+            if (product != null)
+            {
+                ApiProduct _apiProduct = new()
+                {
+                    Id = product.Id,
+                    Description = product.Description,
+                    Image = string.Format(ServerConfig.ServerPath + "/images/Products/" + product.Image),
+                    Name = product.Name,
+                    Status = product.Status,
+                    Type = product.Type,
+                    ProductType = product.productType.Type
+                };
+                return _apiProduct;
             }
             return null;
         }

@@ -1,4 +1,5 @@
-﻿using CemexDictionaryApp.Repositories;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.WebApi.ApiModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,9 +21,9 @@ namespace CemexDictionaryApp.WebApi
             var _result = MasterRepository.StateList();
             var _occupationList = MasterRepository.OccupationList();
             if (_result != null)
-                return Ok(new { Flag = true, Message = "Done", States = StateMapping.Mapping(_result), Occupation = _occupationList});
+                return Ok(new { Flag = true, Message = Messages.Done, States = StateMapping.Mapping(_result), Occupation = _occupationList});
             else
-                return BadRequest(new { Flag = false, Message = "Error _ Empty List", Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.EmptyList, Data = 0 });
         }
     }
 }

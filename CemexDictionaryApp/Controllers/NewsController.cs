@@ -1,6 +1,9 @@
-﻿using CemexDictionaryApp.Models;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
+using CemexDictionaryApp.WebApi;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,17 +14,19 @@ namespace CemexDictionaryApp.Controllers
 {
     public class NewsController : Controller
     {
-        INewsRepository NewsRepository;
-        INewsLogRepository NewsLogRepository;
-        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository)
+        readonly INewsRepository NewsRepository;
+        readonly INewsLogRepository NewsLogRepository;
+        readonly INotificationRepo NotificationRepo;
+        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository , INotificationRepo notificationRepo)
         {
             NewsRepository = _newsRepository;
             NewsLogRepository = _newsLogRepository;
+            NotificationRepo = notificationRepo;
         }
+
         [HttpGet]
         public IActionResult GetAllNews()
-        {
-          
+        {  
             List <News> news = NewsRepository.GetAll();
             return View(news);
         }
@@ -31,11 +36,13 @@ namespace CemexDictionaryApp.Controllers
         {
             return PartialView();
         }
+
         public IActionResult Details(int NewsId)
         {
           News news = NewsRepository.GetById(NewsId);
             return PartialView("Details", news);
         }
+
         public IActionResult ChangeNewsStatusById(int NewsId)
         {
            News news = NewsRepository.GetById(NewsId);
@@ -80,9 +87,21 @@ namespace CemexDictionaryApp.Controllers
                 };
                 TempData["Success"] = "true";
                 NewsLogRepository.Insert(_newslog);
-            
+
+                //Notifcation
+                Notification _notifcation = new()
+                {
+                    Title = Messages.NewsTitle,
+                     Message = Messages.NewsMessage,
+                    UserId = "All",
+                    ObjectId = news.Id.ToString(),
+                    Type = NotificationType.News,
+                    SubmitDate = DateTime.Now.ToString()
+                };
+                await NotificationRepo.Add(_notifcation);
+
+
                 return RedirectToAction("GetAllNews", "News");
-            
             }
             return View("AddNewNews");
         }

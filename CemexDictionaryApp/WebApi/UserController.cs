@@ -1,7 +1,9 @@
-﻿using CemexDictionaryApp.DTO;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.DTO;
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.WebApi.ApiModels;
+using CemexDictionaryApp.WebApi.ApiViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,9 +30,10 @@ namespace CemexDictionaryApp.WebApi
         private readonly SignInManager<ApplicationUser> signinmanager;
         private readonly IHttpContextAccessor httpContextAccessor;
         ICustomerQuistionsRepository CustomerQuestion;
+        private readonly INotificationRepo NotificationRepo;
 
         public UserController(IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signinmanager, UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager, IConfiguration configuration, DBContext _dbcontext, ICustomerQuistionsRepository customerQuestion)
+            RoleManager<IdentityRole> roleManager, IConfiguration configuration, DBContext _dbcontext, ICustomerQuistionsRepository customerQuestion , INotificationRepo notificationRepo)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
@@ -39,6 +42,7 @@ namespace CemexDictionaryApp.WebApi
             this.dbcontext = _dbcontext;
             this.signinmanager = signinmanager;
             CustomerQuestion = customerQuestion;
+            NotificationRepo = notificationRepo;
         }
 
         [HttpPost]
@@ -68,13 +72,13 @@ namespace CemexDictionaryApp.WebApi
                         }
 
                         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecrtKey"]));
-                        return Ok(new { Flag = true, Message =ApiMessages.Done, Data = ApiUserMapping.Mapping(_user)});
+                        return Ok(new { Flag = true, Message = Messages.Done, Data = ApiUserMapping.Mapping(_user)});
                     }
-                    return BadRequest(new { Flag = false, Message =ApiMessages.WrongPassword, Data = 0 });
+                    return BadRequest(new { Flag = false, Message = Messages.WrongPassword, Data = 0 });
                 }
-                return BadRequest(new { Flag = false, Message =ApiMessages.MobileNotExist, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.MobileNotExist, Data = 0 });
             }
-            return BadRequest(new { Flag = false, Message =ApiMessages.EmptyObject, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptyObject, Data = 0 });
         }
        
         [HttpPost]
@@ -117,15 +121,15 @@ namespace CemexDictionaryApp.WebApi
                         await userManager.AddToRoleAsync(_newUser, "User");
 
                     if (_createPass.Succeeded)
-                        return Ok(new { Flag = true, Message =ApiMessages.ConfirmRegistration, Data = ApiUserMapping.Mapping(_newUser) });
+                        return Ok(new { Flag = true, Message = Messages.ConfirmRegistration, Data = ApiUserMapping.Mapping(_newUser) });
 
                     // new { id = _newUser.Id, mobileNo = _newUser.PhoneNumber }
 
-                    return BadRequest(new { Flag = false, Message =ApiMessages.RegistrationError, Data = 0 });
+                    return BadRequest(new { Flag = false, Message = Messages.RegistrationError, Data = 0 });
                 }
-                return BadRequest(new { Flag = false, Message =ApiMessages.MobileExist, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.MobileExist, Data = 0 });
             }
-            return BadRequest(new { Flag = false, Message =ApiMessages.EmptyObject, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptyObject, Data = 0 });
         }
 
         [HttpPost]
@@ -138,11 +142,11 @@ namespace CemexDictionaryApp.WebApi
                 if (_userModel != null)
                 {
                       var _questions =   CustomerQuestion.QuestionStatusPerCustomer(model.Id);
-                      return Ok(new { Flag = true, Message = ApiMessages.Done, User = ApiUserMapping.Mapping(_userModel) , Questions = _questions});
+                      return Ok(new { Flag = true, Message = Messages.Done, User = ApiUserMapping.Mapping(_userModel) , Questions = _questions});
                 }
-                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
+                return BadRequest(new { Flag = false, Message = Messages.UserNotExist, Data = 0 });
             }
-            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptyObject, Data = 0 });
         }
 
         [HttpPost]
@@ -152,14 +156,18 @@ namespace CemexDictionaryApp.WebApi
             if (model != null)
             {
                 ApplicationUser _user = await userManager.FindByIdAsync(model.Id);
-                _user.Token = model.Token; 
-                var _result  = await userManager.UpdateAsync(_user);
+                if(_user!=null)
+                {
+                    _user.Token = model.Token;
+                    var _result = await userManager.UpdateAsync(_user);
 
-                if (_result.Succeeded)
-                    return Ok(new { Flag = true, Message = ApiMessages.Done, UserId = _user.Id });
-                return BadRequest(new { Flag = false, Message = ApiMessages.UserNotExist, Data = 0 });
+                    if (_result.Succeeded)
+                        return Ok(new { Flag = true, Message = Messages.Done, UserId = _user.Id });
+                    return BadRequest(new { Flag = false, Message = Messages.UserNotExist, Data = 0 });
+                }
+                return BadRequest(new { Flag = false, Message = Messages.UserNotExist, Data = 0 });
             }
-            return BadRequest(new { Flag = false, Message = ApiMessages.EmptyObject, Data = 0 });
+            return BadRequest(new { Flag = false, Message = Messages.EmptyObject, Data = 0 });
         }
     }
 }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CemexDictionaryApp.WebApi
+namespace CemexDictionaryApp.Core
 {
-    public class ApiMessages
+    public class Messages
     {
         public static string Done = string.Format("Done");
         public static string EmptyObject = string.Format("خطأ فى البيانات المرسلة");
+        public static string EmptyList = string.Format("لا توجد بيانات");
 
         //News
         public static string EmptyNewsList = string.Format("لا يوجد أخبار");
@@ -30,6 +31,13 @@ namespace CemexDictionaryApp.WebApi
         public static string EmptySearchText = string.Format("خطأ لا يوجد نص للبحث");
         public static string CustomerEmptyQuestons = string.Format("لا توجد أسئلة للعميل");
 
+        //Notifcations
+        public static string NewsTitle = string.Format("تم إضافة خبر جديد");
+        public static string ProductTitle = string.Format("تم إضافة منتج جديد");
+        public static string QuestionTitle = string.Format("تم إضافة سؤال جديد");
 
+        public static string NewsMessage = string.Format("تم إضافة خبر جديد");
+        public static string ProductMessage = string.Format("تم إضافة منتج جديد");
+        public static string QuestionMessage = string.Format("تم إضافة سؤال جديد");
     }
 }
