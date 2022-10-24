@@ -1,8 +1,6 @@
-﻿using CemexDictionaryApp.Core;
-using CemexDictionaryApp.Models;
+﻿using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
-using CemexDictionaryApp.WebApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,39 +12,37 @@ namespace CemexDictionaryApp.Controllers
 {
     public class NewsController : Controller
     {
-        readonly INewsRepository NewsRepository;
-        readonly INewsLogRepository NewsLogRepository;
-        readonly INotificationRepo NotificationRepo;
-        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository , INotificationRepo notificationRepo)
+        INewsRepository NewsRepository;
+        INewsLogRepository NewsLogRepository;
+        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository)
         {
             NewsRepository = _newsRepository;
             NewsLogRepository = _newsLogRepository;
-            NotificationRepo = notificationRepo;
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllNews()
-        {  
+        {
+          
             List <News> news = NewsRepository.GetAll();
             return View(news);
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult AddNewNews()
         {
             return PartialView();
         }
-
+        [Authorize]
         public IActionResult Details(int NewsId)
         {
           News news = NewsRepository.GetById(NewsId);
             return PartialView("Details", news);
         }
-
         public IActionResult ChangeNewsStatusById(int NewsId)
         {
            News news = NewsRepository.GetById(NewsId);
-            //product.Status = !product.Status;
+          
             if (news.Status == "Active")
                 news.Status = "InActive";
             else
@@ -63,7 +59,7 @@ namespace CemexDictionaryApp.Controllers
             NewsLogRepository.Insert(_newId);
             return Json(news.Status);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewNews(NewsViewModel model)
         {
@@ -87,21 +83,9 @@ namespace CemexDictionaryApp.Controllers
                 };
                 TempData["Success"] = "true";
                 NewsLogRepository.Insert(_newslog);
-
-                //Notifcation
-                Notification _notifcation = new()
-                {
-                    Title = Messages.NewsTitle,
-                     Message = Messages.NewsMessage,
-                    UserId = "All",
-                    ObjectId = news.Id.ToString(),
-                    Type = NotificationType.News,
-                    SubmitDate = DateTime.Now.ToString()
-                };
-                await NotificationRepo.Add(_notifcation);
-
-
+            
                 return RedirectToAction("GetAllNews", "News");
+            
             }
             return View("AddNewNews");
         }

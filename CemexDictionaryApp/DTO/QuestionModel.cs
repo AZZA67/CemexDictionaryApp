@@ -13,7 +13,7 @@ namespace CemexDictionaryApp.DTO
         public string Category { get; set; }
         public string Description { get; set; }
 
-        public int CategoryId { get; set; } //1
+        public int CategoryId { get; set; } 
 
         public List<string> QuestionImage { get; set; }
     }

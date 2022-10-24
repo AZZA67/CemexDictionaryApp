@@ -1,6 +1,7 @@
 ﻿using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,12 +38,14 @@ namespace CemexDictionaryApp.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
         private async Task<ApplicationUser> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllProducts()
         {
             List<Product> products = ProductRepository.GetAll();
             return View(products);
         }
+        [Authorize]
         [HttpGet]
         public IActionResult AddNewProduct()
         {
@@ -76,7 +79,7 @@ namespace CemexDictionaryApp.Controllers
             ProductLogRepository.Insert(_productlog);
             return Json(product.Status);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewProductAsync(ProductViewModel model)
         {
@@ -110,7 +113,7 @@ namespace CemexDictionaryApp.Controllers
             List<ProductType> productTypes = ProductTypeRepository.GetAll();
             ViewData["ProductTypes"] = productTypes;
             return View("AddNewProduct");
-            //Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "MyFunction()", true);
+          
 
         }
 

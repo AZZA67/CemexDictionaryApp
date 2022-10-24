@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CemexDictionaryApp.Controllers
 {
@@ -15,16 +16,19 @@ namespace CemexDictionaryApp.Controllers
         {
             QuestionCategoryRepository = _questionCategoryRepository;
         }
+        [Authorize]
         public IActionResult GetAll()
         {
             List<QuestionCategory> questionCategories = QuestionCategoryRepository.GetAll();
             return View(questionCategories);
         }
+        [Authorize]
         [HttpGet]
         public IActionResult AddNewQuestionCategory()
         {
             return PartialView();
         }
+        [Authorize]
         [HttpPost]
         public IActionResult AddNewQuestionCategory(QuestionCategory questionCtegory)
         {

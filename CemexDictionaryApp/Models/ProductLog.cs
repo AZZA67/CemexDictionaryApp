@@ -9,7 +9,6 @@ namespace CemexDictionaryApp.Models
 {
     public class ProductLog
     {
-        //pRODUCTid / uSERiD / aCTION (aDD / aCTIVE / dEACTIVATE ) , DATETIME
 
         public int Id { get; set; }
         public DateTime DateTime { get; set; }
