@@ -1,15 +1,14 @@
-﻿using CemexDictionaryApp.Models;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Firebase;
+using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 namespace CemexDictionaryApp.Controllers
 {
@@ -22,12 +21,15 @@ namespace CemexDictionaryApp.Controllers
         private SignInManager<ApplicationUser> signInManager;
         private RoleManager<IdentityRole> roleManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-       
+        readonly INotificationRepo NotificationRepo;
+        readonly IFirebaseNotificationService FirebaseNotificationService;
+
         public ProductController(UserManager<ApplicationUser> _userManager
         , SignInManager<ApplicationUser> _signInManager
         , RoleManager<IdentityRole> _roleManager,IProductRepository _productRepository,
             IProductTypeRepository _productTypeRepository, 
-            IProductLogRepository _productLogRepository, IHttpContextAccessor httpContextAccessor)
+            IProductLogRepository _productLogRepository, IHttpContextAccessor httpContextAccessor ,
+             INotificationRepo notificationRepo, IFirebaseNotificationService firebaseNotificationService)
         {
             ProductRepository = _productRepository;
             ProductTypeRepository = _productTypeRepository;
@@ -36,8 +38,12 @@ namespace CemexDictionaryApp.Controllers
             userManager = _userManager;
             roleManager = _roleManager;
             _httpContextAccessor = httpContextAccessor;
+            NotificationRepo = notificationRepo;
+            FirebaseNotificationService = firebaseNotificationService;
         }
+
         private async Task<ApplicationUser> GetCurrentUserAsync() => await userManager.GetUserAsync(HttpContext.User);
+
         [Authorize]
         [HttpGet]
         public IActionResult GetAllProducts()
@@ -45,6 +51,7 @@ namespace CemexDictionaryApp.Controllers
             List<Product> products = ProductRepository.GetAll();
             return View(products);
         }
+
         [Authorize]
         [HttpGet]
         public IActionResult AddNewProduct()
@@ -53,6 +60,7 @@ namespace CemexDictionaryApp.Controllers
             ViewData["ProductTypes"] = productTypes;
             return PartialView();
         }
+
         public IActionResult Details(int productId)
         {
             Product product = ProductRepository.GetById(productId);
@@ -79,6 +87,7 @@ namespace CemexDictionaryApp.Controllers
             ProductLogRepository.Insert(_productlog);
             return Json(product.Status);
         }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewProductAsync(ProductViewModel model)
@@ -86,7 +95,8 @@ namespace CemexDictionaryApp.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = ProductRepository.UploadedFile(model);
-                Product product = new Product
+
+                Product product = new()
                 {
                     Name = model.Name,
                     Description = model.Description,
@@ -95,10 +105,13 @@ namespace CemexDictionaryApp.Controllers
                     ProductTypeId = model.ProductTypeId,
                     Type = ProductTypeRepository.GetById(model.ProductTypeId).Type
                 };
-                var user = await GetCurrentUserAsync();
+
+                _ = await GetCurrentUserAsync();
+
                 ProductRepository.Insert(product);
                 TempData["Success"] = "true";
-                ProductLog _productlog = new ProductLog
+
+                ProductLog _productlog = new()
                 {
                     UserId = userManager.GetUserId(HttpContext.User),
                     DateTime = DateTime.Now,
@@ -107,15 +120,27 @@ namespace CemexDictionaryApp.Controllers
                 };
 
                 ProductLogRepository.Insert(_productlog);
+
+                //Notify
+                Notification _notify = new()
+                {
+                    Title = Messages.ProductTitle.ToString(),
+                    Message = Messages.ProductMessage.ToString(),
+                    Type = NotificationType.Products.ToString(),
+                    ObjectId = product.Id.ToString(),
+                    SubmitDate = DateTime.Now.ToString(),
+                    UserId = NotificationType.All.ToString()
+                };
+
+                await NotificationRepo.Add(_notify);
+                await FirebaseNotificationService.SendNotification(FirebaseNotificationService.Topic(_notify));
+
                 return RedirectToAction("GetAllProducts", "Product");
             }
 
             List<ProductType> productTypes = ProductTypeRepository.GetAll();
             ViewData["ProductTypes"] = productTypes;
             return View("AddNewProduct");
-          
-
         }
-
     }
 }

@@ -13,7 +13,8 @@ namespace CemexDictionaryApp.Models
         public string Description { get; set; }
         public string Image { get; set; } 
         [RegularExpression(@"(Active|InActive)", ErrorMessage = "Status Must be Active or InActive")]
-        public string Status { get; set; } 
+        public string Status { get; set; }
+        public DateTime SubmitTime { get; set; }
         public virtual List<NewsLog> NewsLogs { get; set; }
 
     }

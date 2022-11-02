@@ -1,4 +1,6 @@
-﻿using CemexDictionaryApp.Models;
+﻿using CemexDictionaryApp.Core;
+using CemexDictionaryApp.Firebase;
+using CemexDictionaryApp.Models;
 using CemexDictionaryApp.Repositories;
 using CemexDictionaryApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,33 +14,41 @@ namespace CemexDictionaryApp.Controllers
 {
     public class NewsController : Controller
     {
-        INewsRepository NewsRepository;
-        INewsLogRepository NewsLogRepository;
-        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository)
+        readonly INewsRepository NewsRepository;
+        readonly INewsLogRepository NewsLogRepository;
+        readonly INotificationRepo NotificationRepo;
+        readonly IFirebaseNotificationService FirebaseNotificationService;
+        public NewsController(INewsRepository _newsRepository, INewsLogRepository _newsLogRepository , INotificationRepo notificationRepo, 
+            IFirebaseNotificationService firebaseNotificationService)
         {
             NewsRepository = _newsRepository;
             NewsLogRepository = _newsLogRepository;
+            NotificationRepo = notificationRepo;
+            FirebaseNotificationService = firebaseNotificationService;
         }
+
         [Authorize]
         [HttpGet]
         public IActionResult GetAllNews()
-        {
-          
+        {  
             List <News> news = NewsRepository.GetAll();
             return View(news);
         }
+
         [Authorize]
         [HttpGet]
         public IActionResult AddNewNews()
         {
             return PartialView();
         }
+
         [Authorize]
         public IActionResult Details(int NewsId)
         {
-          News news = NewsRepository.GetById(NewsId);
+            News news = NewsRepository.GetById(NewsId);
             return PartialView("Details", news);
         }
+
         public IActionResult ChangeNewsStatusById(int NewsId)
         {
            News news = NewsRepository.GetById(NewsId);
@@ -53,12 +63,13 @@ namespace CemexDictionaryApp.Controllers
             {
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 DateTime = DateTime.Now,
-                Action = news.Status,
+                Action = news.Status.ToString(),
                 NewId = news.Id
             };
             NewsLogRepository.Insert(_newId);
             return Json(news.Status);
         }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddNewNews(NewsViewModel model)
@@ -68,12 +79,14 @@ namespace CemexDictionaryApp.Controllers
                 string uniqueFileName = NewsRepository.UploadedFile(model);
                 News news = new()
                 {
-                    Title = model.Title,
-                    Description = model.Description,
+                    Title = model.Title.ToString(),
+                    Description = model.Description.ToString(),
                     Status = "Active",
                     Image = uniqueFileName,
+                    SubmitTime = DateTime.Now
                 };
                 await NewsRepository.Insert(news);
+
                 NewsLog _newslog = new()
                 {
                     UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
@@ -83,9 +96,21 @@ namespace CemexDictionaryApp.Controllers
                 };
                 TempData["Success"] = "true";
                 NewsLogRepository.Insert(_newslog);
-            
-                return RedirectToAction("GetAllNews", "News");
-            
+
+                //Notify
+                Notification _notify = new()
+                {
+                    Title = Messages.NewsTitle.ToString(),
+                    Message = Messages.NewsMessage.ToString(),
+                    Type = NotificationType.News.ToString(),
+                    ObjectId = news.Id.ToString(),
+                    SubmitDate = DateTime.Now.ToString(),
+                    UserId = NotificationType.All.ToString()
+                };
+                await NotificationRepo.Add(_notify);
+                await FirebaseNotificationService.SendNotification(FirebaseNotificationService.Topic(_notify));
+
+                return RedirectToAction("GetAllNews", "News");    
             }
             return View("AddNewNews");
         }

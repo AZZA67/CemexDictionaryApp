@@ -11,5 +11,6 @@ namespace CemexDictionaryApp.Core
         public static string Products = string.Format("Products");
         public static string SystemQuestion = string.Format("SystemQuestion");
         public static string CustomerQuestion = string.Format("CustomerQuestion");
+        public static string All = string.Format("All");
     }
 }

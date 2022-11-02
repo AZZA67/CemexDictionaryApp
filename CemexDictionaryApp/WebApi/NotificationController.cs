@@ -70,7 +70,7 @@ namespace CemexDictionaryApp.WebApi
                     if (model.Type == NotificationType.CustomerQuestion)
                         _result = ApiCustomerQuestionMapping.MappingByObject(CustomerQuestion.GetById(Convert.ToInt32(model.ObjectId)));
 
-                    return Ok(new { Flag = true, Message = Messages.Done, Data = _result });
+                    return Ok(new { Flag = true, Message = Messages.Done, Data = _result});  // anamous object 
                 }
                 return BadRequest(new { Flag = false, Message = Messages.UserNotExist, Data = 0 });
             }
